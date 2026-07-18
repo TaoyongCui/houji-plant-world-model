@@ -477,8 +477,8 @@
           <button class="action-choice" type="button" data-action="fro6" data-i18n="action4">FRO6 ↑</button>
         </div>
         <div class="time-control"><div class="time-row"><span data-i18n="console_horizon">推演时域</span><strong id="engineTimeLabel">T + 36 h</strong></div><input id="engineTime" type="range" min="6" max="72" value="36" step="6" aria-label="推演时域"></div>
-        <button class="engine-run" id="engineRun" type="button"><span class="engine-run-icon" aria-hidden="true">GPT</span><span data-i18n="engine_run">展开 GPT 推演报告</span></button>
-        <div class="engine-status" id="engineStatus" role="status" aria-live="polite" data-i18n="engine_loading_data">正在载入 GPT‑5.6 预测库…</div>
+        <button class="engine-run" id="engineRun" type="button"><span class="engine-run-icon" aria-hidden="true">AI</span><span data-i18n="engine_run">展开 AI 推演报告</span></button>
+        <div class="engine-status" id="engineStatus" role="status" aria-live="polite" data-i18n="engine_loading_data">正在载入 AI 推演库…</div>
       </div>
       <div class="console-pane">
         <div class="console-label" data-i18n="console_future">ROLLED-OUT FUTURE</div>
@@ -748,9 +748,9 @@ const I18N = {
     console_live:"行动条件推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
     engine_species:"物种", engine_organ:"器官", engine_baseline:"预计算基线", engine_baseline_value:"营养生长期 · 标准光周期 · 中等处理强度 · 其余条件适宜",
     species1:"拟南芥", species2:"水稻", species3:"玉米", organ1:"叶片", organ2:"根", organ3:"幼苗",
-    engine_run:"展开 GPT 推演报告", engine_loading:"正在读取预测轨迹…", engine_loading_data:"正在载入 GPT‑5.6 预测库…", engine_data_ready:"预测库已连接", engine_batch_done:"GPT 条件轨迹已展开", engine_error:"预测库暂时不可用，已切换到本地动力学",
+    engine_run:"展开 AI 推演报告", engine_loading:"正在读取预测轨迹…", engine_loading_data:"正在载入 AI 推演库…", engine_data_ready:"AI 推演库已连接", engine_batch_done:"AI 条件轨迹已展开", engine_error:"预测库暂时不可用，已切换到本地动力学",
     engine_confidence:"条件置信度", engine_uncertainty_local:"基于一般植物生理规律的演示估计。",
-    report_label:"条件未来报告", report_mechanisms:"机制链", report_assumptions:"关键假设", report_validation:"建议验证", report_design:"设计", report_timepoints:"时间点", report_disclaimer_local:"条件推演用于生成可检验假设，实验结果以实际测量为准。", report_disclaimer_batch:"由 GPT‑5.6 预计算的条件轨迹，用于形成可检验假设；实验结论以实际测量为准。",
+    report_label:"条件未来报告", report_mechanisms:"机制链", report_assumptions:"关键假设", report_validation:"建议验证", report_design:"设计", report_timepoints:"时间点", report_disclaimer_local:"条件推演用于生成可检验假设，实验结果以实际测量为准。", report_disclaimer_batch:"由 AI 预计算的条件轨迹，用于形成可检验假设；实验结论以实际测量为准。",
     state1_k:"细胞状态", state1_v:"分布", state2_k:"组织组成", state2_v:"比例", state3_k:"空间关系", state3_v:"邻接图",
     action1:"干旱", action2:"复水", action3:"冷胁迫", action4:"FRO6 ↑",
     loop1:"观察", loop2:"编码", loop3:"行动", loop4:"推演", loop5:"解码", loop6:"校准",
@@ -822,9 +822,9 @@ const I18N = {
     console_live:"ACTION-CONDITIONED ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
     engine_species:"Species", engine_organ:"Organ", engine_baseline:"Precomputed baseline", engine_baseline_value:"Vegetative stage · standard photoperiod · moderate treatment · otherwise favorable conditions",
     species1:"Arabidopsis", species2:"Rice", species3:"Maize", organ1:"Leaf", organ2:"Root", organ3:"Seedling",
-    engine_run:"Open GPT rollout report", engine_loading:"Reading forecast trajectory…", engine_loading_data:"Loading the GPT‑5.6 trajectory library…", engine_data_ready:"Trajectory library connected", engine_batch_done:"GPT conditional trajectory opened", engine_error:"Trajectory library unavailable; local dynamics shown instead",
+    engine_run:"Open AI rollout report", engine_loading:"Reading forecast trajectory…", engine_loading_data:"Loading the AI rollout library…", engine_data_ready:"AI rollout library connected", engine_batch_done:"AI conditional trajectory opened", engine_error:"Trajectory library unavailable; local dynamics shown instead",
     engine_confidence:"Conditional confidence", engine_uncertainty_local:"Demonstration estimate based on general plant physiology.",
-    report_label:"CONDITIONAL FUTURE REPORT", report_mechanisms:"Mechanism chain", report_assumptions:"Key assumptions", report_validation:"Suggested validation", report_design:"Design", report_timepoints:"Timepoints", report_disclaimer_local:"This conditional rollout generates testable hypotheses; experimental conclusions require measurement.", report_disclaimer_batch:"GPT‑5.6 precomputed conditional trajectory for testable hypothesis generation; experimental conclusions require measurement.",
+    report_label:"CONDITIONAL FUTURE REPORT", report_mechanisms:"Mechanism chain", report_assumptions:"Key assumptions", report_validation:"Suggested validation", report_design:"Design", report_timepoints:"Timepoints", report_disclaimer_local:"This conditional rollout generates testable hypotheses; experimental conclusions require measurement.", report_disclaimer_batch:"AI-precomputed conditional trajectory for testable hypothesis generation; experimental conclusions require measurement.",
     state1_k:"Cell state", state1_v:"distribution", state2_k:"Tissue mix", state2_v:"proportion", state3_k:"Spatial relation", state3_v:"graph",
     action1:"Drought", action2:"Rewater", action3:"Cold", action4:"FRO6 ↑",
     loop1:"OBSERVE", loop2:"ENCODE", loop3:"ACT", loop4:"ROLL OUT", loop5:"DECODE", loop6:"CALIBRATE",
@@ -1089,26 +1089,21 @@ function getBatchPrediction(){
     disclaimer:I18N[LANG].report_disclaimer_batch,
     language:LANG,
     source:'batch',
-    model:ENGINE_DATA.meta?.model||ENGINE_DATA.meta?.requestedModel||'GPT-5.6',
     generatedAt:ENGINE_DATA.meta?.generatedAt
   };
-}
-
-function displayModel(model){
-  return String(model||'GPT-5.6').replace(/^openai\//,'').toUpperCase();
 }
 
 function syncDataIdentity(){
   const baseline=document.getElementById('engineBaselineText');
   if(baseline)baseline.textContent=ENGINE_DATA?.meta?.baseline?pickLanguage(ENGINE_DATA.meta.baseline):I18N[LANG].engine_baseline_value;
   const mode=document.getElementById('engineMode');
-  if(mode&&ENGINE_DATA)mode.textContent=`${displayModel(ENGINE_DATA.meta?.model)} · BATCH ROLLOUT`;
+  if(mode&&ENGINE_DATA)mode.textContent='AI WORLD ROLLOUT';
 }
 
 function setCurrentEngineStatus(){
   if(ENGINE_DATA){
     const count=Number(ENGINE_DATA.meta?.scenarioCount)||Object.keys(ENGINE_DATA.scenarios||{}).length;
-    setEngineStatus(`${I18N[LANG].engine_data_ready} · ${displayModel(ENGINE_DATA.meta?.model)} · ${count} ${LANG==='en'?'trajectories':'条轨迹'}`,'ai');
+    setEngineStatus(`${I18N[LANG].engine_data_ready} · ${count} ${LANG==='en'?'trajectories':'条轨迹'}`,'ai');
   }else if(ENGINE_DATA_ERROR){
     setEngineStatus(I18N[LANG].engine_error,'error');
   }else{
@@ -1173,10 +1168,9 @@ function renderPrediction(prediction){
   document.getElementById('engineDesign').textContent=`${I18N[LANG].report_design}: ${prediction.validation?.design||'—'}`;
   document.getElementById('engineTimepoints').textContent=`${I18N[LANG].report_timepoints}: ${(prediction.validation?.timepoints||[]).join(' · ')||'—'}`;
   document.getElementById('engineDisclaimer').textContent=prediction.disclaimer||I18N[LANG].report_disclaimer_local;
-  const source=prediction.source==='batch'?'GITHUB BATCH':'LOCAL DYNAMICS';
-  const model=prediction.source==='batch'&&prediction.model?`\n${displayModel(prediction.model)}`:'';
+  const source=prediction.source==='batch'?'AI BATCH ROLLOUT':'LOCAL DYNAMICS';
   const generated=prediction.generatedAt?new Date(prediction.generatedAt).toLocaleString(LANG==='en'?'en-GB':'zh-CN',{hour12:false}):`T + ${hours} h`;
-  document.getElementById('engineReportMeta').textContent=`${source}${model}\n${generated}`;
+  document.getElementById('engineReportMeta').textContent=`${source}\n${generated}`;
 }
 
 function renderEngine(){
@@ -1212,7 +1206,7 @@ async function generateEnginePrediction(){
     ENGINE_RESULT=getBatchPrediction();
     if(!ENGINE_RESULT)throw new Error('No cached trajectory matches this scenario.');
     ENGINE_HAS_REPORT=true;
-    setEngineStatus(`${I18N[LANG].engine_batch_done} · ${displayModel(ENGINE_RESULT.model)}`,'ai');
+    setEngineStatus(I18N[LANG].engine_batch_done,'ai');
   }catch(error){
     console.warn('Prediction library unavailable:',error.message);
     ENGINE_RESULT=buildLocalPrediction();
