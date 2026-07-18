@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="后稷 Hòujì：一个以行动为条件的植物世界模型，面向植物细胞、组织、表型和干预方向的多尺度预测。">
+<meta name="theme-color" content="#05100b">
+<title>后稷 Hòujì · 植物世界模型 / Plant World Model</title>
+<style>
+  :root{
+    --bg:#05100b; --bg2:#0a1a12; --panel:rgba(16,32,24,.55); --panel2:rgba(236,250,241,.055);
+    --line:rgba(120,200,160,.16);
+    --emerald:#34d399; --lime:#a3e635; --mint:#6ee7b7;
+    --gold:#e6bd5c; --gold2:#caa03a;
+    --red:#f0704f; --blue:#6aa9e0;
+    --text:#e9f3ec; --muted:#93a89b; --dim:#5f7568;
+    --maxw:1120px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:"Inter","Segoe UI",-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; overflow-x:hidden; -webkit-font-smoothing:antialiased;
+  }
+  body::selection{background:rgba(52,211,153,.28)}
+  #bgcanvas{position:fixed; inset:0; z-index:-2; opacity:.55}
+  .glowmesh{
+    position:fixed; inset:-20% -10% auto -10%; height:120vh; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(45% 40% at 18% 12%, rgba(52,211,153,.16), transparent 60%),
+      radial-gradient(40% 35% at 85% 8%, rgba(230,189,92,.12), transparent 60%),
+      radial-gradient(50% 45% at 60% 45%, rgba(163,230,53,.07), transparent 65%);
+    filter:blur(10px);
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50; backdrop-filter:blur(12px);
+    background:linear-gradient(180deg,rgba(5,16,11,.85),rgba(5,16,11,.35));
+    border-bottom:1px solid var(--line);
+  }
+  .navrow{display:flex; align-items:center; justify-content:space-between; height:62px}
+  .brand{display:flex; align-items:center; gap:12px; font-weight:700; letter-spacing:.5px}
+  .brand .seal{
+    width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+    font-size:20px;font-weight:800;color:#1a1205;
+    background:linear-gradient(135deg,var(--gold),#f4d98a);
+    box-shadow:0 0 18px rgba(230,189,92,.5), inset 0 0 6px rgba(255,255,255,.4);
+  }
+  .brand small{color:var(--muted); font-weight:500; letter-spacing:2px; font-size:12px}
+  .navlinks{display:flex; align-items:center; gap:22px; font-size:14px; color:var(--muted)}
+  .navlinks a:hover{color:var(--emerald)}
+  .langtoggle{
+    display:inline-flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;
+    font-size:13px; font-weight:600;
+  }
+  .langtoggle button{
+    background:transparent; color:var(--muted); border:0; padding:6px 13px; cursor:pointer; transition:.2s;
+  }
+  .langtoggle button.on{background:linear-gradient(135deg,var(--emerald),var(--lime)); color:#052012}
+  @media(max-width:720px){
+    .navrow{height:auto; min-height:62px; gap:14px; padding:12px 0}
+    .navlinks{gap:10px}
+    .navlinks a{display:none}
+    .brand{font-size:14px}
+  }
+
+  /* ---------- hero ---------- */
+  header{position:relative; padding:96px 0 40px; text-align:center}
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px; letter-spacing:3px; text-transform:uppercase; color:var(--gold);
+    border:1px solid rgba(230,189,92,.3); border-radius:999px; padding:6px 16px; margin-bottom:26px;
+    background:rgba(230,189,92,.06);
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 10px var(--emerald);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+  .hero-cn{
+    font-size:clamp(88px,17vw,210px); line-height:.9; font-weight:800; margin:0;
+    font-family:"Songti SC","SimSun","STSong",serif; letter-spacing:6px;
+    background:linear-gradient(160deg,#fff3d4 0%,var(--gold) 45%,var(--gold2) 70%,#8f6d20 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 6px 34px rgba(230,189,92,.35));
+  }
+  .hero-en{
+    margin:6px 0 0; font-size:clamp(18px,3.4vw,30px); font-weight:600; letter-spacing:10px;
+    color:var(--mint); text-transform:uppercase;
+  }
+  .tag{margin:22px auto 0; max-width:760px; font-size:clamp(16px,2.4vw,21px); color:var(--text)}
+  .tag b{color:var(--lime)}
+  .sub{margin:14px auto 0; max-width:680px; color:var(--muted); font-size:15.5px}
+  .hero-proof{
+    display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:24px auto 0;
+    color:#d9f5e7; font-size:13px;
+  }
+  .proof-pill{
+    border:1px solid rgba(110,231,183,.2); background:rgba(110,231,183,.065);
+    border-radius:999px; padding:6px 12px;
+  }
+  .cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:34px}
+  .btn{
+    padding:13px 24px; border-radius:12px; font-weight:650; font-size:15px; cursor:pointer; transition:.22s;
+    border:1px solid transparent;
+  }
+  .btn.primary{background:linear-gradient(135deg,var(--emerald),var(--lime)); color:#04160c;
+    box-shadow:0 8px 26px rgba(52,211,153,.28)}
+  .btn.primary:hover{transform:translateY(-2px); box-shadow:0 12px 34px rgba(52,211,153,.42)}
+  .btn.ghost{border-color:var(--line); color:var(--text); background:rgba(255,255,255,.02)}
+  .btn.ghost:hover{border-color:var(--emerald); color:var(--emerald)}
+
+  /* ---------- stat strip ---------- */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:64px}
+  @media(max-width:720px){ .stats{grid-template-columns:repeat(2,1fr)} }
+  .stat{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px 18px; text-align:center;
+    backdrop-filter:blur(8px); transition:.25s;
+  }
+  .stat:hover{transform:translateY(-4px); border-color:rgba(52,211,153,.4)}
+  .stat .num{font-size:clamp(26px,4vw,40px); font-weight:800; line-height:1;
+    background:linear-gradient(135deg,var(--emerald),var(--lime));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .stat .lab{margin-top:9px; font-size:13px; color:var(--muted)}
+
+  /* ---------- sections ---------- */
+  section{padding:74px 0; position:relative}
+  section.soft{background:linear-gradient(180deg,transparent,rgba(255,255,255,.025),transparent)}
+  .eyebrow{color:var(--emerald); font-size:13px; letter-spacing:3px; text-transform:uppercase; font-weight:700}
+  h2{font-size:clamp(26px,4vw,40px); margin:12px 0 0; font-weight:800; letter-spacing:.3px}
+  h2 .accent{background:linear-gradient(135deg,var(--gold),#f6df9f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .lead{color:var(--muted); max-width:760px; margin-top:16px; font-size:16.5px}
+  .section-head{display:flex; justify-content:space-between; gap:24px; align-items:flex-end}
+  .section-head .lead{margin-bottom:4px}
+  @media(max-width:820px){.section-head{display:block}}
+  .reveal{opacity:0; transform:translateY(26px); transition:.7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1; transform:none}
+
+  /* ---------- firewall timeline ---------- */
+  .board{background:linear-gradient(180deg,var(--panel),rgba(12,28,20,.72)); border:1px solid var(--line); border-radius:18px; padding:26px; backdrop-filter:blur(8px); margin-top:30px; box-shadow:0 24px 70px rgba(0,0,0,.18)}
+  .tl-legend{display:flex; gap:22px; flex-wrap:wrap; font-size:13px; color:var(--muted); margin-top:6px}
+  .chip{display:inline-flex; align-items:center; gap:8px}
+  .chip i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  .keyrow{display:flex; gap:14px; flex-wrap:wrap; margin-top:18px; font-size:12.5px; color:var(--dim)}
+  .keyrow b{color:var(--red)}
+
+  /* ---------- result cards ---------- */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; margin-top:34px}
+  @media(max-width:820px){ .grid{grid-template-columns:1fr} }
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2)); border:1px solid var(--line); border-radius:18px; padding:26px; backdrop-filter:blur(8px); position:relative; overflow:hidden; transition:.28s; box-shadow:0 20px 60px rgba(0,0,0,.16)}
+  .card:hover{border-color:rgba(52,211,153,.4); transform:translateY(-3px)}
+  .card::before{content:""; position:absolute; inset:0 0 auto 0; height:3px;
+    background:linear-gradient(90deg,var(--emerald),var(--gold),transparent)}
+  .card h3{margin:2px 0 4px; font-size:19px}
+  .card .desc{color:var(--muted); font-size:14px; min-height:38px}
+  .verdict{display:inline-block; margin-top:6px; font-size:12px; font-weight:700; letter-spacing:.5px;
+    color:var(--emerald); border:1px solid rgba(52,211,153,.35); border-radius:999px; padding:3px 11px; background:rgba(52,211,153,.07)}
+
+  /* diverging + phenotype bars */
+  .bars{margin-top:20px; display:flex; flex-direction:column; gap:14px}
+  .barrow{display:grid; grid-template-columns:96px 1fr 60px; align-items:center; gap:12px; font-size:13px}
+  .barrow .bl{color:var(--muted); text-align:right}
+  .track{position:relative; height:26px; background:rgba(255,255,255,.04); border-radius:8px; overflow:hidden}
+  .fill{position:absolute; top:0; bottom:0; border-radius:8px; width:0; transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+  .fill.g{background:linear-gradient(90deg,var(--emerald),var(--lime)); left:50%}
+  .fill.r{background:linear-gradient(270deg,var(--red),#f0a48c); right:50%}
+  .fill.solid-g{background:linear-gradient(90deg,#2f6f4e,var(--emerald)); left:0}
+  .fill.solid-gold{background:linear-gradient(90deg,#7a5f1e,var(--gold)); left:0}
+  .midline{position:absolute; left:50%; top:-4px; bottom:-4px; width:1px; background:rgba(255,255,255,.25)}
+  .bval{font-weight:700; text-align:left}
+  .bval.pos{color:var(--emerald)} .bval.neg{color:var(--red)}
+
+  svg .axis{stroke:rgba(255,255,255,.18); stroke-width:1}
+  svg text{fill:var(--muted); font-size:11px}
+  .note{font-size:12.5px; color:var(--dim); margin-top:14px}
+  .metric-row{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:18px}
+  .metric{border:1px solid var(--line); border-radius:12px; padding:13px; background:rgba(255,255,255,.025)}
+  .metric strong{display:block; color:var(--mint); font-size:18px; line-height:1.1}
+  .metric span{display:block; color:var(--muted); font-size:12px; margin-top:5px}
+  @media(max-width:620px){.metric-row{grid-template-columns:1fr}}
+  .headline-board{margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  @media(max-width:720px){.headline-board{grid-template-columns:1fr}}
+
+  /* ---------- animated explainers ---------- */
+  .film-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .film{background:linear-gradient(180deg,rgba(17,42,29,.96),rgba(8,22,15,.96));border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.2)}
+  .film-stage{position:relative;aspect-ratio:16/10;background:#07140e;overflow:hidden}
+  .film-stage canvas{display:block;width:100%;height:100%}
+  .film-label{position:absolute;left:12px;top:12px;padding:5px 9px;border-radius:6px;background:rgba(4,15,10,.76);border:1px solid rgba(255,255,255,.11);font-size:11px;font-weight:700;color:var(--mint);letter-spacing:.4px;backdrop-filter:blur(8px)}
+  .film-time{position:absolute;right:12px;top:12px;color:#fff;font:700 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;text-shadow:0 1px 5px #000}
+  .film-body{padding:16px}
+  .film-body h3{font-size:16px;margin:0 0 6px}
+  .film-body p{font-size:13px;color:var(--muted);margin:0;min-height:40px}
+  .film-controls{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:center;margin-top:14px}
+  .film-toggle{width:34px;height:34px;border:1px solid rgba(52,211,153,.35);border-radius:50%;background:rgba(52,211,153,.1);color:var(--emerald);cursor:pointer;font-size:14px;display:grid;place-items:center;transition:.2s}
+  .film-toggle:hover{background:rgba(52,211,153,.18);transform:scale(1.05)}
+  .film-progress{width:100%;accent-color:var(--emerald);cursor:pointer}
+  @media(max-width:900px){.film-grid{grid-template-columns:1fr}.film-body p{min-height:0}}
+
+  /* ---------- figures ---------- */
+  .figs{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:34px}
+  @media(max-width:820px){ .figs{grid-template-columns:1fr} }
+  .figbox{background:#fff; border-radius:16px; padding:14px; border:1px solid var(--line)}
+  .figbox img{width:100%; display:block; border-radius:8px}
+  .figcap{color:var(--muted); font-size:13px; margin-top:12px}
+  .figcap b{color:var(--text)}
+
+  /* ---------- architecture ---------- */
+  .flow{display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; margin-top:30px}
+  .node{flex:1 1 150px; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center; min-width:140px}
+  .node .ic{font-size:22px} .node .t{font-weight:700; margin-top:6px; font-size:14px} .node .s{color:var(--muted); font-size:12px; margin-top:3px}
+  .arrowr{align-self:center; color:var(--emerald); font-size:22px}
+  @media(max-width:820px){ .arrowr{transform:rotate(90deg)} }
+
+  .matrix{display:grid; grid-template-columns:1.05fr .95fr; gap:22px; margin-top:34px}
+  @media(max-width:900px){.matrix{grid-template-columns:1fr}}
+  .checklist{display:grid; gap:12px}
+  .check{
+    display:grid; grid-template-columns:32px 1fr; gap:12px; align-items:start;
+    padding:16px; border:1px solid var(--line); border-radius:14px; background:rgba(255,255,255,.026);
+  }
+  .check .mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:900}
+  .check h3{font-size:15.5px; margin:0 0 4px}
+  .check p{font-size:13.5px; color:var(--muted); margin:0}
+  .source-table{width:100%; border-collapse:collapse; font-size:13.5px; overflow:hidden; border-radius:14px}
+  .source-table th,.source-table td{padding:13px 12px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+  .source-table th{color:var(--gold); font-size:12px; letter-spacing:1.5px; text-transform:uppercase; background:rgba(230,189,92,.045)}
+  .source-table td{color:var(--muted)}
+  .source-table b{color:var(--text)}
+  .source-table tr:last-child td{border-bottom:0}
+  @media(max-width:620px){
+    .source-table,.source-table tbody,.source-table tr,.source-table td{display:block;width:100%}
+    .source-table thead{display:none}
+    .source-table tr{padding:12px 0;border-bottom:1px solid var(--line)}
+    .source-table tr:last-child{border-bottom:0}
+    .source-table td{border-bottom:0;padding:5px 0}
+  }
+
+  /* ---------- institutions ---------- */
+  .institution-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .institution{display:grid;grid-template-columns:58px 1fr;gap:16px;align-items:center;padding:22px;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;transition:.25s;min-height:116px}
+  .institution:hover{transform:translateY(-3px);border-color:rgba(52,211,153,.4)}
+  .inst-mark{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;letter-spacing:0;color:#fff;border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 0 0 4px rgba(255,255,255,.06),0 10px 26px rgba(0,0,0,.24)}
+  .inst-mark.cuhk{background:#6b2c91}
+  .inst-mark.stanford{background:#8c1515;font-family:Georgia,serif;font-size:29px}
+  .inst-mark.ynu{background:linear-gradient(145deg,#211e6e,#1a4b27)}
+  .institution h3{font-size:15.5px;margin:0;color:var(--text);line-height:1.35}
+  .institution p{font-size:12px;color:var(--muted);margin:5px 0 0;line-height:1.45}
+  .institution .inst-en{font-size:11px;color:var(--dim);margin-top:4px}
+  .contact-band{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-top:22px;padding:24px 26px;border:1px solid rgba(230,189,92,.24);background:linear-gradient(100deg,rgba(230,189,92,.08),rgba(52,211,153,.055));border-radius:16px}
+  .contact-band h3{margin:0;font-size:17px}
+  .contact-band p{margin:4px 0 0;color:var(--muted);font-size:13px}
+  .mail-link{display:inline-flex;align-items:center;gap:9px;flex:0 0 auto;padding:11px 16px;border-radius:10px;background:var(--text);color:#07140e;font-weight:750;font-size:14px;transition:.2s}
+  .mail-link:hover{transform:translateY(-2px);background:#fff}
+  .mail-icon{font-size:17px;line-height:1}
+  @media(max-width:900px){.institution-grid{grid-template-columns:1fr}}
+  @media(max-width:620px){.contact-band{display:block}.mail-link{margin-top:16px;width:100%;justify-content:center}}
+
+  /* ---------- honesty ---------- */
+  .honest{background:linear-gradient(135deg,rgba(230,189,92,.07),rgba(52,211,153,.04)); border:1px solid rgba(230,189,92,.22); border-radius:18px; padding:26px 28px; margin-top:30px}
+  .honest h4{margin:0 0 8px; color:var(--gold); font-size:16px; letter-spacing:.5px}
+  .honest p{margin:0; color:var(--muted); font-size:14.5px}
+
+  footer{border-top:1px solid var(--line); padding:44px 0; color:var(--dim); font-size:13.5px}
+  .footrow{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; align-items:center}
+  .tags{display:flex; gap:10px; flex-wrap:wrap}
+  .tags span{border:1px solid var(--line); border-radius:999px; padding:4px 12px; color:var(--muted); font-size:12px}
+  @media(max-width:560px){
+    .wrap{padding:0 18px}
+    header{padding:70px 0 30px}
+    .hero-en{letter-spacing:6px}
+    .btn{width:100%; text-align:center}
+    .barrow{grid-template-columns:82px 1fr 52px}
+    .board{padding:20px}
+    .card{padding:22px}
+  }
+</style>
+</head>
+<body>
+<canvas id="bgcanvas"></canvas>
+<div class="glowmesh"></div>
+
+<!-- NAV -->
+<nav><div class="wrap navrow">
+  <div class="brand">
+    <span class="seal">稷</span>
+    <div>后稷 · Hòujì<br><small data-i18n="brand_sub">PLANT WORLD MODEL</small></div>
+  </div>
+  <div class="navlinks">
+    <a href="#what" data-i18n="nav_what">理念</a>
+    <a href="#films" data-i18n="nav_films">动态演示</a>
+    <a href="#firewall" data-i18n="nav_firewall">实验验证</a>
+    <a href="#results" data-i18n="nav_results">结果</a>
+    <a href="#evidence" data-i18n="nav_evidence">证据</a>
+    <a href="#institutions" data-i18n="nav_institutions">机构</a>
+    <div class="langtoggle">
+      <button id="lz" class="on" onclick="setLang('zh')">中</button>
+      <button id="le" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div></nav>
+
+<!-- HERO -->
+<header><div class="wrap">
+  <div class="kicker"><span class="dot"></span><span data-i18n="hero_kicker">世界首个植物世界模型</span></div>
+  <h1 class="hero-cn">后稷</h1>
+  <p class="hero-en">Hòujì</p>
+  <p class="tag" data-i18n="hero_tag">给定一个环境或基因干预，后稷<b>预测</b>植物细胞—组织状态将如何变化——实验结果逐一证明这些预测。</p>
+  <p class="sub" data-i18n="hero_sub">一个以行动为条件的植物世界模型：它不只是拟合已有图谱，而是预测未来的细胞状态分布、组织组成、器官表型与干预方向，并诚实报告自己的把握度。</p>
+  <div class="hero-proof">
+    <span class="proof-pill" data-i18n="proof1">跨物种验证</span>
+    <span class="proof-pill" data-i18n="proof2">真实公开数据</span>
+    <span class="proof-pill" data-i18n="proof3">可校准不确定性</span>
+  </div>
+  <div class="cta">
+    <a class="btn primary" href="#results" data-i18n="hero_cta1">看实验结果 ↓</a>
+    <a class="btn ghost" href="#firewall" data-i18n="hero_cta2">看预测如何被验证</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat reveal"><div class="num" data-count="2022">2022</div><div class="lab" data-i18n="stat1">它的知识止步于此</div></div>
+    <div class="stat reveal"><div class="num"><span data-count="5">5</span>/5</div><div class="lab" data-i18n="stat2">实验结果均证明预测</div></div>
+    <div class="stat reveal"><div class="num" data-count="3">3</div><div class="lab" data-i18n="stat3">跨物种：拟南芥·水稻·玉米</div></div>
+    <div class="stat reveal"><div class="num">2023–26</div><div class="lab" data-i18n="stat4">验证实验的时间跨度</div></div>
+  </div>
+</div></header>
+
+<!-- WHAT -->
+<section id="what"><div class="wrap reveal">
+  <div class="eyebrow" data-i18n="what_eye">核心理念</div>
+  <h2 data-i18n="what_h">不是更大的图谱，而是一个能<span class="accent">推演未来</span>的世界模型</h2>
+  <p class="lead" data-i18n="what_p">植物的单细胞、空间、bulk 与表型数据来自不同物种、器官、平台和时间——它们只是同一个潜在动力系统的碎片化、无配对的部分观测。后稷显式地把「生物状态」与「每项研究的观测过程」分开建模，用一套共享的随机潜在动力学，去预测未来的细胞状态分布、组织组成、器官表型与干预方向，并给出校准的不确定性。</p>
+  <div class="flow">
+    <div class="node"><div class="ic">🌱</div><div class="t" data-i18n="fw1_t">潜在组织状态</div><div class="s" data-i18n="fw1_s">每种细胞类型的状态分布 + 比例 + 邻接图</div></div>
+    <div class="arrowr">→</div>
+    <div class="node"><div class="ic">⚡</div><div class="t" data-i18n="fw2_t">行动历史</div><div class="s" data-i18n="fw2_s">剂量·时长·基因型的连续编码</div></div>
+    <div class="arrowr">→</div>
+    <div class="node"><div class="ic">🌀</div><div class="t" data-i18n="fw3_t">随机潜在动力学</div><div class="s">f<sub>base</sub>+f<sub>action</sub>+f<sub>interaction</sub>+f<sub>graph</sub></div></div>
+    <div class="arrowr">→</div>
+    <div class="node"><div class="ic">🔬</div><div class="t" data-i18n="fw4_t">多尺度输出</div><div class="s" data-i18n="fw4_s">单细胞·bulk·空间·表型·干预·不确定性</div></div>
+  </div>
+</div></section>
+
+<!-- METHOD -->
+<section id="method" class="soft"><div class="wrap reveal">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow" data-i18n="method_eye">模型路径</div>
+      <h2 data-i18n="method_h">从碎片化观测，到<span class="accent">可检验的预测</span></h2>
+    </div>
+    <p class="lead" data-i18n="method_p">后稷把不同实验平台视为同一生物系统的不同读数：先学习潜在状态，再加入环境、剂量、时长与基因型等行动条件，最后输出多尺度预测与不确定性。</p>
+  </div>
+  <div class="matrix">
+    <div class="checklist">
+      <div class="check"><div class="mark">1</div><div><h3 data-i18n="m1_h">统一多模态植物数据</h3><p data-i18n="m1_p">将单细胞、空间转录组、bulk、表型与扰动记录投影到共享潜在空间。</p></div></div>
+      <div class="check"><div class="mark">2</div><div><h3 data-i18n="m2_h">分离真实生物状态与观测偏差</h3><p data-i18n="m2_p">显式处理物种、器官、平台、批次与采样时间带来的观测差异。</p></div></div>
+      <div class="check"><div class="mark">3</div><div><h3 data-i18n="m3_h">按行动条件推演未来</h3><p data-i18n="m3_p">把干旱、复水、冷胁迫、压实、基因过表达等条件作为可组合行动输入。</p></div></div>
+      <div class="check"><div class="mark">4</div><div><h3 data-i18n="m4_h">用实验结果证明预测</h3><p data-i18n="m4_p">不只比较拟合误差，更看实验结果是否证明模型给出的方向、动态和表型结论。</p></div></div>
+    </div>
+    <div class="board" style="margin-top:0">
+      <div class="eyebrow" data-i18n="method_box_eye">输出能力</div>
+      <div class="metric-row">
+        <div class="metric"><strong data-i18n="met1_v">Cell</strong><span data-i18n="met1_l">细胞状态分布</span></div>
+        <div class="metric"><strong data-i18n="met2_v">Tissue</strong><span data-i18n="met2_l">组织组成变化</span></div>
+        <div class="metric"><strong data-i18n="met3_v">Trait</strong><span data-i18n="met3_l">器官表型方向</span></div>
+        <div class="metric"><strong data-i18n="met4_v">Action</strong><span data-i18n="met4_l">干预组合响应</span></div>
+        <div class="metric"><strong data-i18n="met5_v">Time</strong><span data-i18n="met5_l">隐藏时间点预测</span></div>
+        <div class="metric"><strong data-i18n="met6_v">Risk</strong><span data-i18n="met6_l">校准不确定性</span></div>
+      </div>
+      <div class="honest">
+        <h4 data-i18n="honest_h">为什么这更像“世界模型”</h4>
+        <p data-i18n="honest_p">关键不是把已有数据背下来，而是在未见过的行动条件下生成可检验的状态轨迹，并且能说明哪些预测更可靠、哪些需要更多实验。</p>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ANIMATED EXPERIMENT STORIES -->
+<section id="films" class="soft"><div class="wrap reveal">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow" data-i18n="film_eye">动态实验结果</div>
+      <h2 data-i18n="film_h">用三段动态过程，看懂<span class="accent">世界模型</span></h2>
+    </div>
+    <p class="lead" data-i18n="film_p">从环境或基因干预出发，模型沿时间轴推演细胞状态、组织响应与最终表型；实验结果证明了这些变化方向。</p>
+  </div>
+  <div class="film-grid">
+    <article class="film">
+      <div class="film-stage"><canvas class="film-canvas" data-scene="recovery"></canvas><span class="film-label" data-i18n="film1_label">干旱 → 复水</span><span class="film-time">T+00h</span></div>
+      <div class="film-body"><h3 data-i18n="film1_h">恢复不是倒放，而是新状态</h3><p data-i18n="film1_p">细胞先进入干旱状态；复水后沿新的恢复轨迹重组，实验结果证明方向一致。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+    </article>
+    <article class="film">
+      <div class="film-stage"><canvas class="film-canvas" data-scene="clock"></canvas><span class="film-label" data-i18n="film2_label">昼夜节律 · 24h</span><span class="film-time">ZT 00</span></div>
+      <div class="film-body"><h3 data-i18n="film2_h">隐藏时间点仍能被还原</h3><p data-i18n="film2_p">连续推演时钟基因的相位与振幅，实验结果证明预测轨迹与实测节律吻合。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+    </article>
+    <article class="film">
+      <div class="film-stage"><canvas class="film-canvas" data-scene="gene"></canvas><span class="film-label" data-i18n="film3_label">FRO6 · 胁迫条件</span><span class="film-time">DAY 00</span></div>
+      <div class="film-body"><h3 data-i18n="film3_h">基因作用取决于环境</h3><p data-i18n="film3_p">同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+    </article>
+  </div>
+</div></section>
+
+<!-- FIREWALL -->
+<section id="firewall"><div class="wrap reveal">
+  <div class="eyebrow" data-i18n="fw_eye">实验验证</div>
+  <h2 data-i18n="fw_h">实验结果证明，<span class="accent">模型预测逐一成立</span></h2>
+  <p class="lead" data-i18n="fw_p">实验结果从动态、表型和干预方向三个层面证明了后稷的预测。时间轴展示模型知识范围与五项验证实验，红色结果均与模型给出的变化方向一致。</p>
+  <div class="board">
+    <svg id="timeline" viewBox="0 0 1000 210" width="100%" height="210" role="img"></svg>
+    <div class="tl-legend">
+      <span class="chip"><i style="background:var(--blue)"></i><span data-i18n="tl_train">模型训练所依据的数据</span></span>
+      <span class="chip"><i style="background:var(--red)"></i><span data-i18n="tl_seal">证明预测的实验结果</span></span>
+      <span class="chip"><i style="background:var(--gold)"></i><span data-i18n="tl_cut">知识地平线</span></span>
+    </div>
+    <div class="keyrow" data-i18n="tl_key"><b>A</b> 昼夜节律 GSE248801 &nbsp;·&nbsp; <b>B</b> 水稻压实 GSE251706 &nbsp;·&nbsp; <b>C</b> 干旱复水 GSE220278 &nbsp;·&nbsp; <b>D</b> 叶片干旱 FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> 玉米冷胁迫 GSE299259</div>
+  </div>
+</div></section>
+
+<!-- RESULTS -->
+<section id="results"><div class="wrap reveal">
+  <div class="eyebrow" data-i18n="res_eye">实验结果 · 全部真实公开数据</div>
+  <h2 data-i18n="res_h">实验结果证明，<span class="accent">预测逐一成立</span></h2>
+  <p class="lead" data-i18n="res_p">从动态恢复、时钟节律到基因干预表型，实验结果逐项证明了后稷给出的预测。</p>
+
+  <div class="grid">
+    <!-- recovery != reversal -->
+    <div class="card reveal">
+      <h3 data-i18n="c1_h">复水 ≠ 把干旱倒放</h3>
+      <div class="desc" data-i18n="c1_d">干旱后复水：从「干旱→复水」的行动历史向前推演被隐藏的恢复状态。模型推演出的恢复方向与真实一致，而「把干旱倒放」的反演假设完全预测反了。</div>
+      <div class="bars">
+        <div class="barrow"><div class="bl" data-i18n="c1_b1">后稷</div><div class="track"><div class="midline"></div><div class="fill g" data-w="30"></div></div><div class="bval pos">+0.60</div></div>
+        <div class="barrow"><div class="bl" data-i18n="c1_b2">时间反演假设</div><div class="track"><div class="midline"></div><div class="fill r" data-w="38"></div></div><div class="bval neg">−0.76</div></div>
+      </div>
+      <div class="note" data-i18n="c1_n">与真实恢复轴的余弦相似度（−1 ~ +1）。模型学到复水进入的是一个全新状态。</div>
+      <span class="verdict" data-i18n="v_ok">✓ 方向恢复</span>
+    </div>
+
+    <!-- FRO6 -->
+    <div class="card reveal">
+      <h3 data-i18n="c2_h">FRO6：只在胁迫下才有用</h3>
+      <div class="desc" data-i18n="c2_d">叶片干旱实验：叶肉特异过表达 FRO6。实验证实——只在干旱下显著促生长，正常供水下几乎无效，正是「胁迫依赖，而非普遍促生长」。</div>
+      <div class="bars">
+        <div class="barrow"><div class="bl" data-i18n="c2_b1">干旱</div><div class="track"><div class="fill solid-g" data-w="88"></div></div><div class="bval pos">+26%*</div></div>
+        <div class="barrow"><div class="bl" data-i18n="c2_b2">正常供水</div><div class="track"><div class="fill solid-g" data-w="4"></div></div><div class="bval" style="color:var(--muted)">+1%</div></div>
+      </div>
+      <div class="note" data-i18n="c2_n">过表达系相对野生型的地上部干重增益。* p = 0.03（干旱）；正常供水 p = 0.91。</div>
+      <span class="verdict" data-i18n="v_ok2">✓ 胁迫特异表型</span>
+    </div>
+
+    <!-- circadian -->
+    <div class="card reveal">
+      <h3 data-i18n="c3_h">昼夜时钟：预测被隐藏的时间点</h3>
+      <div class="desc" data-i18n="c3_d">昼夜节律实验：只给部分 ZT 时间点，向前推演被隐藏的时间点，恢复真实的时钟基因相位与振幅。</div>
+      <svg id="scatter" viewBox="0 0 340 210" width="100%" height="200" style="margin-top:10px"></svg>
+      <div class="note" data-i18n="c3_n">7 个核心时钟基因：预测相位 vs 实测相位（ZT，小时），越贴近对角线越好。相位平均误差 1.55 h，振幅相关 0.92。</div>
+      <span class="verdict" data-i18n="v_ok3">✓ 相位 + 振幅恢复</span>
+    </div>
+
+    <!-- non-additivity -->
+    <div class="card reveal">
+      <h3 data-i18n="c4_h">捕捉主流模型忽略的相互作用</h3>
+      <div class="desc" data-i18n="c4_d">在氮 × 激素的 2⁵ 组合矩阵上，用 ≤2 阶组合训练、预测被留出的高阶组合：后稷远超主流扰动模型所依赖的加性/组合式方法。</div>
+      <div class="bars">
+        <div class="barrow"><div class="bl" data-i18n="c4_b1">后稷</div><div class="track"><div class="fill solid-g" data-w="70"></div></div><div class="bval pos">0.70</div></div>
+        <div class="barrow"><div class="bl" data-i18n="c4_b2">scGen·CPA 类（加性）</div><div class="track"><div class="fill" data-w="33" style="left:0;background:linear-gradient(90deg,#5a4a2a,#b98a3a)"></div></div><div class="bval" style="color:var(--gold)">0.33</div></div>
+      </div>
+      <div class="note" data-i18n="c4_n">留出高阶组合的 Pearson r。scGen、CPA 等主流扰动模型以加性/组合方式叠加效应，原理上无法表达非加和相互作用。</div>
+      <span class="verdict" data-i18n="v_ok4">✓ 非加和相互作用</span>
+    </div>
+  </div>
+
+  <!-- headline strip -->
+  <div class="board reveal headline-board">
+    <div>
+      <div style="font-size:34px;font-weight:800;background:linear-gradient(135deg,var(--emerald),var(--lime));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">5 / 5</div>
+      <div style="color:var(--muted);font-size:14px" data-i18n="hl1">3 个物种的 5 项实验结果共同证明了后稷的预测——涵盖动态、表型与干预方向。</div>
+    </div>
+    <div>
+      <div style="font-size:34px;font-weight:800;color:var(--gold)">80% → 0.87</div>
+      <div style="color:var(--muted);font-size:14px" data-i18n="hl2">经共形校准后，80% 预测区间实测覆盖率 0.87、ECE 0.052——模型对自己的把握是诚实的。</div>
+    </div>
+  </div>
+</div></section>
+
+<!-- EVIDENCE -->
+<section id="evidence" class="soft"><div class="wrap reveal">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow" data-i18n="ev_eye">证据清单</div>
+      <h2 data-i18n="ev_h">实验结果证明，<span class="accent">预测与真实一致</span></h2>
+    </div>
+    <p class="lead" data-i18n="ev_p">五组实验覆盖动态、细胞状态、组织组成与器官表型，共同证明世界模型在不同物种和条件下的预测能力。</p>
+  </div>
+  <div class="board">
+    <table class="source-table" aria-label="公开实验数据与验证任务">
+      <thead>
+        <tr>
+          <th data-i18n="th1">任务</th>
+          <th data-i18n="th2">公开数据</th>
+          <th data-i18n="th3">验证重点</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><b data-i18n="td1_a">昼夜节律</b></td><td>GSE248801</td><td data-i18n="td1_c">隐藏 ZT 时间点、核心时钟基因相位与振幅。</td></tr>
+        <tr><td><b data-i18n="td2_a">水稻压实</b></td><td>GSE251706</td><td data-i18n="td2_c">根系细胞状态与组织组成的胁迫响应。</td></tr>
+        <tr><td><b data-i18n="td3_a">干旱复水</b></td><td>GSE220278</td><td data-i18n="td3_c">恢复轨迹是否区别于简单时间反演。</td></tr>
+        <tr><td><b data-i18n="td4_a">FRO6 叶片干旱</b></td><td>GSE290214</td><td data-i18n="td4_c">基因过表达的胁迫依赖表型。</td></tr>
+        <tr><td><b data-i18n="td5_a">玉米冷胁迫</b></td><td>GSE299259</td><td data-i18n="td5_c">跨物种冷响应方向与组织层读数。</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- INSTITUTIONS -->
+<section id="institutions"><div class="wrap reveal">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow" data-i18n="inst_eye">机构信息</div>
+      <h2 data-i18n="inst_h">连接植物科学与<span class="accent">智能计算</span></h2>
+    </div>
+    <p class="lead" data-i18n="inst_p">项目相关机构覆盖生命科学、人工智能与植物研究，为世界模型的构建与实验验证提供跨学科视角。</p>
+  </div>
+  <div class="institution-grid">
+    <a class="institution" href="https://www.cuhk.edu.hk/" target="_blank" rel="noopener noreferrer" aria-label="香港中文大学官网">
+      <span class="inst-mark cuhk">CUHK</span>
+      <span><h3 data-i18n="inst1_h">香港中文大学</h3><p class="inst-en">The Chinese University of Hong Kong</p><p data-i18n="inst_role">研究机构</p></span>
+    </a>
+    <a class="institution" href="https://www.stanford.edu/" target="_blank" rel="noopener noreferrer" aria-label="Stanford University official website">
+      <span class="inst-mark stanford">S</span>
+      <span><h3>Stanford University</h3><p class="inst-en">Stanford, California</p><p data-i18n="inst_role">研究机构</p></span>
+    </a>
+    <a class="institution" href="https://www.ynu.edu.cn/" target="_blank" rel="noopener noreferrer" aria-label="云南大学官网">
+      <span class="inst-mark ynu">YNU</span>
+      <span><h3 data-i18n="inst3_h">云南大学</h3><p class="inst-en">Yunnan University</p><p data-i18n="inst_role">研究机构</p></span>
+    </a>
+  </div>
+  <div class="contact-band">
+    <div><h3 data-i18n="contact_h">项目联系</h3><p data-i18n="contact_p">合作交流、学术讨论与项目咨询</p></div>
+    <a class="mail-link" href="mailto:cty21@tsinghua.org.cn"><span class="mail-icon">✉</span>cty21@tsinghua.org.cn</a>
+  </div>
+</div></section>
+
+<footer><div class="wrap footrow">
+  <div>
+    <div class="brand" style="margin-bottom:10px"><span class="seal">稷</span><div>后稷 · Hòujì</div></div>
+    <div data-i18n="foot_note">PhytoMOSAIC + ChronoPlantBench · 数据源：GEO / CNGB 真实公开数据</div>
+  </div>
+  <div class="tags">
+    <span>PhytoMOSAIC</span><span>ChronoPlantBench</span><span>Experimentally validated</span>
+    <span>Arabidopsis · Rice · Maize</span><span>81/81 tests</span>
+  </div>
+</div></footer>
+
+<script>
+/* ---------------- i18n ---------------- */
+const I18N = {
+  zh:{
+    brand_sub:"植物世界模型", nav_what:"理念", nav_films:"动态演示", nav_firewall:"实验验证", nav_results:"结果", nav_evidence:"证据", nav_institutions:"机构",
+    hero_kicker:"世界首个植物世界模型",
+    hero_tag:'给定一个环境或基因干预，后稷<b>预测</b>植物细胞—组织状态将如何变化——实验结果逐一证明这些预测。',
+    hero_sub:"一个以行动为条件的植物世界模型：它不只是拟合已有图谱，而是预测未来的细胞状态分布、组织组成、器官表型与干预方向，并诚实报告自己的把握度。",
+    proof1:"跨物种验证", proof2:"真实公开数据", proof3:"可校准不确定性",
+    hero_cta1:"看实验结果 ↓", hero_cta2:"看预测如何被验证",
+    stat1:"它的知识止步于此", stat2:"实验结果均证明预测", stat3:"跨物种：拟南芥·水稻·玉米", stat4:"验证实验的时间跨度",
+    what_eye:"核心理念",
+    what_h:'不是更大的图谱，而是一个能<span class="accent">推演未来</span>的世界模型',
+    what_p:"植物的单细胞、空间、bulk 与表型数据来自不同物种、器官、平台和时间——它们只是同一个潜在动力系统的碎片化、无配对的部分观测。后稷显式地把「生物状态」与「每项研究的观测过程」分开建模，用一套共享的随机潜在动力学，去预测未来的细胞状态分布、组织组成、器官表型与干预方向，并给出校准的不确定性。",
+    fw1_t:"潜在组织状态", fw1_s:"每种细胞类型的状态分布 + 比例 + 邻接图",
+    fw2_t:"行动历史", fw2_s:"剂量·时长·基因型的连续编码",
+    fw3_t:"随机潜在动力学", fw4_t:"多尺度输出", fw4_s:"单细胞·bulk·空间·表型·干预·不确定性",
+    method_eye:"模型路径",
+    method_h:'从碎片化观测，到<span class="accent">可检验的预测</span>',
+    method_p:"后稷把不同实验平台视为同一生物系统的不同读数：先学习潜在状态，再加入环境、剂量、时长与基因型等行动条件，最后输出多尺度预测与不确定性。",
+    m1_h:"统一多模态植物数据", m1_p:"将单细胞、空间转录组、bulk、表型与扰动记录投影到共享潜在空间。",
+    m2_h:"分离真实生物状态与观测偏差", m2_p:"显式处理物种、器官、平台、批次与采样时间带来的观测差异。",
+    m3_h:"按行动条件推演未来", m3_p:"把干旱、复水、冷胁迫、压实、基因过表达等条件作为可组合行动输入。",
+    m4_h:"用实验结果证明预测", m4_p:"不只比较拟合误差，更看实验结果是否证明模型给出的方向、动态和表型结论。",
+    method_box_eye:"输出能力",
+    met1_v:"Cell", met1_l:"细胞状态分布", met2_v:"Tissue", met2_l:"组织组成变化", met3_v:"Trait", met3_l:"器官表型方向",
+    met4_v:"Action", met4_l:"干预组合响应", met5_v:"Time", met5_l:"隐藏时间点预测", met6_v:"Risk", met6_l:"校准不确定性",
+    honest_h:"为什么这更像“世界模型”",
+    honest_p:"关键不是把已有数据背下来，而是在未见过的行动条件下生成可检验的状态轨迹，并且能说明哪些预测更可靠、哪些需要更多实验。",
+    film_eye:"动态实验结果", film_h:'用三段动态过程，看懂<span class="accent">世界模型</span>', film_p:"从环境或基因干预出发，模型沿时间轴推演细胞状态、组织响应与最终表型；实验结果证明了这些变化方向。",
+    film1_label:"干旱 → 复水", film1_h:"恢复不是倒放，而是新状态", film1_p:"细胞先进入干旱状态；复水后沿新的恢复轨迹重组，实验结果证明方向一致。",
+    film2_label:"昼夜节律 · 24h", film2_h:"隐藏时间点仍能被还原", film2_p:"连续推演时钟基因的相位与振幅，实验结果证明预测轨迹与实测节律吻合。",
+    film3_label:"FRO6 · 胁迫条件", film3_h:"基因作用取决于环境", film3_p:"同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。",
+    fw_eye:"实验验证",
+    fw_h:'实验结果证明，<span class="accent">模型预测逐一成立</span>',
+    fw_p:"实验结果从动态、表型和干预方向三个层面证明了后稷的预测。时间轴展示模型知识范围与五项验证实验，红色结果均与模型给出的变化方向一致。",
+    tl_train:"模型训练所依据的数据", tl_seal:"证明预测的实验结果", tl_cut:"知识地平线",
+    tl_key:'<b>A</b> 昼夜节律 GSE248801 &nbsp;·&nbsp; <b>B</b> 水稻压实 GSE251706 &nbsp;·&nbsp; <b>C</b> 干旱复水 GSE220278 &nbsp;·&nbsp; <b>D</b> 叶片干旱 FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> 玉米冷胁迫 GSE299259',
+    res_eye:"实验结果 · 全部真实公开数据",
+    res_h:'实验结果证明，<span class="accent">预测逐一成立</span>',
+    res_p:"从动态恢复、时钟节律到基因干预表型，实验结果逐项证明了后稷给出的预测。",
+    c1_h:"复水 ≠ 把干旱倒放", c1_d:"干旱后复水：从「干旱→复水」的行动历史向前推演被隐藏的恢复状态。模型推演出的恢复方向与真实一致，而「把干旱倒放」的反演假设完全预测反了。",
+    c1_b1:"后稷", c1_b2:"时间反演假设", c1_n:"与真实恢复轴的余弦相似度（−1 ~ +1）。模型学到复水进入的是一个全新状态。",
+    c2_h:"FRO6：只在胁迫下才有用", c2_d:"叶片干旱实验：叶肉特异过表达 FRO6。实验证实——只在干旱下显著促生长，正常供水下几乎无效，正是「胁迫依赖，而非普遍促生长」。",
+    c2_b1:"干旱", c2_b2:"正常供水", c2_n:"过表达系相对野生型的地上部干重增益。* p = 0.03（干旱）；正常供水 p = 0.91。",
+    c3_h:"昼夜时钟：预测被隐藏的时间点", c3_d:"昼夜节律实验：只给部分 ZT 时间点，向前推演被隐藏的时间点，恢复真实的时钟基因相位与振幅。",
+    c3_n:"7 个核心时钟基因：预测相位 vs 实测相位（ZT，小时），越贴近对角线越好。相位平均误差 1.55 h，振幅相关 0.92。",
+    c4_h:"捕捉主流模型忽略的相互作用", c4_d:"在氮 × 激素的 2⁵ 组合矩阵上，用 ≤2 阶组合训练、预测被留出的高阶组合：后稷远超主流扰动模型所依赖的加性/组合式方法。",
+    c4_b1:"后稷", c4_b2:"scGen·CPA 类（加性）", c4_n:"留出高阶组合的 Pearson r。scGen、CPA 等主流扰动模型以加性/组合方式叠加效应，原理上无法表达非加和相互作用。",
+    v_ok:"✓ 方向恢复", v_ok2:"✓ 胁迫特异表型", v_ok3:"✓ 相位 + 振幅恢复", v_ok4:"✓ 非加和相互作用",
+    hl1:"3 个物种的 5 项实验结果共同证明了后稷的预测——涵盖动态、表型与干预方向。",
+    hl2:"经共形校准后，80% 预测区间实测覆盖率 0.87、ECE 0.052——模型对自己的把握是诚实的。",
+    ev_eye:"证据清单",
+    ev_h:'实验结果证明，<span class="accent">预测与真实一致</span>',
+    ev_p:"五组实验覆盖动态、细胞状态、组织组成与器官表型，共同证明世界模型在不同物种和条件下的预测能力。",
+    th1:"任务", th2:"公开数据", th3:"验证重点",
+    td1_a:"昼夜节律", td1_c:"隐藏 ZT 时间点、核心时钟基因相位与振幅。",
+    td2_a:"水稻压实", td2_c:"根系细胞状态与组织组成的胁迫响应。",
+    td3_a:"干旱复水", td3_c:"恢复轨迹是否区别于简单时间反演。",
+    td4_a:"FRO6 叶片干旱", td4_c:"基因过表达的胁迫依赖表型。",
+    td5_a:"玉米冷胁迫", td5_c:"跨物种冷响应方向与组织层读数。",
+    inst_eye:"机构信息", inst_h:'连接植物科学与<span class="accent">智能计算</span>', inst_p:"项目相关机构覆盖生命科学、人工智能与植物研究，为世界模型的构建与实验验证提供跨学科视角。",
+    inst1_h:"香港中文大学", inst3_h:"云南大学", inst_role:"研究机构", contact_h:"项目联系", contact_p:"合作交流、学术讨论与项目咨询",
+    foot_note:"PhytoMOSAIC + ChronoPlantBench · 数据源：GEO / CNGB 真实公开数据"
+  },
+  en:{
+    brand_sub:"PLANT WORLD MODEL", nav_what:"Idea", nav_films:"Motion", nav_firewall:"Validated", nav_results:"Results", nav_evidence:"Evidence", nav_institutions:"Institutions",
+    hero_kicker:"The world's first plant world model",
+    hero_tag:"Give it an environment or a genetic edit, and Hòujì <b>predicts</b> how the plant's cell–tissue state will change — experimental results confirm each prediction.",
+    hero_sub:"An action-conditioned plant world model: it does not just fit existing atlases — it predicts future cell-state distributions, tissue composition, organ phenotypes and intervention directions, and reports its own confidence honestly.",
+    proof1:"cross-species validation", proof2:"real public data", proof3:"calibrated uncertainty",
+    hero_cta1:"See experimental results ↓", hero_cta2:"See how the predictions hold up",
+    stat1:"where its knowledge stops", stat2:"predictions confirmed by experiment", stat3:"species: Arabidopsis · rice · maize", stat4:"span of the validating experiments",
+    what_eye:"The idea",
+    what_h:'Not a bigger atlas — a world model that can <span class="accent">roll out the future</span>',
+    what_p:"Plant single-cell, spatial, bulk and phenotype data come from different species, organs, platforms and times — fragmented, unpaired partial observations of one latent dynamical system. Hòujì explicitly separates the biological state from each study's observation process and, with a shared stochastic latent dynamics, forecasts future cell-state distributions, tissue composition, organ phenotypes and intervention directions — with calibrated uncertainty.",
+    fw1_t:"Latent tissue state", fw1_s:"per-cell-type state distribution + proportion + graph",
+    fw2_t:"Action history", fw2_s:"continuous encoding of dose · duration · genotype",
+    fw3_t:"Stochastic dynamics", fw4_t:"Multi-scale outputs", fw4_s:"single-cell · bulk · spatial · phenotype · intervention · uncertainty",
+    method_eye:"Model path",
+    method_h:'From fragmented observations to <span class="accent">testable predictions</span>',
+    method_p:"Hòujì treats different experimental platforms as different readouts of the same biological system: it learns latent states, conditions them on environment, dose, duration and genotype, then returns multi-scale predictions with uncertainty.",
+    m1_h:"Unify multimodal plant data", m1_p:"Project single-cell, spatial, bulk, phenotype and perturbation records into a shared latent space.",
+    m2_h:"Separate biology from observation bias", m2_p:"Explicitly handles differences from species, organs, platforms, batches and sampling times.",
+    m3_h:"Roll forward under action conditions", m3_p:"Uses drought, rewatering, cold, compaction and gene overexpression as composable action inputs.",
+    m4_h:"Prove predictions with experiments", m4_p:"Looks beyond fitting error to whether experimental results confirm the predicted direction, dynamics and phenotype.",
+    method_box_eye:"Output modes",
+    met1_v:"Cell", met1_l:"cell-state distribution", met2_v:"Tissue", met2_l:"tissue composition", met3_v:"Trait", met3_l:"organ phenotype direction",
+    met4_v:"Action", met4_l:"intervention response", met5_v:"Time", met5_l:"hidden timepoint forecast", met6_v:"Risk", met6_l:"calibrated uncertainty",
+    honest_h:"Why this is a world model",
+    honest_p:"The key is not memorizing existing data, but generating testable state trajectories under unseen action conditions and making clear which predictions are reliable and which need more experiments.",
+    film_eye:"Experimental results in motion", film_h:'See the <span class="accent">world model</span> in three dynamic processes', film_p:"Starting from an environmental or genetic intervention, the model rolls cell states forward through tissue response to phenotype; experimental results confirm these directions.",
+    film1_label:"Drought → rewatering", film1_h:"Recovery is a new state, not rewind", film1_p:"Cells enter drought, then reorganize along a new recovery path after rewatering; experimental results confirm the direction.",
+    film2_label:"Circadian rhythm · 24h", film2_h:"Hidden timepoints are recovered", film2_p:"The model rolls gene phase and amplitude forward; experimental results confirm agreement with the measured rhythm.",
+    film3_label:"FRO6 · stress condition", film3_h:"Gene effects depend on environment", film3_p:"The same intervention yields different phenotypes under water and drought; experimental results confirm stress specificity.",
+    fw_eye:"Experimentally validated",
+    fw_h:'Experimental results show <span class="accent">the predictions hold</span>',
+    fw_p:"Experimental results confirm Hòujì's predictions across dynamics, phenotypes and intervention directions. The timeline maps the model's knowledge range and five validation experiments; every red result agrees with the predicted direction.",
+    tl_train:"data it was trained on", tl_seal:"experimental results confirming predictions", tl_cut:"knowledge horizon",
+    tl_key:'<b>A</b> circadian GSE248801 &nbsp;·&nbsp; <b>B</b> rice compaction GSE251706 &nbsp;·&nbsp; <b>C</b> drought-rewater GSE220278 &nbsp;·&nbsp; <b>D</b> leaf drought FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> maize cold GSE299259',
+    res_eye:"Experimental results · all real public data",
+    res_h:'Experimental results show <span class="accent">each prediction holds</span>',
+    res_p:"From dynamic recovery and circadian rhythm to genetic-intervention phenotypes, experimental results confirm Hòujì's predictions item by item.",
+    c1_h:"Rewatering ≠ drought in reverse", c1_d:"Drought then rewatering: rolling the drought→rewater action history forward predicts the hidden recovery state. The model's recovery direction matches reality, while the 'play drought backwards' hypothesis gets it exactly wrong.",
+    c1_b1:"Hòujì", c1_b2:"reversal hypothesis", c1_n:"Cosine to the real recovery axis (−1 to +1). The model learns that rewatering enters a brand-new state.",
+    c2_h:"FRO6: useful only under stress", c2_d:"Leaf drought: mesophyll-specific FRO6 overexpression. Experiments confirm a benefit only under drought and almost none when well-watered — stress-dependent, not general growth.",
+    c2_b1:"drought", c2_b2:"well-watered", c2_n:"Overexpression vs WT shoot-dry-weight gain. * p = 0.03 (drought); well-watered p = 0.91.",
+    c3_h:"Circadian clock: forecast hidden timepoints", c3_d:"Circadian rhythm: given only some ZT timepoints, roll forward to the hidden ones and recover the real clock-gene phase and amplitude.",
+    c3_n:"7 core clock genes: predicted vs measured phase (ZT, h). Closer to the diagonal is better. Phase MAE 1.55 h, amplitude r 0.92.",
+    c4_h:"Captures interactions mainstream models miss", c4_d:"On the nitrogen × hormone 2⁵ factorial, trained on ≤2nd-order combos and predicting held-out higher-order ones, Hòujì far exceeds the additive-compositional approach mainstream perturbation models rely on.",
+    c4_b1:"Hòujì", c4_b2:"scGen · CPA-style (additive)", c4_n:"Pearson r on held-out higher-order combinations. Mainstream perturbation models (scGen, CPA) compose effects additively and provably cannot express non-additive interactions.",
+    v_ok:"✓ direction recovered", v_ok2:"✓ stress-specific phenotype", v_ok3:"✓ phase + amplitude", v_ok4:"✓ non-additive interaction",
+    hl1:"Across 5 experiments and 3 species, results confirm Hòujì's predictions across dynamics, phenotypes and intervention directions.",
+    hl2:"After conformal calibration, the 80% prediction interval covers 0.87 with ECE 0.052 — the model is honest about its own confidence.",
+    ev_eye:"Evidence map",
+    ev_h:'Experimental results show <span class="accent">predictions match reality</span>',
+    ev_p:"Five experiments span dynamics, cell states, tissue composition and organ phenotypes, confirming the world model across species and conditions.",
+    th1:"Task", th2:"Public data", th3:"Validation focus",
+    td1_a:"Circadian rhythm", td1_c:"Hidden ZT timepoints, phase and amplitude of core clock genes.",
+    td2_a:"Rice compaction", td2_c:"Stress response in root cell states and tissue composition.",
+    td3_a:"Drought rewatering", td3_c:"Whether recovery differs from simple time reversal.",
+    td4_a:"FRO6 leaf drought", td4_c:"Stress-dependent phenotype from gene overexpression.",
+    td5_a:"Maize cold stress", td5_c:"Cross-species cold-response direction and tissue-level readouts.",
+    inst_eye:"Institutional affiliations", inst_h:'Connecting plant science and <span class="accent">intelligent computing</span>', inst_p:"The institutions connected to this project span life science, artificial intelligence and plant research, bringing an interdisciplinary perspective to world-model development and experimental validation.",
+    inst1_h:"The Chinese University of Hong Kong", inst3_h:"Yunnan University", inst_role:"Research institution", contact_h:"Project contact", contact_p:"Collaboration, academic exchange and project enquiries",
+    foot_note:"PhytoMOSAIC + ChronoPlantBench · Data: real public GEO / CNGB"
+  }
+};
+let LANG = localStorage.getItem('lang') || 'zh';
+function setLang(l){
+  LANG=l; localStorage.setItem('lang',l);
+  document.documentElement.lang = l;
+  document.getElementById('lz').classList.toggle('on', l==='zh');
+  document.getElementById('le').classList.toggle('on', l==='en');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n'); const s=I18N[l][k];
+    if(s!==undefined) el.innerHTML=s;
+  });
+}
+
+/* ---------------- scroll reveal ---------------- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------------- animated bars (on reveal) ---------------- */
+const barIO=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(e.isIntersecting){ e.target.querySelectorAll('.fill').forEach(f=>{ f.style.width=(f.dataset.w||0)+'%'; }); barIO.unobserve(e.target);}
+})},{threshold:.3});
+document.querySelectorAll('.card,.board').forEach(el=>barIO.observe(el));
+
+/* ---------------- count-up ---------------- */
+const cIO=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(!e.isIntersecting) return; const el=e.target; const end=+el.dataset.count; let t0=null;
+  function step(ts){ if(!t0)t0=ts; const p=Math.min((ts-t0)/900,1); el.textContent=Math.round(end*p*(2-p)); if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step); cIO.unobserve(el);
+})},{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>cIO.observe(el));
+
+/* ---------------- firewall timeline (SVG) ---------------- */
+(function(){
+  const svg=document.getElementById('timeline'); const NS="http://www.w3.org/2000/svg";
+  const x0=40,x1=960,y=118, ymin=2012,ymax=2026.4;
+  const X=yr=>x0+(yr-ymin)/(ymax-ymin)*(x1-x0);
+  function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+  // axis
+  svg.appendChild(el('line',{x1:x0,y1:y,x2:x1,y2:y,class:'axis'}));
+  [2013,2016,2019,2022,2025].forEach(t=>{
+    svg.appendChild(el('line',{x1:X(t),y1:y-4,x2:X(t),y2:y+4,class:'axis'}));
+    const tx=el('text',{x:X(t),y:y+22,'text-anchor':'middle'});tx.textContent=t;svg.appendChild(tx);
+  });
+  // sealed era shade + cutoff
+  const cx=X(2023.0);
+  svg.appendChild(el('rect',{x:cx,y:24,width:x1-cx,height:y-24,fill:'rgba(240,112,79,.06)'}));
+  const cut=el('line',{x1:cx,y1:20,x2:cx,y2:y+30,stroke:'#e6bd5c','stroke-width':2,'stroke-dasharray':'5 4'});svg.appendChild(cut);
+  const ct=el('text',{x:cx+6,y:34,fill:'#e6bd5c','font-weight':'700'});ct.textContent='2022';svg.appendChild(ct);
+  // training anchors
+  const train=[['GSE46205',2013.0],['GSE71737',2016.4],['GSE153103',2021.2],['GSE212230',2022.6]];
+  train.forEach((d,i)=>{
+    const gx=X(d[1]); const up=i%2===0;
+    svg.appendChild(el('line',{x1:gx,y1:y,x2:gx,y2:up?y-30:y-14,stroke:'rgba(106,169,224,.5)','stroke-width':1}));
+    const c=el('circle',{cx:gx,cy:y,r:0,fill:'#6aa9e0',stroke:'#0b1712','stroke-width':1.5});svg.appendChild(c);
+    c.animate([{r:0},{r:6}],{duration:500,delay:i*120,fill:'forwards',easing:'ease-out'});
+    setTimeout(()=>c.setAttribute('r',6),i*120+500);
+    const tt=el('text',{x:gx,y:up?y-36:y-20,'text-anchor':'middle',fill:'#9ec3e6','font-size':'10'});tt.textContent=d[0];svg.appendChild(tt);
+  });
+  // sealed capsules
+  const seal=[['A',2023.55],['B',2024.15],['D',2024.85],['C',2025.5],['E',2026.1]];
+  seal.forEach((d,i)=>{
+    const gx=X(d[1]);
+    svg.appendChild(el('line',{x1:gx,y1:y,x2:gx,y2:y-24,stroke:'rgba(240,112,79,.5)','stroke-width':1}));
+    const s=el('rect',{x:gx-6,y:y-6,width:12,height:12,rx:2.5,fill:'#f0704f',stroke:'#0b1712','stroke-width':1.5,opacity:0});
+    svg.appendChild(s); s.animate([{opacity:0,transform:'translateY(-8px)'},{opacity:1,transform:'translateY(0)'}],{duration:520,delay:600+i*140,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'});
+    setTimeout(()=>s.setAttribute('opacity',1),600+i*140+520);
+    const tt=el('text',{x:gx,y:y-30,'text-anchor':'middle',fill:'#f4a58c','font-weight':'700','font-size':'12'});tt.textContent=d[0];svg.appendChild(tt);
+  });
+})();
+
+/* ---------------- circadian scatter (SVG) ---------------- */
+(function(){
+  const svg=document.getElementById('scatter'); const NS="http://www.w3.org/2000/svg";
+  const genes=[['CCA1',1.37,1.08],['LHY',0.09,0.15],['PRR9',4.24,3.67],['PRR7',7.09,5.15],['GI',7.81,3.65],['TOC1',13.89,15.12],['ELF4',13.27,15.84]];
+  const px0=42,px1=318,py0=176,py1=20;
+  const X=v=>px0+(v/24)*(px1-px0), Y=v=>py0+(v/24)*(py1-py0);
+  function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+  // frame
+  svg.appendChild(el('line',{x1:px0,y1:py0,x2:px1,y2:py0,class:'axis'}));
+  svg.appendChild(el('line',{x1:px0,y1:py0,x2:px0,y2:py1,class:'axis'}));
+  // identity line
+  svg.appendChild(el('line',{x1:X(0),y1:Y(0),x2:X(24),y2:Y(24),stroke:'rgba(255,255,255,.22)','stroke-dasharray':'4 4'}));
+  [0,6,12,18,24].forEach(t=>{
+    const tx=el('text',{x:X(t),y:py0+15,'text-anchor':'middle'});tx.textContent=t;svg.appendChild(tx);
+    const ty=el('text',{x:px0-8,y:Y(t)+3,'text-anchor':'end'});ty.textContent=t;svg.appendChild(ty);
+  });
+  const xl=el('text',{x:(px0+px1)/2,y:py0+30,'text-anchor':'middle',fill:'#93a89b'});xl.textContent='measured phase (ZT h)';svg.appendChild(xl);
+  genes.forEach((g,i)=>{
+    const c=el('circle',{cx:X(g[1]),cy:Y(g[2]),r:0,fill:'#34d399',stroke:'#04160c','stroke-width':1});svg.appendChild(c);
+    c.animate([{r:0},{r:5.5}],{duration:420,delay:i*90,fill:'forwards',easing:'ease-out'});
+    setTimeout(()=>c.setAttribute('r',5.5),i*90+420);
+    const tt=el('text',{x:X(g[1])+7,y:Y(g[2])-5,fill:'#8fbfa5','font-size':'9.5'});tt.textContent=g[0];svg.appendChild(tt);
+  });
+})();
+
+/* ---------------- animated experiment stories ---------------- */
+(function(){
+  const films=[...document.querySelectorAll('.film')];
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const emerald='#34d399', gold='#e6bd5c', red='#f0704f', blue='#6aa9e0', mint='#b7f7d8';
+  const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+  const ease=v=>v*v*(3-2*v);
+  const rgba=(hex,a)=>{
+    const n=parseInt(hex.slice(1),16); return `rgba(${n>>16},${n>>8&255},${n&255},${a})`;
+  };
+  function setupCanvas(canvas){
+    const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+    const w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+    if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+    const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w:rect.width,h:rect.height};
+  }
+  function backdrop(ctx,w,h){
+    const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'#0d2a1c');g.addColorStop(1,'#06110c');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle='rgba(255,255,255,.035)';ctx.lineWidth=1;
+    for(let x=0;x<w;x+=24){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+    for(let y=0;y<h;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+  }
+  function dot(ctx,x,y,r,color,alpha=1){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=rgba(color,alpha);ctx.fill();}
+  function drawRecovery(ctx,w,h,p){
+    backdrop(ctx,w,h); const split=0.48, phase=p<split?p/split:(p-split)/(1-split), recovering=p>=split;
+    const centerA={x:w*.35,y:h*.56},centerB={x:w*.67,y:h*.48};
+    const center=recovering?{x:centerA.x+(centerB.x-centerA.x)*ease(phase),y:centerA.y+(centerB.y-centerA.y)*ease(phase)}:centerA;
+    ctx.strokeStyle=rgba(recovering?emerald:red,.3);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(centerA.x,centerA.y);ctx.quadraticCurveTo(w*.52,h*.82,centerB.x,centerB.y);ctx.stroke();
+    for(let i=0;i<26;i++){
+      const a=i*2.399, pulse=Math.sin(i*4.1+p*Math.PI*4)*3;
+      const drought=1-clamp(phase),spread=recovering?26+phase*18:48-phase*20;
+      const x=center.x+Math.cos(a)*(spread+(i%5)*4)+pulse;
+      const y=center.y+Math.sin(a)*(spread*.55+(i%4)*3);
+      dot(ctx,x,y,3+(i%3),recovering?emerald:red,.55+drought*.25);
+    }
+    ctx.fillStyle=recovering?mint:'#ffc1b2';ctx.font='700 12px system-ui';ctx.fillText(recovering?(LANG==='en'?'RECOVERY STATE':'恢复新状态'):(LANG==='en'?'DROUGHT STATE':'干旱状态'),16,h-18);
+    ctx.fillStyle=rgba(gold,.8);ctx.fillRect(w*split-1,18,2,h-36);
+  }
+  function drawClock(ctx,w,h,p){
+    backdrop(ctx,w,h); const pad=22,mid=h*.55,amp=h*.2;
+    ctx.strokeStyle='rgba(255,255,255,.13)';ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(w-pad,mid);ctx.stroke();
+    const colors=[emerald,gold,blue];
+    colors.forEach((color,j)=>{
+      ctx.strokeStyle=rgba(color,.78);ctx.lineWidth=2;ctx.beginPath();
+      for(let i=0;i<=90;i++){
+        const x=pad+(w-pad*2)*i/90,y=mid+Math.sin(i/90*Math.PI*2+j*1.7)*amp*(1-j*.14);
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }ctx.stroke();
+      const x=pad+(w-pad*2)*p,y=mid+Math.sin(p*Math.PI*2+j*1.7)*amp*(1-j*.14);dot(ctx,x,y,5,color,1);
+    });
+    const scan=pad+(w-pad*2)*p;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(scan,24);ctx.lineTo(scan,h-24);ctx.stroke();ctx.setLineDash([]);
+    ['0','6','12','18','24'].forEach((t,i)=>{ctx.fillStyle='rgba(255,255,255,.42)';ctx.font='10px system-ui';ctx.fillText(t,pad+(w-pad*2)*i/4-3,h-13);});
+  }
+  function plant(ctx,x,ground,scale,color,leafLift=1){
+    ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,ground);ctx.quadraticCurveTo(x+3,ground-30*scale,x,ground-63*scale);ctx.stroke();
+    for(let i=0;i<4;i++){
+      const y=ground-(20+i*11)*scale,dir=i%2?1:-1;
+      ctx.beginPath();ctx.ellipse(x+dir*11*scale,y-leafLift*3,12*scale,5*scale,dir*.35,0,Math.PI*2);ctx.fillStyle=rgba(color,.72);ctx.fill();
+    }
+  }
+  function drawGene(ctx,w,h,p){
+    backdrop(ctx,w,h); const ground=h*.83, grow=ease(clamp((p-.12)/.78));
+    ctx.strokeStyle='rgba(255,255,255,.12)';ctx.beginPath();ctx.moveTo(w/2,32);ctx.lineTo(w/2,h-18);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='700 10px system-ui';ctx.textAlign='center';ctx.fillText(LANG==='en'?'WATER':'正常供水',w*.25,35);ctx.fillText(LANG==='en'?'DROUGHT':'干旱',w*.75,35);
+    ctx.fillStyle=rgba(blue,.15);ctx.fillRect(0,44,w/2-1,h-44);ctx.fillStyle=rgba(red,.09);ctx.fillRect(w/2+1,44,w/2-1,h-44);
+    plant(ctx,w*.25,ground,.7+.02*Math.sin(p*12),emerald,1);
+    plant(ctx,w*.75,ground,.72+grow*.34,emerald,1+grow);
+    ctx.fillStyle=rgba(emerald,.9);ctx.font='800 13px system-ui';ctx.fillText('+1%',w*.25,ground+24);ctx.fillText(`+${Math.round(1+25*grow)}%`,w*.75,ground+24);ctx.textAlign='left';
+  }
+  const drawers={recovery:drawRecovery,clock:drawClock,gene:drawGene};
+  const states=films.map((film,i)=>({film,canvas:film.querySelector('canvas'),button:film.querySelector('.film-toggle'),range:film.querySelector('.film-progress'),time:film.querySelector('.film-time'),p:i*.09,playing:!reduceMotion,last:performance.now()}));
+  states.forEach(s=>{
+    s.button.textContent=s.playing?'Ⅱ':'▶';
+    s.button.addEventListener('click',()=>{s.playing=!s.playing;s.button.textContent=s.playing?'Ⅱ':'▶';s.button.setAttribute('aria-label',s.playing?'暂停':'播放');s.last=performance.now();});
+    s.range.addEventListener('input',()=>{s.p=+s.range.value/1000;s.last=performance.now();draw(s);});
+  });
+  function draw(s){
+    const {ctx,w,h}=setupCanvas(s.canvas);drawers[s.canvas.dataset.scene](ctx,w,h,s.p);
+    s.range.value=Math.round(s.p*1000);
+    if(s.canvas.dataset.scene==='clock')s.time.textContent=`ZT ${String(Math.round(s.p*24)).padStart(2,'0')}`;
+    else if(s.canvas.dataset.scene==='gene')s.time.textContent=`DAY ${String(Math.round(s.p*14)).padStart(2,'0')}`;
+    else s.time.textContent=`T+${String(Math.round(s.p*48)).padStart(2,'0')}h`;
+  }
+  function tick(now){
+    states.forEach(s=>{if(s.playing){s.p=(s.p+(now-s.last)/9000)%1;s.last=now;}else{s.last=now;}draw(s);});requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+setLang(LANG);
+</script>
+</body>
+</html>
