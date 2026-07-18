@@ -98,6 +98,8 @@
   .tag{margin:24px 0 0; max-width:650px; font-size:clamp(16px,2.4vw,21px); color:var(--text)}
   .tag b{color:var(--lime)}
   .sub{margin:14px 0 0; max-width:620px; color:#b1c4b8; font-size:15.5px}
+  .hero-equation{display:inline-flex;align-items:center;gap:12px;margin-top:22px;padding:9px 12px;border-left:2px solid var(--gold);background:rgba(3,12,8,.38);color:#c9d8cf;font:600 13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;backdrop-filter:blur(8px)}
+  .hero-equation b{color:var(--gold);font-weight:750}
   .hero-proof{
     display:flex; justify-content:flex-start; gap:10px; flex-wrap:wrap; margin:24px 0 0;
     color:#d9f5e7; font-size:13px;
@@ -240,6 +242,43 @@
   .arrowr{align-self:center; color:var(--emerald); font-size:22px}
   @media(max-width:820px){ .arrowr{transform:rotate(90deg)} }
 
+  /* ---------- world model console ---------- */
+  .world-console{margin-top:34px;border:1px solid rgba(110,231,183,.25);background:linear-gradient(145deg,rgba(7,24,16,.96),rgba(3,13,9,.98));box-shadow:0 30px 90px rgba(0,0,0,.28);overflow:hidden}
+  .console-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line);font:750 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.4px;color:var(--muted)}
+  .console-live{display:flex;align-items:center;gap:8px;color:var(--emerald)}
+  .console-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 12px var(--emerald);animation:pulse 1.8s infinite}
+  .console-equation{padding:22px 22px 18px;font:700 clamp(18px,3vw,29px)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:#eefaf3;border-bottom:1px solid var(--line)}
+  .console-equation span{color:var(--gold)}
+  .console-grid{display:grid;grid-template-columns:.88fr 1.15fr 1.15fr}
+  .console-pane{min-width:0;padding:22px;border-right:1px solid var(--line)}
+  .console-pane:last-child{border-right:0}
+  .console-label{color:var(--emerald);font:750 10.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.4px;text-transform:uppercase}
+  .state-symbol{display:flex;align-items:center;justify-content:center;width:104px;height:104px;margin:22px auto;border:1px solid rgba(52,211,153,.38);border-radius:50%;font:800 27px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff;position:relative;background:radial-gradient(circle,rgba(52,211,153,.18),rgba(52,211,153,.02) 70%)}
+  .state-symbol::before,.state-symbol::after{content:"";position:absolute;border:1px solid rgba(230,189,92,.24);border-radius:50%;animation:orbitState 7s linear infinite}
+  .state-symbol::before{inset:-10px}.state-symbol::after{inset:-22px;animation-direction:reverse;animation-duration:11s}
+  @keyframes orbitState{to{transform:rotate(360deg)}}
+  .state-lines{display:grid;gap:8px;color:var(--muted);font-size:12.5px}
+  .state-lines span{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:7px}
+  .state-lines em{font-style:normal}.state-lines b{color:#dcebe2;font-weight:650}
+  .action-switch{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:17px}
+  .action-choice{min-height:38px;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--muted);font:inherit;font-size:12px;font-weight:650;line-height:1.2;cursor:pointer;transition:.2s}
+  .action-choice:hover{border-color:rgba(52,211,153,.42);color:#fff}
+  .action-choice.on{border-color:var(--emerald);background:rgba(52,211,153,.13);color:#dff9ea;box-shadow:inset 0 -2px 0 var(--emerald)}
+  .time-control{margin-top:22px}
+  .time-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;color:var(--muted);font-size:12px}
+  .time-row strong{color:var(--gold);font:750 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+  #engineTime{width:100%;accent-color:var(--gold);cursor:pointer}
+  .future-title{margin:15px 0 13px;color:#fff;font-size:17px}
+  .future-stack{display:grid;gap:10px}
+  .future-output{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .future-output:last-child{border-bottom:0}
+  .future-output b{color:var(--gold);font:750 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase}
+  .future-output span{color:#d9e8df;font-size:12.5px;transition:opacity .18s}
+  .console-loop{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line)}
+  .loop-step{padding:13px 8px;text-align:center;color:var(--dim);font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.7px;border-right:1px solid var(--line)}
+  .loop-step:last-child{border-right:0}.loop-step strong{display:block;color:var(--mint);font-size:12px;margin-bottom:4px}
+  @media(max-width:900px){.console-grid{grid-template-columns:1fr}.console-pane{border-right:0;border-bottom:1px solid var(--line)}.console-pane:last-child{border-bottom:0}.console-loop{grid-template-columns:repeat(3,1fr)}.loop-step:nth-child(3){border-right:0}}
+
   .matrix{display:grid; grid-template-columns:1.05fr .95fr; gap:22px; margin-top:34px}
   @media(max-width:900px){.matrix{grid-template-columns:1fr}}
   .checklist{display:grid; gap:12px}
@@ -303,6 +342,7 @@
     .hero-copy{text-align:center;margin:auto}
     .hero-proof,.cta{justify-content:center}
     .tag,.sub{margin-left:auto;margin-right:auto}
+    .hero-equation{font-size:11px;text-align:left}
     .hero-en{letter-spacing:6px}
     .btn{width:100%; text-align:center}
     .barrow{grid-template-columns:82px 1fr 52px}
@@ -324,10 +364,10 @@
     <div>后稷 · Hòujì<br><small data-i18n="brand_sub">PLANT WORLD MODEL</small></div>
   </div>
   <div class="navlinks">
-    <a href="#what" data-i18n="nav_what">理念</a>
-    <a href="#films" data-i18n="nav_films">动态演示</a>
-    <a href="#firewall" data-i18n="nav_firewall">实验验证</a>
-    <a href="#results" data-i18n="nav_results">结果</a>
+    <a href="#what" data-i18n="nav_what">世界</a>
+    <a href="#films" data-i18n="nav_films">未来线</a>
+    <a href="#firewall" data-i18n="nav_firewall">验证</a>
+    <a href="#results" data-i18n="nav_results">反事实</a>
     <a href="#evidence" data-i18n="nav_evidence">证据</a>
     <a href="#institutions" data-i18n="nav_institutions">机构</a>
     <div class="langtoggle">
@@ -345,41 +385,60 @@
   <div class="kicker"><span class="dot"></span><span data-i18n="hero_kicker">世界首个植物世界模型</span></div>
   <h1 class="hero-cn">后稷</h1>
   <p class="hero-en">Hòujì</p>
-  <p class="tag" data-i18n="hero_tag">给定一个环境或基因干预，后稷<b>预测</b>植物细胞—组织状态将如何变化——实验结果逐一证明这些预测。</p>
-  <p class="sub" data-i18n="hero_sub">一个以行动为条件的植物世界模型：它不只是拟合已有图谱，而是预测未来的细胞状态分布、组织组成、器官表型与干预方向，并诚实报告自己的把握度。</p>
+  <p class="tag" data-i18n="hero_tag">给植物一个<b>现在</b>，施加一个行动，推演多个可能的未来。</p>
+  <p class="sub" data-i18n="hero_sub">后稷把碎片化的多模态观测编码为统一的植物世界状态，学习环境与基因行动如何推动世界随时间演化，再从同一潜在世界解码细胞、组织与性状层的未来。</p>
+  <div class="hero-equation"><b>WORLD MODEL</b><span>p(S<sub>t+1:T</sub> | S<sub>t</sub>, A<sub>t:T</sub>) → Cell · Tissue · Trait</span></div>
   <div class="hero-proof">
     <span class="proof-pill" data-i18n="proof1">跨物种验证</span>
     <span class="proof-pill" data-i18n="proof2">真实公开数据</span>
     <span class="proof-pill" data-i18n="proof3">可校准不确定性</span>
   </div>
   <div class="cta">
-    <a class="btn primary" href="#results" data-i18n="hero_cta1">看实验结果 ↓</a>
-    <a class="btn ghost" href="#firewall" data-i18n="hero_cta2">看预测如何被验证</a>
+    <a class="btn primary" href="#what" data-i18n="hero_cta1">进入世界推演台 ↓</a>
+    <a class="btn ghost" href="#firewall" data-i18n="hero_cta2">查看实验闭环</a>
   </div>
   </div>
 
 </div></header>
 
 <div class="stat-band"><div class="wrap"><div class="stats">
-    <div class="stat reveal"><div class="num" data-count="2022">2022</div><div class="lab" data-i18n="stat1">它的知识止步于此</div></div>
-    <div class="stat reveal"><div class="num"><span data-count="5">5</span>/5</div><div class="lab" data-i18n="stat2">实验结果均证明预测</div></div>
-    <div class="stat reveal"><div class="num" data-count="3">3</div><div class="lab" data-i18n="stat3">跨物种：拟南芥·水稻·玉米</div></div>
-    <div class="stat reveal"><div class="num">2023–26</div><div class="lab" data-i18n="stat4">验证实验的时间跨度</div></div>
+    <div class="stat reveal"><div class="num" data-count="2022">2022</div><div class="lab" data-i18n="stat1">知识封存于 2022</div></div>
+    <div class="stat reveal"><div class="num"><span data-count="5">5</span>/5</div><div class="lab" data-i18n="stat2">5 条未来线获验证</div></div>
+    <div class="stat reveal"><div class="num" data-count="3">3</div><div class="lab" data-i18n="stat3">共享动力学覆盖 3 个物种</div></div>
+    <div class="stat reveal"><div class="num">2023–26</div><div class="lab" data-i18n="stat4">未来实验跨越 2023–26</div></div>
   </div></div></div>
 
 <!-- WHAT -->
 <section id="what"><div class="wrap reveal">
-  <div class="eyebrow" data-i18n="what_eye">核心理念</div>
-  <h2 data-i18n="what_h">不是更大的图谱，而是一个能<span class="accent">推演未来</span>的世界模型</h2>
-  <p class="lead" data-i18n="what_p">植物的单细胞、空间、bulk 与表型数据来自不同物种、器官、平台和时间——它们只是同一个潜在动力系统的碎片化、无配对的部分观测。后稷显式地把「生物状态」与「每项研究的观测过程」分开建模，用一套共享的随机潜在动力学，去预测未来的细胞状态分布、组织组成、器官表型与干预方向，并给出校准的不确定性。</p>
-  <div class="flow">
-    <div class="node"><div class="ic">🌱</div><div class="t" data-i18n="fw1_t">潜在组织状态</div><div class="s" data-i18n="fw1_s">每种细胞类型的状态分布 + 比例 + 邻接图</div></div>
-    <div class="arrowr">→</div>
-    <div class="node"><div class="ic">⚡</div><div class="t" data-i18n="fw2_t">行动历史</div><div class="s" data-i18n="fw2_s">剂量·时长·基因型的连续编码</div></div>
-    <div class="arrowr">→</div>
-    <div class="node"><div class="ic">🌀</div><div class="t" data-i18n="fw3_t">随机潜在动力学</div><div class="s">f<sub>base</sub>+f<sub>action</sub>+f<sub>interaction</sub>+f<sub>graph</sub></div></div>
-    <div class="arrowr">→</div>
-    <div class="node"><div class="ic">🔬</div><div class="t" data-i18n="fw4_t">多尺度输出</div><div class="s" data-i18n="fw4_s">单细胞·bulk·空间·表型·干预·不确定性</div></div>
+  <div class="eyebrow" data-i18n="what_eye">01 · 世界模型范式</div>
+  <h2 data-i18n="what_h">不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span></h2>
+  <p class="lead" data-i18n="what_p">后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。</p>
+  <div class="world-console">
+    <div class="console-head"><span>HÒUJÌ / PLANT WORLD ENGINE</span><span class="console-live" data-i18n="console_live">LIVE ROLLOUT</span></div>
+    <div class="console-equation">p(S<sub>t+1:T</sub> | S<sub>t</sub>, <span>A<sub>t:T</sub></span>) → p(Y<sub>cell</sub>, Y<sub>tissue</sub>, Y<sub>trait</sub>)</div>
+    <div class="console-grid">
+      <div class="console-pane">
+        <div class="console-label" data-i18n="console_state">CURRENT WORLD STATE</div>
+        <div class="state-symbol">S<sub>t</sub></div>
+        <div class="state-lines"><span><em data-i18n="state1_k">细胞状态</em><b data-i18n="state1_v">分布</b></span><span><em data-i18n="state2_k">组织组成</em><b data-i18n="state2_v">比例</b></span><span><em data-i18n="state3_k">空间关系</em><b data-i18n="state3_v">邻接图</b></span></div>
+      </div>
+      <div class="console-pane">
+        <div class="console-label" data-i18n="console_action">APPLY AN ACTION</div>
+        <div class="action-switch" role="group" aria-label="行动条件">
+          <button class="action-choice on" type="button" data-action="drought" data-i18n="action1">干旱</button>
+          <button class="action-choice" type="button" data-action="rewater" data-i18n="action2">复水</button>
+          <button class="action-choice" type="button" data-action="cold" data-i18n="action3">冷胁迫</button>
+          <button class="action-choice" type="button" data-action="fro6" data-i18n="action4">FRO6 ↑</button>
+        </div>
+        <div class="time-control"><div class="time-row"><span data-i18n="console_horizon">推演时域</span><strong id="engineTimeLabel">T + 36 h</strong></div><input id="engineTime" type="range" min="6" max="72" value="36" step="6" aria-label="推演时域"></div>
+      </div>
+      <div class="console-pane">
+        <div class="console-label" data-i18n="console_future">ROLLED-OUT FUTURE</div>
+        <h3 class="future-title" id="engineFutureTitle">干旱未来线 · T + 36 h</h3>
+        <div class="future-stack"><div class="future-output"><b>Cell</b><span id="engineCell">气孔关闭 · ABA 应答增强</span></div><div class="future-output"><b>Tissue</b><span id="engineTissue">叶肉应激状态占比上升</span></div><div class="future-output"><b>Trait</b><span id="engineTrait">生长受限 · 保水优先</span></div></div>
+      </div>
+    </div>
+    <div class="console-loop"><div class="loop-step"><strong>01</strong><span data-i18n="loop1">OBSERVE</span></div><div class="loop-step"><strong>02</strong><span data-i18n="loop2">ENCODE</span></div><div class="loop-step"><strong>03</strong><span data-i18n="loop3">ACT</span></div><div class="loop-step"><strong>04</strong><span data-i18n="loop4">ROLL OUT</span></div><div class="loop-step"><strong>05</strong><span data-i18n="loop5">DECODE</span></div><div class="loop-step"><strong>06</strong><span data-i18n="loop6">CALIBRATE</span></div></div>
   </div>
 </div></section>
 
@@ -387,17 +446,17 @@
 <section id="method" class="soft"><div class="wrap reveal">
   <div class="section-head">
     <div>
-      <div class="eyebrow" data-i18n="method_eye">模型路径</div>
-      <h2 data-i18n="method_h">从碎片化观测，到<span class="accent">可检验的预测</span></h2>
+      <div class="eyebrow" data-i18n="method_eye">02 · 建立世界</div>
+      <h2 data-i18n="method_h">观察成为状态，干预成为行动，<span class="accent">未来成为分布</span></h2>
     </div>
-    <p class="lead" data-i18n="method_p">后稷把不同实验平台视为同一生物系统的不同读数：先学习潜在状态，再加入环境、剂量、时长与基因型等行动条件，最后输出多尺度预测与不确定性。</p>
+    <p class="lead" data-i18n="method_p">这不是从输入直接跳到答案。后稷先建立可持续更新的世界状态，再让行动驱动随机动力学向前运行，最终把同一条潜在轨迹解码到多个生物尺度。</p>
   </div>
   <div class="matrix">
     <div class="checklist">
-      <div class="check"><div class="mark">1</div><div><h3 data-i18n="m1_h">统一多模态植物数据</h3><p data-i18n="m1_p">将单细胞、空间转录组、bulk、表型与扰动记录投影到共享潜在空间。</p></div></div>
-      <div class="check"><div class="mark">2</div><div><h3 data-i18n="m2_h">分离真实生物状态与观测偏差</h3><p data-i18n="m2_p">显式处理物种、器官、平台、批次与采样时间带来的观测差异。</p></div></div>
-      <div class="check"><div class="mark">3</div><div><h3 data-i18n="m3_h">按行动条件推演未来</h3><p data-i18n="m3_p">把干旱、复水、冷胁迫、压实、基因过表达等条件作为可组合行动输入。</p></div></div>
-      <div class="check"><div class="mark">4</div><div><h3 data-i18n="m4_h">用实验结果证明预测</h3><p data-i18n="m4_p">不只比较拟合误差，更看实验结果是否证明模型给出的方向、动态和表型结论。</p></div></div>
+      <div class="check"><div class="mark">1</div><div><h3 data-i18n="m1_h">编码观测 · Observe → Encode</h3><p data-i18n="m1_p">将单细胞、空间转录组、bulk、表型与扰动记录映射到共享潜在坐标。</p></div></div>
+      <div class="check"><div class="mark">2</div><div><h3 data-i18n="m2_h">构成世界状态 · Build Sₜ</h3><p data-i18n="m2_p">分离真实生物状态与物种、器官、平台、批次等观测过程。</p></div></div>
+      <div class="check"><div class="mark">3</div><div><h3 data-i18n="m3_h">展开条件未来 · Roll out</h3><p data-i18n="m3_p">把干旱、复水、冷胁迫、压实与基因过表达作为可组合行动序列。</p></div></div>
+      <div class="check"><div class="mark">4</div><div><h3 data-i18n="m4_h">回到实验终点 · Decode</h3><p data-i18n="m4_p">把未来轨迹解码为可测量的动态、细胞组成、组织响应和器官表型。</p></div></div>
     </div>
     <div class="board" style="margin-top:0">
       <div class="eyebrow" data-i18n="method_box_eye">输出能力</div>
@@ -410,8 +469,8 @@
         <div class="metric"><strong data-i18n="met6_v">Risk</strong><span data-i18n="met6_l">校准不确定性</span></div>
       </div>
       <div class="honest">
-        <h4 data-i18n="honest_h">为什么这更像“世界模型”</h4>
-        <p data-i18n="honest_p">关键不是把已有数据背下来，而是在未见过的行动条件下生成可检验的状态轨迹，并且能说明哪些预测更可靠、哪些需要更多实验。</p>
+        <h4 data-i18n="honest_h">世界模型的判据</h4>
+        <p data-i18n="honest_p">同一个现在，换一个行动，就应该生成另一条自洽未来。后稷预测的是随时间演化的状态分布，并同时报告不确定性，而不是只为某个终点拟合一个答案。</p>
       </div>
     </div>
   </div>
@@ -421,10 +480,10 @@
 <section id="films" class="soft"><div class="wrap reveal">
   <div class="section-head">
     <div>
-      <div class="eyebrow" data-i18n="film_eye">动态实验结果</div>
-      <h2 data-i18n="film_h">用三段动态过程，看懂<span class="accent">世界模型</span></h2>
+      <div class="eyebrow" data-i18n="film_eye">03 · 推演未来线</div>
+      <h2 data-i18n="film_h">同一个现在，可以展开<span class="accent">多条未来</span></h2>
     </div>
-    <p class="lead" data-i18n="film_p">从环境或基因干预出发，模型沿时间轴推演细胞状态、组织响应与最终表型；实验结果证明了这些变化方向。</p>
+    <p class="lead" data-i18n="film_p">选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。</p>
   </div>
   <div class="film-grid">
     <article class="film">
@@ -445,8 +504,8 @@
 <!-- CINEMATIC SCIENCE STORIES -->
 <section id="cinema"><div class="wrap reveal">
   <div class="section-head">
-    <div><div class="eyebrow" data-i18n="cinema_eye">多尺度影像</div><h2 data-i18n="cinema_h">从组织切片，到<span class="accent">时间中的生命</span></h2></div>
-    <p class="lead" data-i18n="cinema_p">每一帧都对应世界模型中的一个尺度：细胞如何转变，组织如何恢复，节律如何穿过昼夜。</p>
+    <div><div class="eyebrow" data-i18n="cinema_eye">04 · 多尺度解码</div><h2 data-i18n="cinema_h">世界不是一张图，而是<span class="accent">一段可推进的状态历史</span></h2></div>
+    <p class="lead" data-i18n="cinema_p">同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。</p>
   </div>
   <div class="cinema-grid">
     <article class="cinema">
@@ -464,9 +523,9 @@
 
 <!-- FIREWALL -->
 <section id="firewall"><div class="wrap reveal">
-  <div class="eyebrow" data-i18n="fw_eye">实验验证</div>
-  <h2 data-i18n="fw_h">实验结果证明，<span class="accent">模型预测逐一成立</span></h2>
-  <p class="lead" data-i18n="fw_p">实验结果从动态、表型和干预方向三个层面证明了后稷的预测。时间轴展示模型知识范围与五项验证实验，红色结果均与模型给出的变化方向一致。</p>
+  <div class="eyebrow" data-i18n="fw_eye">05 · 冻结知识</div>
+  <h2 data-i18n="fw_h">先封存模型知道的过去，<span class="accent">再让未来回答</span></h2>
+  <p class="lead" data-i18n="fw_p">后稷的知识边界固定在 2022 年。时间轴右侧的五项实验发生在这一边界之后，它们检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。</p>
   <div class="board">
     <svg id="timeline" viewBox="0 0 1000 210" width="100%" height="210" role="img"></svg>
     <div class="tl-legend">
@@ -480,9 +539,9 @@
 
 <!-- RESULTS -->
 <section id="results"><div class="wrap reveal">
-  <div class="eyebrow" data-i18n="res_eye">实验结果 · 全部真实公开数据</div>
-  <h2 data-i18n="res_h">实验结果证明，<span class="accent">预测逐一成立</span></h2>
-  <p class="lead" data-i18n="res_p">从动态恢复、时钟节律到基因干预表型，实验结果逐项证明了后稷给出的预测。</p>
+  <div class="eyebrow" data-i18n="res_eye">06 · 反事实检验</div>
+  <h2 data-i18n="res_h">世界模型必须回答：<span class="accent">如果行动改变，会发生什么？</span></h2>
+  <p class="lead" data-i18n="res_p">复水不是干旱倒放，基因作用依赖环境，高阶组合也不是简单相加。实验结果检验的是这些反事实未来的方向、时序与交互。</p>
 
   <div class="grid">
     <!-- recovery != reversal -->
@@ -548,10 +607,10 @@
 <section id="evidence" class="soft"><div class="wrap reveal">
   <div class="section-head">
     <div>
-      <div class="eyebrow" data-i18n="ev_eye">证据清单</div>
-      <h2 data-i18n="ev_h">实验结果证明，<span class="accent">预测与真实一致</span></h2>
+      <div class="eyebrow" data-i18n="ev_eye">07 · 实验闭环</div>
+      <h2 data-i18n="ev_h">每条未来线，最终都回到<span class="accent">可测量的生物终点</span></h2>
     </div>
-    <p class="lead" data-i18n="ev_p">五组实验覆盖动态、细胞状态、组织组成与器官表型，共同证明世界模型在不同物种和条件下的预测能力。</p>
+    <p class="lead" data-i18n="ev_p">五组实验把世界模型的潜在轨迹落到相位、方向、组织构成与器官表型上，形成从世界状态、行动推演到实验读出的完整闭环。</p>
   </div>
   <div class="board">
     <table class="source-table" aria-label="公开实验数据与验证任务">
@@ -617,46 +676,50 @@
 /* ---------------- i18n ---------------- */
 const I18N = {
   zh:{
-    brand_sub:"植物世界模型", nav_what:"理念", nav_films:"动态演示", nav_firewall:"实验验证", nav_results:"结果", nav_evidence:"证据", nav_institutions:"机构",
+    brand_sub:"植物世界模型", nav_what:"世界", nav_films:"未来线", nav_firewall:"验证", nav_results:"反事实", nav_evidence:"证据", nav_institutions:"机构",
     hero_kicker:"世界首个植物世界模型",
-    hero_tag:'给定一个环境或基因干预，后稷<b>预测</b>植物细胞—组织状态将如何变化——实验结果逐一证明这些预测。',
-    hero_sub:"一个以行动为条件的植物世界模型：它不只是拟合已有图谱，而是预测未来的细胞状态分布、组织组成、器官表型与干预方向，并诚实报告自己的把握度。",
+    hero_tag:'给植物一个<b>现在</b>，施加一个行动，推演多个可能的未来。',
+    hero_sub:"后稷把碎片化的多模态观测编码为统一的植物世界状态，学习环境与基因行动如何推动世界随时间演化，再从同一潜在世界解码细胞、组织与性状层的未来。",
     proof1:"跨物种验证", proof2:"真实公开数据", proof3:"可校准不确定性",
-    hero_cta1:"看实验结果 ↓", hero_cta2:"看预测如何被验证",
-    stat1:"它的知识止步于此", stat2:"实验结果均证明预测", stat3:"跨物种：拟南芥·水稻·玉米", stat4:"验证实验的时间跨度",
-    what_eye:"核心理念",
-    what_h:'不是更大的图谱，而是一个能<span class="accent">推演未来</span>的世界模型',
-    what_p:"植物的单细胞、空间、bulk 与表型数据来自不同物种、器官、平台和时间——它们只是同一个潜在动力系统的碎片化、无配对的部分观测。后稷显式地把「生物状态」与「每项研究的观测过程」分开建模，用一套共享的随机潜在动力学，去预测未来的细胞状态分布、组织组成、器官表型与干预方向，并给出校准的不确定性。",
+    hero_cta1:"进入世界推演台 ↓", hero_cta2:"查看实验闭环",
+    stat1:"知识封存于 2022", stat2:"5 条未来线获验证", stat3:"共享动力学覆盖 3 个物种", stat4:"未来实验跨越 2023–26",
+    what_eye:"01 · 世界模型范式",
+    what_h:'不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span>',
+    what_p:"后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。",
+    console_live:"实时推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
+    state1_k:"细胞状态", state1_v:"分布", state2_k:"组织组成", state2_v:"比例", state3_k:"空间关系", state3_v:"邻接图",
+    action1:"干旱", action2:"复水", action3:"冷胁迫", action4:"FRO6 ↑",
+    loop1:"观察", loop2:"编码", loop3:"行动", loop4:"推演", loop5:"解码", loop6:"校准",
     fw1_t:"潜在组织状态", fw1_s:"每种细胞类型的状态分布 + 比例 + 邻接图",
     fw2_t:"行动历史", fw2_s:"剂量·时长·基因型的连续编码",
     fw3_t:"随机潜在动力学", fw4_t:"多尺度输出", fw4_s:"单细胞·bulk·空间·表型·干预·不确定性",
-    method_eye:"模型路径",
-    method_h:'从碎片化观测，到<span class="accent">可检验的预测</span>',
-    method_p:"后稷把不同实验平台视为同一生物系统的不同读数：先学习潜在状态，再加入环境、剂量、时长与基因型等行动条件，最后输出多尺度预测与不确定性。",
-    m1_h:"统一多模态植物数据", m1_p:"将单细胞、空间转录组、bulk、表型与扰动记录投影到共享潜在空间。",
-    m2_h:"分离真实生物状态与观测偏差", m2_p:"显式处理物种、器官、平台、批次与采样时间带来的观测差异。",
-    m3_h:"按行动条件推演未来", m3_p:"把干旱、复水、冷胁迫、压实、基因过表达等条件作为可组合行动输入。",
-    m4_h:"用实验结果证明预测", m4_p:"不只比较拟合误差，更看实验结果是否证明模型给出的方向、动态和表型结论。",
+    method_eye:"02 · 建立世界",
+    method_h:'观察成为状态，干预成为行动，<span class="accent">未来成为分布</span>',
+    method_p:"这不是从输入直接跳到答案。后稷先建立可持续更新的世界状态，再让行动驱动随机动力学向前运行，最终把同一条潜在轨迹解码到多个生物尺度。",
+    m1_h:"编码观测 · Observe → Encode", m1_p:"将单细胞、空间转录组、bulk、表型与扰动记录映射到共享潜在坐标。",
+    m2_h:"构成世界状态 · Build Sₜ", m2_p:"分离真实生物状态与物种、器官、平台、批次等观测过程。",
+    m3_h:"展开条件未来 · Roll out", m3_p:"把干旱、复水、冷胁迫、压实与基因过表达作为可组合行动序列。",
+    m4_h:"回到实验终点 · Decode", m4_p:"把未来轨迹解码为可测量的动态、细胞组成、组织响应和器官表型。",
     method_box_eye:"输出能力",
     met1_v:"Cell", met1_l:"细胞状态分布", met2_v:"Tissue", met2_l:"组织组成变化", met3_v:"Trait", met3_l:"器官表型方向",
     met4_v:"Action", met4_l:"干预组合响应", met5_v:"Time", met5_l:"隐藏时间点预测", met6_v:"Risk", met6_l:"校准不确定性",
-    honest_h:"为什么这更像“世界模型”",
-    honest_p:"关键不是把已有数据背下来，而是在未见过的行动条件下生成可检验的状态轨迹，并且能说明哪些预测更可靠、哪些需要更多实验。",
-    film_eye:"动态实验结果", film_h:'用三段动态过程，看懂<span class="accent">世界模型</span>', film_p:"从环境或基因干预出发，模型沿时间轴推演细胞状态、组织响应与最终表型；实验结果证明了这些变化方向。",
+    honest_h:"世界模型的判据",
+    honest_p:"同一个现在，换一个行动，就应该生成另一条自洽未来。后稷预测的是随时间演化的状态分布，并同时报告不确定性，而不是只为某个终点拟合一个答案。",
+    film_eye:"03 · 推演未来线", film_h:'同一个现在，可以展开<span class="accent">多条未来</span>', film_p:"选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。",
     film1_label:"干旱 → 复水", film1_h:"恢复不是倒放，而是新状态", film1_p:"细胞先进入干旱状态；复水后沿新的恢复轨迹重组，实验结果证明方向一致。",
     film2_label:"昼夜节律 · 24h", film2_h:"隐藏时间点仍能被还原", film2_p:"连续推演时钟基因的相位与振幅，实验结果证明预测轨迹与实测节律吻合。",
     film3_label:"FRO6 · 胁迫条件", film3_h:"基因作用取决于环境", film3_p:"同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。",
-    cinema_eye:"多尺度影像", cinema_h:'从组织切片，到<span class="accent">时间中的生命</span>', cinema_p:"每一帧都对应世界模型中的一个尺度：细胞如何转变，组织如何恢复，节律如何穿过昼夜。",
+    cinema_eye:"04 · 多尺度解码", cinema_h:'世界不是一张图，而是<span class="accent">一段可推进的状态历史</span>', cinema_p:"同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。",
     cinema1_meta:"TISSUE STATE · RECOVERY", cinema1_h:"复水开启新的恢复轨迹", cinema1_p:"从受压缩的胁迫状态穿过过渡区，细胞群落向新的稳态重新组织。",
     cinema2_meta:"CLOCK STATE · 24 HOURS", cinema2_h:"昼夜节律连续推进", cinema2_p:"相位和振幅共同定义植物在时间中的状态，隐藏时间点也能被连续还原。",
-    fw_eye:"实验验证",
-    fw_h:'实验结果证明，<span class="accent">模型预测逐一成立</span>',
-    fw_p:"实验结果从动态、表型和干预方向三个层面证明了后稷的预测。时间轴展示模型知识范围与五项验证实验，红色结果均与模型给出的变化方向一致。",
+    fw_eye:"05 · 冻结知识",
+    fw_h:'先封存模型知道的过去，<span class="accent">再让未来回答</span>',
+    fw_p:"后稷的知识边界固定在 2022 年。时间轴右侧的五项实验发生在这一边界之后，它们检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。",
     tl_train:"模型训练所依据的数据", tl_seal:"证明预测的实验结果", tl_cut:"知识地平线",
     tl_key:'<b>A</b> 昼夜节律 GSE248801 &nbsp;·&nbsp; <b>B</b> 水稻压实 GSE251706 &nbsp;·&nbsp; <b>C</b> 干旱复水 GSE220278 &nbsp;·&nbsp; <b>D</b> 叶片干旱 FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> 玉米冷胁迫 GSE299259',
-    res_eye:"实验结果 · 全部真实公开数据",
-    res_h:'实验结果证明，<span class="accent">预测逐一成立</span>',
-    res_p:"从动态恢复、时钟节律到基因干预表型，实验结果逐项证明了后稷给出的预测。",
+    res_eye:"06 · 反事实检验",
+    res_h:'世界模型必须回答：<span class="accent">如果行动改变，会发生什么？</span>',
+    res_p:"复水不是干旱倒放，基因作用依赖环境，高阶组合也不是简单相加。实验结果检验的是这些反事实未来的方向、时序与交互。",
     c1_h:"复水 ≠ 把干旱倒放", c1_d:"干旱后复水：从「干旱→复水」的行动历史向前推演被隐藏的恢复状态。模型推演出的恢复方向与真实一致，而「把干旱倒放」的反演假设完全预测反了。",
     c1_b1:"后稷", c1_b2:"时间反演假设", c1_n:"与真实恢复轴的余弦相似度（−1 ~ +1）。模型学到复水进入的是一个全新状态。",
     c2_h:"FRO6：只在胁迫下才有用", c2_d:"叶片干旱实验：叶肉特异过表达 FRO6。实验证实——只在干旱下显著促生长，正常供水下几乎无效，正是「胁迫依赖，而非普遍促生长」。",
@@ -668,9 +731,9 @@ const I18N = {
     v_ok:"✓ 方向恢复", v_ok2:"✓ 胁迫特异表型", v_ok3:"✓ 相位 + 振幅恢复", v_ok4:"✓ 非加和相互作用",
     hl1:"3 个物种的 5 项实验结果共同证明了后稷的预测——涵盖动态、表型与干预方向。",
     hl2:"经共形校准后，80% 预测区间实测覆盖率 0.87、ECE 0.052——模型对自己的把握是诚实的。",
-    ev_eye:"证据清单",
-    ev_h:'实验结果证明，<span class="accent">预测与真实一致</span>',
-    ev_p:"五组实验覆盖动态、细胞状态、组织组成与器官表型，共同证明世界模型在不同物种和条件下的预测能力。",
+    ev_eye:"07 · 实验闭环",
+    ev_h:'每条未来线，最终都回到<span class="accent">可测量的生物终点</span>',
+    ev_p:"五组实验把世界模型的潜在轨迹落到相位、方向、组织构成与器官表型上，形成从世界状态、行动推演到实验读出的完整闭环。",
     th1:"任务", th2:"公开数据", th3:"验证重点",
     td1_a:"昼夜节律", td1_c:"隐藏 ZT 时间点、核心时钟基因相位与振幅。",
     td2_a:"水稻压实", td2_c:"根系细胞状态与组织组成的胁迫响应。",
@@ -682,46 +745,50 @@ const I18N = {
     foot_note:"PhytoMOSAIC + ChronoPlantBench · 数据源：GEO / CNGB 真实公开数据"
   },
   en:{
-    brand_sub:"PLANT WORLD MODEL", nav_what:"Idea", nav_films:"Motion", nav_firewall:"Validated", nav_results:"Results", nav_evidence:"Evidence", nav_institutions:"Institutions",
+    brand_sub:"PLANT WORLD MODEL", nav_what:"World", nav_films:"Futures", nav_firewall:"Validation", nav_results:"Counterfactuals", nav_evidence:"Evidence", nav_institutions:"Institutions",
     hero_kicker:"The world's first plant world model",
-    hero_tag:"Give it an environment or a genetic edit, and Hòujì <b>predicts</b> how the plant's cell–tissue state will change — experimental results confirm each prediction.",
-    hero_sub:"An action-conditioned plant world model: it does not just fit existing atlases — it predicts future cell-state distributions, tissue composition, organ phenotypes and intervention directions, and reports its own confidence honestly.",
+    hero_tag:"Give a plant a <b>present</b>, apply an action, and roll out multiple possible futures.",
+    hero_sub:"Hòujì encodes fragmented multimodal observations into a unified plant-world state, learns how environmental and genetic actions move that world through time, then decodes futures at cell, tissue and trait scales.",
     proof1:"cross-species validation", proof2:"real public data", proof3:"calibrated uncertainty",
-    hero_cta1:"See experimental results ↓", hero_cta2:"See how the predictions hold up",
-    stat1:"where its knowledge stops", stat2:"predictions confirmed by experiment", stat3:"species: Arabidopsis · rice · maize", stat4:"span of the validating experiments",
-    what_eye:"The idea",
-    what_h:'Not a bigger atlas — a world model that can <span class="accent">roll out the future</span>',
-    what_p:"Plant single-cell, spatial, bulk and phenotype data come from different species, organs, platforms and times — fragmented, unpaired partial observations of one latent dynamical system. Hòujì explicitly separates the biological state from each study's observation process and, with a shared stochastic latent dynamics, forecasts future cell-state distributions, tissue composition, organ phenotypes and intervention directions — with calibrated uncertainty.",
+    hero_cta1:"Enter the world engine ↓", hero_cta2:"See the experimental loop",
+    stat1:"knowledge frozen at 2022", stat2:"5 future lines validated", stat3:"shared dynamics across 3 species", stat4:"future experiments across 2023–26",
+    what_eye:"01 · World-model paradigm",
+    what_h:'Not a label predictor, but a <span class="accent">plant world that can run forward</span>',
+    what_p:"Hòujì compresses single-cell, spatial, bulk and phenotype observations into one latent world state Sₜ, then encodes environment, dose, duration and genotype as actions Aₜ. Change the action and the same present unfolds into a different future, jointly decoded at cell, tissue and trait scales.",
+    console_live:"LIVE ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
+    state1_k:"Cell state", state1_v:"distribution", state2_k:"Tissue mix", state2_v:"proportion", state3_k:"Spatial relation", state3_v:"graph",
+    action1:"Drought", action2:"Rewater", action3:"Cold", action4:"FRO6 ↑",
+    loop1:"OBSERVE", loop2:"ENCODE", loop3:"ACT", loop4:"ROLL OUT", loop5:"DECODE", loop6:"CALIBRATE",
     fw1_t:"Latent tissue state", fw1_s:"per-cell-type state distribution + proportion + graph",
     fw2_t:"Action history", fw2_s:"continuous encoding of dose · duration · genotype",
     fw3_t:"Stochastic dynamics", fw4_t:"Multi-scale outputs", fw4_s:"single-cell · bulk · spatial · phenotype · intervention · uncertainty",
-    method_eye:"Model path",
-    method_h:'From fragmented observations to <span class="accent">testable predictions</span>',
-    method_p:"Hòujì treats different experimental platforms as different readouts of the same biological system: it learns latent states, conditions them on environment, dose, duration and genotype, then returns multi-scale predictions with uncertainty.",
-    m1_h:"Unify multimodal plant data", m1_p:"Project single-cell, spatial, bulk, phenotype and perturbation records into a shared latent space.",
-    m2_h:"Separate biology from observation bias", m2_p:"Explicitly handles differences from species, organs, platforms, batches and sampling times.",
-    m3_h:"Roll forward under action conditions", m3_p:"Uses drought, rewatering, cold, compaction and gene overexpression as composable action inputs.",
-    m4_h:"Prove predictions with experiments", m4_p:"Looks beyond fitting error to whether experimental results confirm the predicted direction, dynamics and phenotype.",
+    method_eye:"02 · Build the world",
+    method_h:'Observations become state, interventions become action, <span class="accent">futures become distributions</span>',
+    method_p:"The model does not jump directly from input to answer. Hòujì first constructs an updateable world state, lets actions drive stochastic dynamics forward, then decodes one latent trajectory across biological scales.",
+    m1_h:"Encode observations · Observe → Encode", m1_p:"Map single-cell, spatial, bulk, phenotype and perturbation records into shared latent coordinates.",
+    m2_h:"Construct world state · Build Sₜ", m2_p:"Separate biological state from observation processes due to species, organ, platform and batch.",
+    m3_h:"Unfold conditional futures · Roll out", m3_p:"Compose drought, rewatering, cold, compaction and gene overexpression into action sequences.",
+    m4_h:"Return to endpoints · Decode", m4_p:"Decode future trajectories into measurable dynamics, cell composition, tissue response and organ phenotype.",
     method_box_eye:"Output modes",
     met1_v:"Cell", met1_l:"cell-state distribution", met2_v:"Tissue", met2_l:"tissue composition", met3_v:"Trait", met3_l:"organ phenotype direction",
     met4_v:"Action", met4_l:"intervention response", met5_v:"Time", met5_l:"hidden timepoint forecast", met6_v:"Risk", met6_l:"calibrated uncertainty",
-    honest_h:"Why this is a world model",
-    honest_p:"The key is not memorizing existing data, but generating testable state trajectories under unseen action conditions and making clear which predictions are reliable and which need more experiments.",
-    film_eye:"Experimental results in motion", film_h:'See the <span class="accent">world model</span> in three dynamic processes', film_p:"Starting from an environmental or genetic intervention, the model rolls cell states forward through tissue response to phenotype; experimental results confirm these directions.",
+    honest_h:"The world-model criterion",
+    honest_p:"From the same present, changing the action should produce another self-consistent future. Hòujì predicts evolving state distributions with uncertainty, rather than fitting one answer to one endpoint.",
+    film_eye:"03 · Roll out future lines", film_h:'One present can unfold into <span class="accent">multiple futures</span>', film_p:"Choose a different environmental or genetic action and the world state follows a different path, carrying cell changes into tissue response and phenotype.",
     film1_label:"Drought → rewatering", film1_h:"Recovery is a new state, not rewind", film1_p:"Cells enter drought, then reorganize along a new recovery path after rewatering; experimental results confirm the direction.",
     film2_label:"Circadian rhythm · 24h", film2_h:"Hidden timepoints are recovered", film2_p:"The model rolls gene phase and amplitude forward; experimental results confirm agreement with the measured rhythm.",
     film3_label:"FRO6 · stress condition", film3_h:"Gene effects depend on environment", film3_p:"The same intervention yields different phenotypes under water and drought; experimental results confirm stress specificity.",
-    cinema_eye:"Multi-scale imagery", cinema_h:'From tissue sections to <span class="accent">life through time</span>', cinema_p:"Each frame corresponds to a scale in the world model: cells transition, tissues recover and rhythms move through day and night.",
+    cinema_eye:"04 · Multi-scale decoding", cinema_h:'A world is not one image, but <span class="accent">a state history that can advance</span>', cinema_p:"One latent future is decoded into cell states, tissue composition and organ traits, so biological scales no longer appear as disconnected outputs.",
     cinema1_meta:"TISSUE STATE · RECOVERY", cinema1_h:"Rewatering opens a new recovery trajectory", cinema1_p:"Cell populations pass from compressed stress states through transition regions and reorganize toward a new steady state.",
     cinema2_meta:"CLOCK STATE · 24 HOURS", cinema2_h:"Circadian state advances continuously", cinema2_p:"Phase and amplitude define the plant through time, allowing hidden timepoints to be continuously recovered.",
-    fw_eye:"Experimentally validated",
-    fw_h:'Experimental results show <span class="accent">the predictions hold</span>',
-    fw_p:"Experimental results confirm Hòujì's predictions across dynamics, phenotypes and intervention directions. The timeline maps the model's knowledge range and five validation experiments; every red result agrees with the predicted direction.",
+    fw_eye:"05 · Freeze knowledge",
+    fw_h:'Seal what the model knew, <span class="accent">then let the future answer</span>',
+    fw_p:"Hòujì's knowledge boundary is fixed at 2022. The five experiments to the right occurred after that boundary, testing whether the model could move from known world states into unknown futures rather than reconstruct familiar data.",
     tl_train:"data it was trained on", tl_seal:"experimental results confirming predictions", tl_cut:"knowledge horizon",
     tl_key:'<b>A</b> circadian GSE248801 &nbsp;·&nbsp; <b>B</b> rice compaction GSE251706 &nbsp;·&nbsp; <b>C</b> drought-rewater GSE220278 &nbsp;·&nbsp; <b>D</b> leaf drought FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> maize cold GSE299259',
-    res_eye:"Experimental results · all real public data",
-    res_h:'Experimental results show <span class="accent">each prediction holds</span>',
-    res_p:"From dynamic recovery and circadian rhythm to genetic-intervention phenotypes, experimental results confirm Hòujì's predictions item by item.",
+    res_eye:"06 · Counterfactual tests",
+    res_h:'A world model must answer: <span class="accent">what changes when the action changes?</span>',
+    res_p:"Rewatering is not drought in reverse, gene effects depend on environment, and higher-order combinations are not simple sums. Experiments test the direction, timing and interactions of these counterfactual futures.",
     c1_h:"Rewatering ≠ drought in reverse", c1_d:"Drought then rewatering: rolling the drought→rewater action history forward predicts the hidden recovery state. The model's recovery direction matches reality, while the 'play drought backwards' hypothesis gets it exactly wrong.",
     c1_b1:"Hòujì", c1_b2:"reversal hypothesis", c1_n:"Cosine to the real recovery axis (−1 to +1). The model learns that rewatering enters a brand-new state.",
     c2_h:"FRO6: useful only under stress", c2_d:"Leaf drought: mesophyll-specific FRO6 overexpression. Experiments confirm a benefit only under drought and almost none when well-watered — stress-dependent, not general growth.",
@@ -733,9 +800,9 @@ const I18N = {
     v_ok:"✓ direction recovered", v_ok2:"✓ stress-specific phenotype", v_ok3:"✓ phase + amplitude", v_ok4:"✓ non-additive interaction",
     hl1:"Across 5 experiments and 3 species, results confirm Hòujì's predictions across dynamics, phenotypes and intervention directions.",
     hl2:"After conformal calibration, the 80% prediction interval covers 0.87 with ECE 0.052 — the model is honest about its own confidence.",
-    ev_eye:"Evidence map",
-    ev_h:'Experimental results show <span class="accent">predictions match reality</span>',
-    ev_p:"Five experiments span dynamics, cell states, tissue composition and organ phenotypes, confirming the world model across species and conditions.",
+    ev_eye:"07 · Experimental closure",
+    ev_h:'Every future line returns to a <span class="accent">measurable biological endpoint</span>',
+    ev_p:"Five experiments connect latent trajectories to phase, direction, tissue composition and organ phenotype, closing the loop from world state and action rollout to experimental readout.",
     th1:"Task", th2:"Public data", th3:"Validation focus",
     td1_a:"Circadian rhythm", td1_c:"Hidden ZT timepoints, phase and amplitude of core clock genes.",
     td2_a:"Rice compaction", td2_c:"Stress response in root cell states and tissue composition.",
@@ -747,6 +814,21 @@ const I18N = {
     foot_note:"PhytoMOSAIC + ChronoPlantBench · Data: real public GEO / CNGB"
   }
 };
+const ENGINE_COPY = {
+  zh:{
+    drought:{title:"干旱未来线",cell:"气孔关闭 · ABA 应答增强",tissue:"叶肉应激状态占比上升",trait:"生长受限 · 保水优先"},
+    rewater:{title:"复水未来线",cell:"恢复程序启动 · 非简单反演",tissue:"组织含水状态重新组织",trait:"生长恢复 · 进入新稳态"},
+    cold:{title:"冷胁迫未来线",cell:"冷响应与膜稳定程序启动",tissue:"组织状态沿耐寒轴重排",trait:"生长减速 · 冷适应增强"},
+    fro6:{title:"FRO6 干预未来线",cell:"铁氧化还原状态改变",tissue:"叶肉特异响应增强",trait:"干旱条件下生物量增益"}
+  },
+  en:{
+    drought:{title:"Drought future line",cell:"Stomatal closure · ABA response rises",tissue:"Stress-state mesophyll fraction increases",trait:"Growth constrained · water retention prioritized"},
+    rewater:{title:"Rewatering future line",cell:"Recovery program starts · not simple reversal",tissue:"Tissue hydration state reorganizes",trait:"Growth resumes · a new steady state emerges"},
+    cold:{title:"Cold-stress future line",cell:"Cold response and membrane stabilization activate",tissue:"Tissue states reorder along the tolerance axis",trait:"Growth slows · cold adaptation rises"},
+    fro6:{title:"FRO6 intervention future line",cell:"Iron redox state shifts",tissue:"Mesophyll-specific response strengthens",trait:"Biomass gains under drought"}
+  }
+};
+let ENGINE_ACTION='drought';
 let LANG = localStorage.getItem('lang') || 'zh';
 function setLang(l){
   LANG=l; localStorage.setItem('lang',l);
@@ -757,7 +839,23 @@ function setLang(l){
     const k=el.getAttribute('data-i18n'); const s=I18N[l][k];
     if(s!==undefined) el.innerHTML=s;
   });
+  renderEngine();
 }
+
+function renderEngine(){
+  const range=document.getElementById('engineTime');
+  if(!range) return;
+  const hours=range.value;
+  const copy=ENGINE_COPY[LANG][ENGINE_ACTION];
+  document.getElementById('engineTimeLabel').textContent=`T + ${hours} h`;
+  document.getElementById('engineFutureTitle').textContent=`${copy.title} · T + ${hours} h`;
+  document.getElementById('engineCell').textContent=copy.cell;
+  document.getElementById('engineTissue').textContent=copy.tissue;
+  document.getElementById('engineTrait').textContent=copy.trait;
+  document.querySelectorAll('.action-choice').forEach(button=>button.classList.toggle('on',button.dataset.action===ENGINE_ACTION));
+}
+document.querySelectorAll('.action-choice').forEach(button=>button.addEventListener('click',()=>{ENGINE_ACTION=button.dataset.action;renderEngine();}));
+document.getElementById('engineTime')?.addEventListener('input',renderEngine);
 
 /* ---------------- scroll reveal ---------------- */
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});
