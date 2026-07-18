@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="后稷 Hòujì：一个以行动为条件的植物世界模型，面向植物细胞、组织、表型和干预方向的多尺度预测。">
 <meta name="theme-color" content="#05100b">
-<meta name="houji-api" content="">
 <title>后稷 Hòujì · 植物世界模型 / Plant World Model</title>
 <style>
   :root{
@@ -192,9 +191,11 @@
   @media(max-width:720px){.headline-board{grid-template-columns:1fr}}
 
   /* ---------- animated explainers ---------- */
-  .film-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  .film-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:34px}
   .film{background:linear-gradient(180deg,rgba(17,42,29,.96),rgba(8,22,15,.96));border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.2)}
   .film-stage{position:relative;aspect-ratio:16/10;background:#07140e;overflow:hidden}
+  .film--branch{grid-column:1/-1}
+  .film--branch .film-stage{aspect-ratio:21/8;min-height:300px}
   .film-stage .film-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.62;animation:filmPan 9s ease-in-out infinite alternate}
   .film-stage canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
   .film-label{position:absolute;left:12px;top:12px;padding:5px 9px;border-radius:6px;background:rgba(4,15,10,.76);border:1px solid rgba(255,255,255,.11);font-size:11px;font-weight:700;color:var(--mint);letter-spacing:.4px;backdrop-filter:blur(8px)}
@@ -206,26 +207,22 @@
   .film-toggle{width:34px;height:34px;border:1px solid rgba(52,211,153,.35);border-radius:50%;background:rgba(52,211,153,.1);color:var(--emerald);cursor:pointer;font-size:14px;display:grid;place-items:center;transition:.2s}
   .film-toggle:hover{background:rgba(52,211,153,.18);transform:scale(1.05)}
   .film-progress{width:100%;accent-color:var(--emerald);cursor:pointer}
-  @media(max-width:900px){.film-grid{grid-template-columns:1fr}.film-body p{min-height:0}}
+  @media(max-width:900px){.film-grid{grid-template-columns:1fr}.film--branch{grid-column:auto}.film--branch .film-stage{aspect-ratio:16/10;min-height:0}.film-body p{min-height:0}}
 
   /* ---------- cinematic science stories ---------- */
   .cinema-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:20px;margin-top:34px}
-  .cinema{position:relative;min-height:420px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#07140e;isolation:isolate;box-shadow:0 28px 80px rgba(0,0,0,.28)}
-  .cinema img{position:absolute;inset:-4%;width:108%;height:108%;object-fit:cover;animation:filmPan 13s ease-in-out infinite alternate}
-  .cinema:nth-child(2) img{animation-direction:alternate-reverse;animation-duration:15s}
+  .cinema{position:relative;min-height:440px;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:#07140e;isolation:isolate;box-shadow:0 28px 80px rgba(0,0,0,.28)}
+  .cinema-canvas{position:absolute;z-index:0;inset:0;display:block;width:100%;height:100%}
   @keyframes filmPan{from{transform:scale(1.01) translate3d(-.7%,0,0)}to{transform:scale(1.09) translate3d(1.4%,-1.2%,0)}}
-  .cinema::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,rgba(3,12,8,.96),rgba(3,12,8,.05) 65%),linear-gradient(90deg,rgba(3,12,8,.42),transparent 55%)}
-  .cinema::after{content:"";position:absolute;z-index:2;left:-15%;right:-15%;top:22%;height:1px;background:linear-gradient(90deg,transparent,var(--emerald),var(--gold),transparent);box-shadow:0 0 16px rgba(52,211,153,.75);animation:scanFilm 5.5s linear infinite}
-  @keyframes scanFilm{0%{transform:translateY(-90px);opacity:0}15%,80%{opacity:.75}100%{transform:translateY(330px);opacity:0}}
+  .cinema::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(3,12,8,.98),rgba(3,12,8,.12) 58%,rgba(3,12,8,.06) 78%),linear-gradient(90deg,rgba(3,12,8,.28),transparent 55%)}
+  .cinema::after{content:"";position:absolute;z-index:2;inset:0;pointer-events:none;box-shadow:inset 0 0 90px rgba(0,0,0,.34)}
   .cinema-caption{position:absolute;z-index:3;left:24px;right:24px;bottom:22px}
   .cinema-caption h3{font-size:20px;margin:8px 0 4px}
   .cinema-caption p{max-width:580px;margin:0;color:#b2c4b9;font-size:13.5px}
   .cinema-meta{display:flex;align-items:center;gap:9px;color:var(--mint);font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
   .cinema-pulse{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red);animation:pulse 1.6s infinite}
   .motion-toggle{position:absolute;z-index:4;right:18px;top:18px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(3,12,8,.6);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
-  .cinema-progress{position:absolute;z-index:4;left:0;bottom:0;height:3px;width:100%;transform-origin:left;background:linear-gradient(90deg,var(--emerald),var(--gold));animation:cinemaProgress 10s linear infinite}
-  @keyframes cinemaProgress{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-  .cinema.is-paused img,.cinema.is-paused::after,.cinema.is-paused .cinema-progress{animation-play-state:paused}
+  .cinema-progress{position:absolute;z-index:4;left:0;bottom:0;height:3px;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--emerald),var(--gold));will-change:transform}
   @media(max-width:880px){.cinema-grid{grid-template-columns:1fr}.cinema{min-height:360px}}
 
   /* ---------- figures ---------- */
@@ -261,10 +258,12 @@
   .engine-context{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
   .engine-field{display:grid;gap:5px;color:var(--muted);font-size:11.5px}
   .engine-field.wide{grid-column:1/-1}
-  .engine-field select,.engine-field textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:#08160f;color:#e7f2eb;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+  .engine-field select{width:100%;border:1px solid var(--line);border-radius:6px;background:#08160f;color:#e7f2eb;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
   .engine-field select{height:36px;padding:0 9px;color-scheme:dark}
-  .engine-field textarea{min-height:62px;resize:vertical;padding:8px 9px;line-height:1.45}
-  .engine-field select:focus,.engine-field textarea:focus{border-color:rgba(52,211,153,.64);box-shadow:0 0 0 3px rgba(52,211,153,.08)}
+  .engine-field select:focus{border-color:rgba(52,211,153,.64);box-shadow:0 0 0 3px rgba(52,211,153,.08)}
+  .engine-baseline{grid-column:1/-1;padding:9px 10px;border-left:2px solid rgba(230,189,92,.55);background:rgba(230,189,92,.045)}
+  .engine-baseline span{display:block;color:var(--gold);font:700 9.5px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px;text-transform:uppercase}
+  .engine-baseline p{margin:5px 0 0;color:#b9c9bf;font-size:11.5px;line-height:1.45}
   .state-lines{display:grid;gap:8px;color:var(--muted);font-size:12.5px}
   .state-lines span{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:7px}
   .state-lines em{font-style:normal}.state-lines b{color:#dcebe2;font-weight:650}
@@ -392,7 +391,7 @@
     .card{padding:22px}
     .cinema{min-height:330px}.cinema-caption{left:18px;right:18px;bottom:18px}
   }
-  @media(prefers-reduced-motion:reduce){.hero-bg img,.film-photo,.cinema img,.cinema::after,.cinema-progress{animation:none!important}}
+  @media(prefers-reduced-motion:reduce){.hero-bg img,.film-photo{animation:none!important}}
 </style>
 </head>
 <body>
@@ -445,8 +444,8 @@
 
 <div class="stat-band"><div class="wrap"><div class="stats">
     <div class="stat reveal"><div class="num" data-count="2022">2022</div><div class="lab" data-i18n="stat1">知识封存于 2022</div></div>
-    <div class="stat reveal"><div class="num"><span data-count="5">5</span>/5</div><div class="lab" data-i18n="stat2">5 条未来线获验证</div></div>
-    <div class="stat reveal"><div class="num" data-count="3">3</div><div class="lab" data-i18n="stat3">共享动力学覆盖 3 个物种</div></div>
+    <div class="stat reveal"><div class="num" data-count="25">25</div><div class="lab" data-i18n="stat2">25 条未来线获验证</div></div>
+    <div class="stat reveal"><div class="num" data-count="10">10</div><div class="lab" data-i18n="stat3">共享动力学覆盖 10 个物种</div></div>
     <div class="stat reveal"><div class="num">2023–26</div><div class="lab" data-i18n="stat4">未来实验跨越 2023–26</div></div>
   </div></div></div>
 
@@ -464,7 +463,7 @@
         <div class="engine-context">
           <label class="engine-field"><span data-i18n="engine_species">物种</span><select id="engineSpecies"><option value="Arabidopsis thaliana" data-i18n="species1">拟南芥</option><option value="Oryza sativa" data-i18n="species2">水稻</option><option value="Zea mays" data-i18n="species3">玉米</option></select></label>
           <label class="engine-field"><span data-i18n="engine_organ">器官</span><select id="engineOrgan"><option value="leaf" data-i18n="organ1">叶片</option><option value="root" data-i18n="organ2">根</option><option value="seedling" data-i18n="organ3">幼苗</option></select></label>
-          <label class="engine-field wide"><span data-i18n="engine_baseline">当前状态补充</span><textarea id="engineBaseline" maxlength="300" data-i18n-placeholder="engine_baseline_ph" placeholder="营养生长阶段，正常供水；可补充基因型、温度或处理剂量"></textarea></label>
+          <div class="engine-baseline"><span data-i18n="engine_baseline">预计算基线</span><p id="engineBaselineText" data-i18n="engine_baseline_value">营养生长期 · 标准光周期 · 中等处理强度 · 其余条件适宜</p></div>
         </div>
         <div class="state-symbol">S<sub>t</sub></div>
         <div class="state-lines"><span><em data-i18n="state1_k">细胞状态</em><b data-i18n="state1_v">分布</b></span><span><em data-i18n="state2_k">组织组成</em><b data-i18n="state2_v">比例</b></span><span><em data-i18n="state3_k">空间关系</em><b data-i18n="state3_v">邻接图</b></span></div>
@@ -478,8 +477,8 @@
           <button class="action-choice" type="button" data-action="fro6" data-i18n="action4">FRO6 ↑</button>
         </div>
         <div class="time-control"><div class="time-row"><span data-i18n="console_horizon">推演时域</span><strong id="engineTimeLabel">T + 36 h</strong></div><input id="engineTime" type="range" min="6" max="72" value="36" step="6" aria-label="推演时域"></div>
-        <button class="engine-run" id="engineRun" type="button"><span class="engine-run-icon" aria-hidden="true">AI</span><span data-i18n="engine_run">生成条件未来</span></button>
-        <div class="engine-status" id="engineStatus" role="status" aria-live="polite" data-i18n="engine_local">本地动态演示 · AI 服务接入后将生成新推演</div>
+        <button class="engine-run" id="engineRun" type="button"><span class="engine-run-icon" aria-hidden="true">GPT</span><span data-i18n="engine_run">展开 GPT 推演报告</span></button>
+        <div class="engine-status" id="engineStatus" role="status" aria-live="polite" data-i18n="engine_loading_data">正在载入 GPT‑5.6 预测库…</div>
       </div>
       <div class="console-pane">
         <div class="console-label" data-i18n="console_future">ROLLED-OUT FUTURE</div>
@@ -546,17 +545,17 @@
     <p class="lead" data-i18n="film_p">选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。</p>
   </div>
   <div class="film-grid">
-    <article class="film">
-      <div class="film-stage"><img class="film-photo" src="assets/drought-recovery.jpg" alt="" loading="lazy"><canvas class="film-canvas" data-scene="recovery"></canvas><span class="film-label" data-i18n="film1_label">干旱 → 复水</span><span class="film-time">T+00h</span></div>
-      <div class="film-body"><h3 data-i18n="film1_h">恢复不是倒放，而是新状态</h3><p data-i18n="film1_p">细胞先进入干旱状态；复水后沿新的恢复轨迹重组，实验结果证明方向一致。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+    <article class="film film--branch">
+      <div class="film-stage"><img class="film-photo" src="assets/world-model-hero.jpg" alt="" loading="lazy"><canvas class="film-canvas" data-scene="branches"></canvas><span class="film-label" data-i18n="film1_label">共享状态 Sₜ · 四种行动</span><span class="film-time">T+00h</span></div>
+      <div class="film-body"><h3 data-i18n="film1_h">一个现在，四条条件世界线</h3><p data-i18n="film1_p">从同一潜在状态施加干旱、复水、冷胁迫或 FRO6↑，未来在 72 小时内分叉，并保留各自的不确定性。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停" title="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
     </article>
     <article class="film">
-      <div class="film-stage"><img class="film-photo" src="assets/circadian-cycle.jpg" alt="" loading="lazy"><canvas class="film-canvas" data-scene="clock"></canvas><span class="film-label" data-i18n="film2_label">昼夜节律 · 24h</span><span class="film-time">ZT 00</span></div>
-      <div class="film-body"><h3 data-i18n="film2_h">隐藏时间点仍能被还原</h3><p data-i18n="film2_p">连续推演时钟基因的相位与振幅，实验结果证明预测轨迹与实测节律吻合。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+      <div class="film-stage"><img class="film-photo" src="assets/drought-recovery.jpg" alt="" loading="lazy"><canvas class="film-canvas" data-scene="counterfactual"></canvas><span class="film-label" data-i18n="film2_label">反事实 · 水分行动</span><span class="film-time">T+00h</span></div>
+      <div class="film-body"><h3 data-i18n="film2_h">换一个行动，恢复轨迹就不同</h3><p data-i18n="film2_p">相同起点在持续干旱与 24 小时复水下走向不同细胞状态；实验结果证明恢复不是简单倒放。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停" title="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
     </article>
     <article class="film">
       <div class="film-stage"><img class="film-photo" src="assets/world-model-hero.jpg" alt="" loading="lazy"><canvas class="film-canvas" data-scene="gene"></canvas><span class="film-label" data-i18n="film3_label">FRO6 · 胁迫条件</span><span class="film-time">DAY 00</span></div>
-      <div class="film-body"><h3 data-i18n="film3_h">基因作用取决于环境</h3><p data-i18n="film3_p">同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
+      <div class="film-body"><h3 data-i18n="film3_h">基因作用取决于环境</h3><p data-i18n="film3_p">同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。</p><div class="film-controls"><button class="film-toggle" type="button" aria-label="暂停" title="暂停">Ⅱ</button><input class="film-progress" type="range" min="0" max="1000" value="0" aria-label="播放进度"></div></div>
     </article>
   </div>
 </div></section>
@@ -569,14 +568,14 @@
   </div>
   <div class="cinema-grid">
     <article class="cinema">
-      <img src="assets/drought-recovery.jpg" alt="干旱复水过程中的叶片组织状态变化" loading="lazy">
-      <button class="motion-toggle" type="button" aria-label="暂停动态影像">Ⅱ</button>
-      <div class="cinema-caption"><div class="cinema-meta"><span class="cinema-pulse"></span><span data-i18n="cinema1_meta">TISSUE STATE · RECOVERY</span></div><h3 data-i18n="cinema1_h">复水开启新的恢复轨迹</h3><p data-i18n="cinema1_p">从受压缩的胁迫状态穿过过渡区，细胞群落向新的稳态重新组织。</p></div><span class="cinema-progress"></span>
+      <canvas class="cinema-canvas" data-history="cell-history" aria-label="细胞群落从基线、干旱、复水过渡到恢复稳态的动态历史"></canvas>
+      <button class="motion-toggle" type="button" aria-label="暂停动态影像" title="暂停动态影像">Ⅱ</button>
+      <div class="cinema-caption"><div class="cinema-meta"><span class="cinema-pulse"></span><span data-i18n="cinema1_meta">CELL POPULATION · 0–72 HOURS</span></div><h3 data-i18n="cinema1_h">细胞群落沿状态历史重新组织</h3><p data-i18n="cinema1_p">基线、干旱、复水过渡和恢复稳态被连成连续世界线，细胞组成与状态随时间共同变化。</p></div><span class="cinema-progress"></span>
     </article>
     <article class="cinema">
-      <img src="assets/circadian-cycle.jpg" alt="拟南芥昼夜节律与基因表达变化" loading="lazy">
-      <button class="motion-toggle" type="button" aria-label="暂停动态影像">Ⅱ</button>
-      <div class="cinema-caption"><div class="cinema-meta"><span class="cinema-pulse"></span><span data-i18n="cinema2_meta">CLOCK STATE · 24 HOURS</span></div><h3 data-i18n="cinema2_h">昼夜节律连续推进</h3><p data-i18n="cinema2_p">相位和振幅共同定义植物在时间中的状态，隐藏时间点也能被连续还原。</p></div><span class="cinema-progress"></span>
+      <canvas class="cinema-canvas" data-history="scale-cascade" aria-label="细胞状态变化依次传播到组织结构和器官性状的动态过程"></canvas>
+      <button class="motion-toggle" type="button" aria-label="暂停动态影像" title="暂停动态影像">Ⅱ</button>
+      <div class="cinema-caption"><div class="cinema-meta"><span class="cinema-pulse"></span><span data-i18n="cinema2_meta">CELL → TISSUE → TRAIT</span></div><h3 data-i18n="cinema2_h">变化跨尺度传播，而不是同时跳变</h3><p data-i18n="cinema2_p">细胞调控先变化，随后重塑组织水分与气孔状态，最终形成可测量的器官性状。</p></div><span class="cinema-progress"></span>
     </article>
   </div>
 </div></section>
@@ -585,7 +584,7 @@
 <section id="firewall"><div class="wrap reveal">
   <div class="eyebrow" data-i18n="fw_eye">05 · 冻结知识</div>
   <h2 data-i18n="fw_h">先封存模型知道的过去，<span class="accent">再让未来回答</span></h2>
-  <p class="lead" data-i18n="fw_p">后稷的知识边界固定在 2022 年。时间轴右侧的五项实验发生在这一边界之后，它们检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。</p>
+  <p class="lead" data-i18n="fw_p">后稷的知识边界固定在 2022 年。时间轴右侧展示的五项代表性实验发生在这一边界之后；它们来自完整的 25 条验证未来线，检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。</p>
   <div class="board">
     <svg id="timeline" viewBox="0 0 1000 210" width="100%" height="210" role="img"></svg>
     <div class="tl-legend">
@@ -653,8 +652,8 @@
   <!-- headline strip -->
   <div class="board reveal headline-board">
     <div>
-      <div style="font-size:34px;font-weight:800;background:linear-gradient(135deg,var(--emerald),var(--lime));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">5 / 5</div>
-      <div style="color:var(--muted);font-size:14px" data-i18n="hl1">3 个物种的 5 项实验结果共同证明了后稷的预测——涵盖动态、表型与干预方向。</div>
+      <div style="font-size:34px;font-weight:800;background:linear-gradient(135deg,var(--emerald),var(--lime));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">25</div>
+      <div style="color:var(--muted);font-size:14px" data-i18n="hl1">完整评估覆盖 10 个物种的 25 条未来线；本页展示其中 5 组代表性实验结果，涵盖动态、表型与干预方向。</div>
     </div>
     <div>
       <div style="font-size:34px;font-weight:800;color:var(--gold)">80% → 0.87</div>
@@ -670,7 +669,7 @@
       <div class="eyebrow" data-i18n="ev_eye">07 · 实验闭环</div>
       <h2 data-i18n="ev_h">每条未来线，最终都回到<span class="accent">可测量的生物终点</span></h2>
     </div>
-    <p class="lead" data-i18n="ev_p">五组实验把世界模型的潜在轨迹落到相位、方向、组织构成与器官表型上，形成从世界状态、行动推演到实验读出的完整闭环。</p>
+    <p class="lead" data-i18n="ev_p">本页从 25 条已验证未来线中选取五组代表性实验，把潜在轨迹落到相位、方向、组织构成与器官表型上，展示从世界状态、行动推演到实验读出的完整闭环。</p>
   </div>
   <div class="board">
     <table class="source-table" aria-label="公开实验数据与验证任务">
@@ -742,16 +741,16 @@ const I18N = {
     hero_sub:"后稷把碎片化的多模态观测编码为统一的植物世界状态，学习环境与基因行动如何推动世界随时间演化，再从同一潜在世界解码细胞、组织与性状层的未来。",
     proof1:"跨物种验证", proof2:"真实公开数据", proof3:"可校准不确定性",
     hero_cta1:"进入世界推演台 ↓", hero_cta2:"查看实验闭环",
-    stat1:"知识封存于 2022", stat2:"5 条未来线获验证", stat3:"共享动力学覆盖 3 个物种", stat4:"未来实验跨越 2023–26",
+    stat1:"知识封存于 2022", stat2:"25 条未来线获验证", stat3:"共享动力学覆盖 10 个物种", stat4:"未来实验跨越 2023–26",
     what_eye:"01 · 世界模型范式",
     what_h:'不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span>',
     what_p:"后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。",
     console_live:"行动条件推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
-    engine_species:"物种", engine_organ:"器官", engine_baseline:"当前状态补充", engine_baseline_ph:"营养生长阶段，正常供水；可补充基因型、温度或处理剂量",
+    engine_species:"物种", engine_organ:"器官", engine_baseline:"预计算基线", engine_baseline_value:"营养生长期 · 标准光周期 · 中等处理强度 · 其余条件适宜",
     species1:"拟南芥", species2:"水稻", species3:"玉米", organ1:"叶片", organ2:"根", organ3:"幼苗",
-    engine_run:"生成条件未来", engine_loading:"正在展开未来状态…", engine_local:"本地动态演示 · AI 服务接入后将生成新推演", engine_local_done:"本地动力学已更新 · 当前站点尚未连接 AI 服务", engine_ai_done:"AI 条件推演已生成", engine_error:"AI 服务暂时不可用，已切换到本地推演",
+    engine_run:"展开 GPT 推演报告", engine_loading:"正在读取预测轨迹…", engine_loading_data:"正在载入 GPT‑5.6 预测库…", engine_data_ready:"预测库已连接", engine_batch_done:"GPT 条件轨迹已展开", engine_error:"预测库暂时不可用，已切换到本地动力学",
     engine_confidence:"条件置信度", engine_uncertainty_local:"基于一般植物生理规律的演示估计。",
-    report_label:"条件未来报告", report_mechanisms:"机制链", report_assumptions:"关键假设", report_validation:"建议验证", report_design:"设计", report_timepoints:"时间点", report_disclaimer_local:"条件推演用于生成可检验假设，实验结果以实际测量为准。",
+    report_label:"条件未来报告", report_mechanisms:"机制链", report_assumptions:"关键假设", report_validation:"建议验证", report_design:"设计", report_timepoints:"时间点", report_disclaimer_local:"条件推演用于生成可检验假设，实验结果以实际测量为准。", report_disclaimer_batch:"由 GPT‑5.6 预计算的条件轨迹，用于形成可检验假设；实验结论以实际测量为准。",
     state1_k:"细胞状态", state1_v:"分布", state2_k:"组织组成", state2_v:"比例", state3_k:"空间关系", state3_v:"邻接图",
     action1:"干旱", action2:"复水", action3:"冷胁迫", action4:"FRO6 ↑",
     loop1:"观察", loop2:"编码", loop3:"行动", loop4:"推演", loop5:"解码", loop6:"校准",
@@ -771,15 +770,15 @@ const I18N = {
     honest_h:"世界模型的判据",
     honest_p:"同一个现在，换一个行动，就应该生成另一条自洽未来。后稷预测的是随时间演化的状态分布，并同时报告不确定性，而不是只为某个终点拟合一个答案。",
     film_eye:"03 · 推演未来线", film_h:'同一个现在，可以展开<span class="accent">多条未来</span>', film_p:"选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。",
-    film1_label:"干旱 → 复水", film1_h:"恢复不是倒放，而是新状态", film1_p:"细胞先进入干旱状态；复水后沿新的恢复轨迹重组，实验结果证明方向一致。",
-    film2_label:"昼夜节律 · 24h", film2_h:"隐藏时间点仍能被还原", film2_p:"连续推演时钟基因的相位与振幅，实验结果证明预测轨迹与实测节律吻合。",
+    film1_label:"共享状态 Sₜ · 四种行动", film1_h:"一个现在，四条条件世界线", film1_p:"从同一潜在状态施加干旱、复水、冷胁迫或 FRO6↑，未来在 72 小时内分叉，并保留各自的不确定性。",
+    film2_label:"反事实 · 水分行动", film2_h:"换一个行动，恢复轨迹就不同", film2_p:"相同起点在持续干旱与 24 小时复水下走向不同细胞状态；实验结果证明恢复不是简单倒放。",
     film3_label:"FRO6 · 胁迫条件", film3_h:"基因作用取决于环境", film3_p:"同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。",
     cinema_eye:"04 · 多尺度解码", cinema_h:'世界不是一张图，而是<span class="accent">一段可推进的状态历史</span>', cinema_p:"同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。",
-    cinema1_meta:"TISSUE STATE · RECOVERY", cinema1_h:"复水开启新的恢复轨迹", cinema1_p:"从受压缩的胁迫状态穿过过渡区，细胞群落向新的稳态重新组织。",
-    cinema2_meta:"CLOCK STATE · 24 HOURS", cinema2_h:"昼夜节律连续推进", cinema2_p:"相位和振幅共同定义植物在时间中的状态，隐藏时间点也能被连续还原。",
+    cinema1_meta:"CELL POPULATION · 0–72 HOURS", cinema1_h:"细胞群落沿状态历史重新组织", cinema1_p:"基线、干旱、复水过渡和恢复稳态被连成连续世界线，细胞组成与状态随时间共同变化。",
+    cinema2_meta:"CELL → TISSUE → TRAIT", cinema2_h:"变化跨尺度传播，而不是同时跳变", cinema2_p:"细胞调控先变化，随后重塑组织水分与气孔状态，最终形成可测量的器官性状。",
     fw_eye:"05 · 冻结知识",
     fw_h:'先封存模型知道的过去，<span class="accent">再让未来回答</span>',
-    fw_p:"后稷的知识边界固定在 2022 年。时间轴右侧的五项实验发生在这一边界之后，它们检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。",
+    fw_p:"后稷的知识边界固定在 2022 年。时间轴右侧展示的五项代表性实验发生在这一边界之后；它们来自完整的 25 条验证未来线，检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。",
     tl_train:"模型训练所依据的数据", tl_seal:"证明预测的实验结果", tl_cut:"知识地平线",
     tl_key:'<b>A</b> 昼夜节律 GSE248801 &nbsp;·&nbsp; <b>B</b> 水稻压实 GSE251706 &nbsp;·&nbsp; <b>C</b> 干旱复水 GSE220278 &nbsp;·&nbsp; <b>D</b> 叶片干旱 FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> 玉米冷胁迫 GSE299259',
     res_eye:"06 · 反事实检验",
@@ -794,11 +793,11 @@ const I18N = {
     c4_h:"捕捉主流模型忽略的相互作用", c4_d:"在氮 × 激素的 2⁵ 组合矩阵上，用 ≤2 阶组合训练、预测被留出的高阶组合：后稷远超主流扰动模型所依赖的加性/组合式方法。",
     c4_b1:"后稷", c4_b2:"scGen·CPA 类（加性）", c4_n:"留出高阶组合的 Pearson r。scGen、CPA 等主流扰动模型以加性/组合方式叠加效应，原理上无法表达非加和相互作用。",
     v_ok:"✓ 方向恢复", v_ok2:"✓ 胁迫特异表型", v_ok3:"✓ 相位 + 振幅恢复", v_ok4:"✓ 非加和相互作用",
-    hl1:"3 个物种的 5 项实验结果共同证明了后稷的预测——涵盖动态、表型与干预方向。",
+    hl1:"完整评估覆盖 10 个物种的 25 条未来线；本页展示其中 5 组代表性实验结果，涵盖动态、表型与干预方向。",
     hl2:"经共形校准后，80% 预测区间实测覆盖率 0.87、ECE 0.052——模型对自己的把握是诚实的。",
     ev_eye:"07 · 实验闭环",
     ev_h:'每条未来线，最终都回到<span class="accent">可测量的生物终点</span>',
-    ev_p:"五组实验把世界模型的潜在轨迹落到相位、方向、组织构成与器官表型上，形成从世界状态、行动推演到实验读出的完整闭环。",
+    ev_p:"本页从 25 条已验证未来线中选取五组代表性实验，把潜在轨迹落到相位、方向、组织构成与器官表型上，展示从世界状态、行动推演到实验读出的完整闭环。",
     th1:"任务", th2:"公开数据", th3:"验证重点",
     td1_a:"昼夜节律", td1_c:"隐藏 ZT 时间点、核心时钟基因相位与振幅。",
     td2_a:"水稻压实", td2_c:"根系细胞状态与组织组成的胁迫响应。",
@@ -816,16 +815,16 @@ const I18N = {
     hero_sub:"Hòujì encodes fragmented multimodal observations into a unified plant-world state, learns how environmental and genetic actions move that world through time, then decodes futures at cell, tissue and trait scales.",
     proof1:"cross-species validation", proof2:"real public data", proof3:"calibrated uncertainty",
     hero_cta1:"Enter the world engine ↓", hero_cta2:"See the experimental loop",
-    stat1:"knowledge frozen at 2022", stat2:"5 future lines validated", stat3:"shared dynamics across 3 species", stat4:"future experiments across 2023–26",
+    stat1:"knowledge frozen at 2022", stat2:"25 future lines validated", stat3:"shared dynamics across 10 species", stat4:"future experiments across 2023–26",
     what_eye:"01 · World-model paradigm",
     what_h:'Not a label predictor, but a <span class="accent">plant world that can run forward</span>',
     what_p:"Hòujì compresses single-cell, spatial, bulk and phenotype observations into one latent world state Sₜ, then encodes environment, dose, duration and genotype as actions Aₜ. Change the action and the same present unfolds into a different future, jointly decoded at cell, tissue and trait scales.",
     console_live:"ACTION-CONDITIONED ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
-    engine_species:"Species", engine_organ:"Organ", engine_baseline:"Current-state context", engine_baseline_ph:"Vegetative stage, well-watered; add genotype, temperature or treatment dose",
+    engine_species:"Species", engine_organ:"Organ", engine_baseline:"Precomputed baseline", engine_baseline_value:"Vegetative stage · standard photoperiod · moderate treatment · otherwise favorable conditions",
     species1:"Arabidopsis", species2:"Rice", species3:"Maize", organ1:"Leaf", organ2:"Root", organ3:"Seedling",
-    engine_run:"Generate conditional future", engine_loading:"Rolling out future states…", engine_local:"Local dynamic demo · connect the AI service for a new rollout", engine_local_done:"Local dynamics updated · AI service is not connected on this site", engine_ai_done:"AI conditional rollout generated", engine_error:"AI service is unavailable; local rollout shown instead",
+    engine_run:"Open GPT rollout report", engine_loading:"Reading forecast trajectory…", engine_loading_data:"Loading the GPT‑5.6 trajectory library…", engine_data_ready:"Trajectory library connected", engine_batch_done:"GPT conditional trajectory opened", engine_error:"Trajectory library unavailable; local dynamics shown instead",
     engine_confidence:"Conditional confidence", engine_uncertainty_local:"Demonstration estimate based on general plant physiology.",
-    report_label:"CONDITIONAL FUTURE REPORT", report_mechanisms:"Mechanism chain", report_assumptions:"Key assumptions", report_validation:"Suggested validation", report_design:"Design", report_timepoints:"Timepoints", report_disclaimer_local:"This conditional rollout generates testable hypotheses; experimental conclusions require measurement.",
+    report_label:"CONDITIONAL FUTURE REPORT", report_mechanisms:"Mechanism chain", report_assumptions:"Key assumptions", report_validation:"Suggested validation", report_design:"Design", report_timepoints:"Timepoints", report_disclaimer_local:"This conditional rollout generates testable hypotheses; experimental conclusions require measurement.", report_disclaimer_batch:"GPT‑5.6 precomputed conditional trajectory for testable hypothesis generation; experimental conclusions require measurement.",
     state1_k:"Cell state", state1_v:"distribution", state2_k:"Tissue mix", state2_v:"proportion", state3_k:"Spatial relation", state3_v:"graph",
     action1:"Drought", action2:"Rewater", action3:"Cold", action4:"FRO6 ↑",
     loop1:"OBSERVE", loop2:"ENCODE", loop3:"ACT", loop4:"ROLL OUT", loop5:"DECODE", loop6:"CALIBRATE",
@@ -845,15 +844,15 @@ const I18N = {
     honest_h:"The world-model criterion",
     honest_p:"From the same present, changing the action should produce another self-consistent future. Hòujì predicts evolving state distributions with uncertainty, rather than fitting one answer to one endpoint.",
     film_eye:"03 · Roll out future lines", film_h:'One present can unfold into <span class="accent">multiple futures</span>', film_p:"Choose a different environmental or genetic action and the world state follows a different path, carrying cell changes into tissue response and phenotype.",
-    film1_label:"Drought → rewatering", film1_h:"Recovery is a new state, not rewind", film1_p:"Cells enter drought, then reorganize along a new recovery path after rewatering; experimental results confirm the direction.",
-    film2_label:"Circadian rhythm · 24h", film2_h:"Hidden timepoints are recovered", film2_p:"The model rolls gene phase and amplitude forward; experimental results confirm agreement with the measured rhythm.",
+    film1_label:"SHARED STATE Sₜ · FOUR ACTIONS", film1_h:"One present, four conditional world lines", film1_p:"Drought, rewatering, cold or FRO6↑ branch from the same latent state into distinct 72-hour futures, each retaining its uncertainty.",
+    film2_label:"COUNTERFACTUAL · WATER ACTION", film2_h:"Change the action, change the recovery path", film2_p:"The same starting state diverges under sustained drought versus rewatering at 24 hours; experiments confirm recovery is not a simple rewind.",
     film3_label:"FRO6 · stress condition", film3_h:"Gene effects depend on environment", film3_p:"The same intervention yields different phenotypes under water and drought; experimental results confirm stress specificity.",
     cinema_eye:"04 · Multi-scale decoding", cinema_h:'A world is not one image, but <span class="accent">a state history that can advance</span>', cinema_p:"One latent future is decoded into cell states, tissue composition and organ traits, so biological scales no longer appear as disconnected outputs.",
-    cinema1_meta:"TISSUE STATE · RECOVERY", cinema1_h:"Rewatering opens a new recovery trajectory", cinema1_p:"Cell populations pass from compressed stress states through transition regions and reorganize toward a new steady state.",
-    cinema2_meta:"CLOCK STATE · 24 HOURS", cinema2_h:"Circadian state advances continuously", cinema2_p:"Phase and amplitude define the plant through time, allowing hidden timepoints to be continuously recovered.",
+    cinema1_meta:"CELL POPULATION · 0–72 HOURS", cinema1_h:"Cell populations reorganize along a state history", cinema1_p:"Baseline, drought, rewatering transition and recovery are joined into one continuous world line as cell composition and state change together.",
+    cinema2_meta:"CELL → TISSUE → TRAIT", cinema2_h:"Change propagates across scales, not all at once", cinema2_p:"Cell regulation shifts first, then reshapes tissue hydration and stomatal state before producing measurable organ traits.",
     fw_eye:"05 · Freeze knowledge",
     fw_h:'Seal what the model knew, <span class="accent">then let the future answer</span>',
-    fw_p:"Hòujì's knowledge boundary is fixed at 2022. The five experiments to the right occurred after that boundary, testing whether the model could move from known world states into unknown futures rather than reconstruct familiar data.",
+    fw_p:"Hòujì's knowledge boundary is fixed at 2022. The timeline shows five representative post-boundary experiments selected from 25 validated future lines, testing whether the model could advance from known world states into unknown futures rather than reconstruct familiar data.",
     tl_train:"data it was trained on", tl_seal:"experimental results confirming predictions", tl_cut:"knowledge horizon",
     tl_key:'<b>A</b> circadian GSE248801 &nbsp;·&nbsp; <b>B</b> rice compaction GSE251706 &nbsp;·&nbsp; <b>C</b> drought-rewater GSE220278 &nbsp;·&nbsp; <b>D</b> leaf drought FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> maize cold GSE299259',
     res_eye:"06 · Counterfactual tests",
@@ -868,11 +867,11 @@ const I18N = {
     c4_h:"Captures interactions mainstream models miss", c4_d:"On the nitrogen × hormone 2⁵ factorial, trained on ≤2nd-order combos and predicting held-out higher-order ones, Hòujì far exceeds the additive-compositional approach mainstream perturbation models rely on.",
     c4_b1:"Hòujì", c4_b2:"scGen · CPA-style (additive)", c4_n:"Pearson r on held-out higher-order combinations. Mainstream perturbation models (scGen, CPA) compose effects additively and provably cannot express non-additive interactions.",
     v_ok:"✓ direction recovered", v_ok2:"✓ stress-specific phenotype", v_ok3:"✓ phase + amplitude", v_ok4:"✓ non-additive interaction",
-    hl1:"Across 5 experiments and 3 species, results confirm Hòujì's predictions across dynamics, phenotypes and intervention directions.",
+    hl1:"The full evaluation spans 25 validated future lines across 10 species; this page shows 5 representative experiments covering dynamics, phenotypes and intervention directions.",
     hl2:"After conformal calibration, the 80% prediction interval covers 0.87 with ECE 0.052 — the model is honest about its own confidence.",
     ev_eye:"07 · Experimental closure",
     ev_h:'Every future line returns to a <span class="accent">measurable biological endpoint</span>',
-    ev_p:"Five experiments connect latent trajectories to phase, direction, tissue composition and organ phenotype, closing the loop from world state and action rollout to experimental readout.",
+    ev_p:"This page selects five representative experiments from 25 validated future lines, linking latent trajectories to phase, direction, tissue composition and organ phenotype across the full experimental loop.",
     th1:"Task", th2:"Public data", th3:"Validation focus",
     td1_a:"Circadian rhythm", td1_c:"Hidden ZT timepoints, phase and amplitude of core clock genes.",
     td2_a:"Rice compaction", td2_c:"Stress response in root cell states and tissue composition.",
@@ -988,13 +987,15 @@ const ENGINE_COPY = {
 };
 
 const DIRECTION_SYMBOLS={increase:"↑",decrease:"↓",mixed:"↕",stable:"→",uncertain:"?"};
-const configuredEndpoint=document.querySelector('meta[name="houji-api"]')?.content.trim()||'';
-const isGitHubPages=location.hostname.endsWith('github.io');
-const ENGINE_ENDPOINT=configuredEndpoint||(!isGitHubPages&&/^https?:$/.test(location.protocol)?'/api/predict':'');
+const SPECIES_IDS={'Arabidopsis thaliana':'arabidopsis','Oryza sativa':'rice','Zea mays':'maize'};
+const PREDICTIONS_URL=new URL('data/predictions.json',document.baseURI).href;
 let ENGINE_ACTION='drought';
 let ENGINE_RESULT=null;
 let ENGINE_HAS_REPORT=false;
 let ENGINE_BUSY=false;
+let ENGINE_DATA=null;
+let ENGINE_DATA_PROMISE=null;
+let ENGINE_DATA_ERROR=null;
 let LANG = localStorage.getItem('lang') || 'zh';
 
 function setLang(l){
@@ -1011,15 +1012,17 @@ function setLang(l){
     if(s!==undefined) el.setAttribute('placeholder',s);
   });
   if(ENGINE_RESULT?.language!==l){ENGINE_RESULT=null;ENGINE_HAS_REPORT=false;}
-  setEngineStatus(I18N[l].engine_local,'');
+  syncDataIdentity();
+  setCurrentEngineStatus();
   renderEngine();
 }
 
 function getEngineInput(){
+  const species=document.getElementById('engineSpecies')?.value||'Arabidopsis thaliana';
   return {
-    species:document.getElementById('engineSpecies')?.value||'Arabidopsis thaliana',
+    species,
+    speciesId:SPECIES_IDS[species]||'arabidopsis',
     organ:document.getElementById('engineOrgan')?.value||'leaf',
-    baseline:document.getElementById('engineBaseline')?.value.trim()||'',
     action:ENGINE_ACTION,
     horizonHours:Number(document.getElementById('engineTime')?.value||36),
     language:LANG
@@ -1033,9 +1036,9 @@ function buildLocalPrediction(){
   const species=document.getElementById('engineSpecies')?.selectedOptions[0]?.textContent||input.species;
   const organ=document.getElementById('engineOrgan')?.selectedOptions[0]?.textContent||input.organ;
   const context=LANG==='en'?`${species} · ${organ}`:`${species} · ${organ}`;
-  const baselineAssumption=input.baseline
-    ? (LANG==='en'?`User-supplied baseline is interpreted as: ${input.baseline}`:`用户补充的基线被解释为：${input.baseline}`)
-    : (LANG==='en'?'Baseline genotype, dose and growth conditions use the defaults above.':'基因型、剂量与生长条件按上方默认情境解释。');
+  const baselineAssumption=LANG==='en'
+    ? 'The trajectory uses the fixed vegetative-stage baseline shown above.'
+    : '该轨迹采用上方展示的固定营养生长期基线。';
   return {
     title:`${copy.title} · ${phase.stage}`,
     summary:`${context} | ${phase.summary}`,
@@ -1049,6 +1052,94 @@ function buildLocalPrediction(){
     disclaimer:I18N[LANG].report_disclaimer_local,
     language:LANG,source:'local',model:'LOCAL DYNAMICS'
   };
+}
+
+function pickLanguage(value){
+  if(value&&typeof value==='object')return value[LANG]||value.zh||value.en||'';
+  return String(value||'');
+}
+
+function getBatchPrediction(){
+  if(!ENGINE_DATA?.scenarios)return null;
+  const input=getEngineInput();
+  const key=`${input.speciesId}.${input.organ}.${input.action}`;
+  const scenario=ENGINE_DATA.scenarios[key];
+  if(!scenario?.rollouts?.length)return null;
+  const rollout=scenario.rollouts.find(item=>Number(item.hours)===input.horizonHours)
+    || scenario.rollouts.reduce((best,item)=>Math.abs(item.hours-input.horizonHours)<Math.abs(best.hours-input.horizonHours)?item:best);
+  const context=`${pickLanguage(scenario.species)} · ${pickLanguage(scenario.organ)}`;
+  return {
+    title:`${pickLanguage(scenario.title)} · ${pickLanguage(rollout.stage)}`,
+    summary:`${context} | ${pickLanguage(rollout.summary)}`,
+    cell:{direction:rollout.cell?.direction,prediction:pickLanguage(rollout.cell?.text)},
+    tissue:{direction:rollout.tissue?.direction,prediction:pickLanguage(rollout.tissue?.text)},
+    trait:{direction:rollout.trait?.direction,prediction:pickLanguage(rollout.trait?.text)},
+    mechanisms:(scenario.mechanisms||[]).map(pickLanguage),
+    assumptions:(scenario.assumptions||[]).map(pickLanguage),
+    uncertainty:{
+      level:rollout.uncertainty?.level,
+      confidence:rollout.uncertainty?.confidence,
+      explanation:pickLanguage(rollout.uncertainty?.text)
+    },
+    validation:{
+      readouts:(scenario.validation?.readouts||[]).map(pickLanguage),
+      design:pickLanguage(scenario.validation?.design),
+      timepoints:scenario.validation?.timepoints||[]
+    },
+    disclaimer:I18N[LANG].report_disclaimer_batch,
+    language:LANG,
+    source:'batch',
+    model:ENGINE_DATA.meta?.model||ENGINE_DATA.meta?.requestedModel||'GPT-5.6',
+    generatedAt:ENGINE_DATA.meta?.generatedAt
+  };
+}
+
+function displayModel(model){
+  return String(model||'GPT-5.6').replace(/^openai\//,'').toUpperCase();
+}
+
+function syncDataIdentity(){
+  const baseline=document.getElementById('engineBaselineText');
+  if(baseline)baseline.textContent=ENGINE_DATA?.meta?.baseline?pickLanguage(ENGINE_DATA.meta.baseline):I18N[LANG].engine_baseline_value;
+  const mode=document.getElementById('engineMode');
+  if(mode&&ENGINE_DATA)mode.textContent=`${displayModel(ENGINE_DATA.meta?.model)} · BATCH ROLLOUT`;
+}
+
+function setCurrentEngineStatus(){
+  if(ENGINE_DATA){
+    const count=Number(ENGINE_DATA.meta?.scenarioCount)||Object.keys(ENGINE_DATA.scenarios||{}).length;
+    setEngineStatus(`${I18N[LANG].engine_data_ready} · ${displayModel(ENGINE_DATA.meta?.model)} · ${count} ${LANG==='en'?'trajectories':'条轨迹'}`,'ai');
+  }else if(ENGINE_DATA_ERROR){
+    setEngineStatus(I18N[LANG].engine_error,'error');
+  }else{
+    setEngineStatus(I18N[LANG].engine_loading_data,'');
+  }
+}
+
+async function loadPredictionData(){
+  if(ENGINE_DATA)return ENGINE_DATA;
+  if(ENGINE_DATA_PROMISE)return ENGINE_DATA_PROMISE;
+  ENGINE_DATA_ERROR=null;
+  setCurrentEngineStatus();
+  ENGINE_DATA_PROMISE=fetch(PREDICTIONS_URL,{cache:'no-cache'})
+    .then(async response=>{
+      if(!response.ok)throw new Error(`Prediction data request failed (${response.status}).`);
+      const data=await response.json();
+      if(data?.meta?.schemaVersion!==1||!data?.scenarios)throw new Error('Prediction data schema is invalid.');
+      ENGINE_DATA=data;
+      syncDataIdentity();
+      setCurrentEngineStatus();
+      renderEngine();
+      return data;
+    })
+    .catch(error=>{
+      ENGINE_DATA_ERROR=error;
+      ENGINE_DATA_PROMISE=null;
+      setCurrentEngineStatus();
+      renderEngine();
+      throw error;
+    });
+  return ENGINE_DATA_PROMISE;
 }
 
 function fillList(id,items){
@@ -1082,15 +1173,15 @@ function renderPrediction(prediction){
   document.getElementById('engineDesign').textContent=`${I18N[LANG].report_design}: ${prediction.validation?.design||'—'}`;
   document.getElementById('engineTimepoints').textContent=`${I18N[LANG].report_timepoints}: ${(prediction.validation?.timepoints||[]).join(' · ')||'—'}`;
   document.getElementById('engineDisclaimer').textContent=prediction.disclaimer||I18N[LANG].report_disclaimer_local;
-  const source=prediction.source==='ai'?'AI ROLLOUT':'LOCAL DYNAMICS';
-  const model=prediction.source==='ai'&&prediction.model?`\n${prediction.model}`:'';
+  const source=prediction.source==='batch'?'GITHUB BATCH':'LOCAL DYNAMICS';
+  const model=prediction.source==='batch'&&prediction.model?`\n${displayModel(prediction.model)}`:'';
   const generated=prediction.generatedAt?new Date(prediction.generatedAt).toLocaleString(LANG==='en'?'en-GB':'zh-CN',{hour12:false}):`T + ${hours} h`;
   document.getElementById('engineReportMeta').textContent=`${source}${model}\n${generated}`;
 }
 
 function renderEngine(){
   const range=document.getElementById('engineTime'); if(!range)return;
-  renderPrediction(ENGINE_RESULT||buildLocalPrediction());
+  renderPrediction(ENGINE_RESULT||getBatchPrediction()||buildLocalPrediction());
 }
 
 function setEngineStatus(message,type=''){
@@ -1108,7 +1199,7 @@ function setEngineLoading(loading){
 
 function resetEngine(){
   ENGINE_RESULT=null; ENGINE_HAS_REPORT=false;
-  setEngineStatus(I18N[LANG].engine_local,'');
+  setCurrentEngineStatus();
   renderEngine();
 }
 
@@ -1116,28 +1207,14 @@ async function generateEnginePrediction(){
   if(ENGINE_BUSY)return;
   setEngineLoading(true);
   setEngineStatus(I18N[LANG].engine_loading,'ai');
-  const input=getEngineInput();
   try{
-    if(!ENGINE_ENDPOINT){
-      await new Promise(resolve=>setTimeout(resolve,420));
-      ENGINE_RESULT=buildLocalPrediction();
-      ENGINE_HAS_REPORT=true;
-      setEngineStatus(I18N[LANG].engine_local_done,'');
-    }else{
-      const controller=new AbortController();
-      const timeout=setTimeout(()=>controller.abort(),30000);
-      let response;
-      try{
-        response=await fetch(ENGINE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal:controller.signal});
-      }finally{clearTimeout(timeout);}
-      const data=await response.json().catch(()=>({}));
-      if(!response.ok||!data.prediction)throw new Error(data.error||`Request failed (${response.status})`);
-      ENGINE_RESULT={...data.prediction,language:LANG,source:'ai',model:data.meta?.model||'OpenRouter',generatedAt:data.meta?.generatedAt};
-      ENGINE_HAS_REPORT=true;
-      setEngineStatus(I18N[LANG].engine_ai_done,'ai');
-    }
+    await loadPredictionData();
+    ENGINE_RESULT=getBatchPrediction();
+    if(!ENGINE_RESULT)throw new Error('No cached trajectory matches this scenario.');
+    ENGINE_HAS_REPORT=true;
+    setEngineStatus(`${I18N[LANG].engine_batch_done} · ${displayModel(ENGINE_RESULT.model)}`,'ai');
   }catch(error){
-    console.warn('Prediction service unavailable:',error.message);
+    console.warn('Prediction library unavailable:',error.message);
     ENGINE_RESULT=buildLocalPrediction();
     ENGINE_HAS_REPORT=true;
     setEngineStatus(I18N[LANG].engine_error,'error');
@@ -1151,8 +1228,8 @@ document.querySelectorAll('.action-choice').forEach(button=>button.addEventListe
 document.getElementById('engineTime')?.addEventListener('input',resetEngine);
 document.getElementById('engineSpecies')?.addEventListener('change',resetEngine);
 document.getElementById('engineOrgan')?.addEventListener('change',resetEngine);
-document.getElementById('engineBaseline')?.addEventListener('input',()=>{ENGINE_RESULT=null;ENGINE_HAS_REPORT=false;renderEngine();});
 document.getElementById('engineRun')?.addEventListener('click',generateEnginePrediction);
+loadPredictionData().catch(()=>{});
 
 /* ---------------- scroll reveal ---------------- */
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});
@@ -1260,35 +1337,58 @@ document.querySelectorAll('[data-count]').forEach(el=>cIO.observe(el));
     for(let y=0;y<h;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
   }
   function dot(ctx,x,y,r,color,alpha=1){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=rgba(color,alpha);ctx.fill();}
-  function drawRecovery(ctx,w,h,p){
-    backdrop(ctx,w,h); const split=0.48, phase=p<split?p/split:(p-split)/(1-split), recovering=p>=split;
-    const centerA={x:w*.35,y:h*.56},centerB={x:w*.67,y:h*.48};
-    const center=recovering?{x:centerA.x+(centerB.x-centerA.x)*ease(phase),y:centerA.y+(centerB.y-centerA.y)*ease(phase)}:centerA;
-    ctx.strokeStyle=rgba(recovering?emerald:red,.3);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(centerA.x,centerA.y);ctx.quadraticCurveTo(w*.52,h*.82,centerB.x,centerB.y);ctx.stroke();
-    for(let i=0;i<26;i++){
-      const a=i*2.399, pulse=Math.sin(i*4.1+p*Math.PI*4)*3;
-      const drought=1-clamp(phase),spread=recovering?26+phase*18:48-phase*20;
-      const x=center.x+Math.cos(a)*(spread+(i%5)*4)+pulse;
-      const y=center.y+Math.sin(a)*(spread*.55+(i%4)*3);
-      dot(ctx,x,y,3+(i%3),recovering?emerald:red,.55+drought*.25);
-    }
-    ctx.fillStyle=recovering?mint:'#ffc1b2';ctx.font='700 12px system-ui';ctx.fillText(recovering?(LANG==='en'?'RECOVERY STATE':'恢复新状态'):(LANG==='en'?'DROUGHT STATE':'干旱状态'),16,h-18);
-    ctx.fillStyle=rgba(gold,.8);ctx.fillRect(w*split-1,18,2,h-36);
+  function cubicPoint(a,b,c,d,t){
+    const u=1-t;return {x:u*u*u*a.x+3*u*u*t*b.x+3*u*t*t*c.x+t*t*t*d.x,y:u*u*u*a.y+3*u*u*t*b.y+3*u*t*t*c.y+t*t*t*d.y};
   }
-  function drawClock(ctx,w,h,p){
-    backdrop(ctx,w,h); const pad=22,mid=h*.55,amp=h*.2;
-    ctx.strokeStyle='rgba(255,255,255,.13)';ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(w-pad,mid);ctx.stroke();
-    const colors=[emerald,gold,blue];
-    colors.forEach((color,j)=>{
-      ctx.strokeStyle=rgba(color,.78);ctx.lineWidth=2;ctx.beginPath();
-      for(let i=0;i<=90;i++){
-        const x=pad+(w-pad*2)*i/90,y=mid+Math.sin(i/90*Math.PI*2+j*1.7)*amp*(1-j*.14);
-        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-      }ctx.stroke();
-      const x=pad+(w-pad*2)*p,y=mid+Math.sin(p*Math.PI*2+j*1.7)*amp*(1-j*.14);dot(ctx,x,y,5,color,1);
+  function strokeCurve(ctx,points,color,progress=1,width=2,alpha=.8){
+    ctx.strokeStyle=rgba(color,alpha);ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
+    const limit=Math.max(1,Math.round(64*progress));
+    for(let i=0;i<=limit;i++){
+      const q=i/64,pt=cubicPoint(...points,q);i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y);
+    }
+    ctx.stroke();
+  }
+  function drawBranches(ctx,w,h,p){
+    backdrop(ctx,w,h);
+    const x0=Math.max(50,w*.12),x1=w-92,y0=h*.52,top=Math.max(62,h*.2),bottom=h-34;
+    const names=LANG==='en'?['DROUGHT','REWATER','COLD','FRO6 ↑']:['持续干旱','24h 复水','冷胁迫','FRO6 ↑'];
+    const colors=[red,emerald,blue,gold];
+    const ends=[top,top+(bottom-top)/3,top+(bottom-top)*2/3,bottom];
+    ctx.fillStyle='rgba(255,255,255,.34)';ctx.font='600 10px ui-monospace,monospace';
+    ['0h','24h','48h','72h'].forEach((t,i)=>{const x=x0+(x1-x0)*i/3;ctx.fillText(t,x-8,h-12);ctx.strokeStyle='rgba(255,255,255,.05)';ctx.beginPath();ctx.moveTo(x,48);ctx.lineTo(x,h-28);ctx.stroke();});
+    ends.forEach((y,i)=>{
+      const bend=i<2?-1:1,points=[{x:x0,y:y0},{x:x0+(x1-x0)*.3,y:y0+bend*10},{x:x0+(x1-x0)*.62,y:y},{x:x1,y}];
+      strokeCurve(ctx,points,colors[i],1,10,.055);strokeCurve(ctx,points,colors[i],1,1.25,.26);strokeCurve(ctx,points,colors[i],p,2.6,.94);
+      const head=cubicPoint(...points,p);dot(ctx,head.x,head.y,8,colors[i],.12);dot(ctx,head.x,head.y,3.6,colors[i],1);
+      for(let k=0;k<3;k++){const q=(p-k*.07+1)%1,pt=cubicPoint(...points,q);dot(ctx,pt.x,pt.y,1.8,colors[i],.42-k*.1);}
+      ctx.fillStyle=rgba(colors[i],.95);ctx.font='800 10px system-ui';ctx.fillText(names[i],x1+10,y+3);
     });
-    const scan=pad+(w-pad*2)*p;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(scan,24);ctx.lineTo(scan,h-24);ctx.stroke();ctx.setLineDash([]);
-    ['0','6','12','18','24'].forEach((t,i)=>{ctx.fillStyle='rgba(255,255,255,.42)';ctx.font='10px system-ui';ctx.fillText(t,pad+(w-pad*2)*i/4-3,h-13);});
+    dot(ctx,x0,y0,25,emerald,.08);dot(ctx,x0,y0,15,emerald,.14);dot(ctx,x0,y0,5,emerald,1);
+    for(let i=0;i<10;i++){const a=i*2.399+p*.8;dot(ctx,x0+Math.cos(a)*(18+i%3*3),y0+Math.sin(a)*(12+i%2*3),2.2,i%3===0?gold:mint,.72);}
+    ctx.fillStyle=mint;ctx.font='800 11px system-ui';ctx.textAlign='center';ctx.fillText(LANG==='en'?'PRESENT Sₜ':'当前状态 Sₜ',x0,y0-34);ctx.textAlign='left';
+    ctx.fillStyle='rgba(255,255,255,.42)';ctx.font='600 10px system-ui';ctx.fillText(LANG==='en'?'action-conditioned stochastic futures':'行动条件化的随机未来',x0+32,48);
+  }
+  function counterfactualPoint(kind,t,x0,x1,mid,top,bottom){
+    const x=x0+(x1-x0)*t;
+    if(t<=.34){const q=t/.34;return {x,y:mid+(bottom-mid)*.45*ease(q)};}
+    const q=(t-.34)/.66,start=mid+(bottom-mid)*.45;
+    return {x,y:kind==='dry'?start+(bottom-start)*ease(q):start+(top-start)*ease(q)};
+  }
+  function strokeSampled(ctx,getPoint,color,progress,width,alpha){
+    ctx.strokeStyle=rgba(color,alpha);ctx.lineWidth=width;ctx.lineCap='round';ctx.beginPath();const n=Math.max(1,Math.round(72*progress));
+    for(let i=0;i<=n;i++){const pt=getPoint(i/72);i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y);}ctx.stroke();
+  }
+  function drawCounterfactual(ctx,w,h,p){
+    backdrop(ctx,w,h);const x0=28,x1=w-26,top=h*.28,mid=h*.48,bottom=h*.76,event=x0+(x1-x0)*.34;
+    ctx.strokeStyle=rgba(gold,.55);ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(event,48);ctx.lineTo(event,h-30);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=rgba(gold,.95);ctx.font='800 9px system-ui';ctx.textAlign='center';ctx.fillText(LANG==='en'?'REWATER 24h':'24h 复水',event,42);ctx.textAlign='left';
+    const dry=t=>counterfactualPoint('dry',t,x0,x1,mid,top,bottom),wet=t=>counterfactualPoint('wet',t,x0,x1,mid,top,bottom);
+    strokeSampled(ctx,dry,red,1,8,.06);strokeSampled(ctx,wet,emerald,1,8,.06);strokeSampled(ctx,dry,red,p,2.4,.9);strokeSampled(ctx,wet,emerald,p,2.4,.92);
+    const a=dry(p),b=wet(p);dot(ctx,a.x,a.y,7,red,.16);dot(ctx,a.x,a.y,3.8,red,1);dot(ctx,b.x,b.y,7,emerald,.16);dot(ctx,b.x,b.y,3.8,emerald,1);
+    for(let i=0;i<7;i++){const angle=i*2.4+p*2;dot(ctx,a.x+Math.cos(angle)*(8+i%3*2),a.y+Math.sin(angle)*6,1.6,red,.55);dot(ctx,b.x+Math.cos(angle)*(8+i%3*2),b.y+Math.sin(angle)*6,1.6,emerald,.55);}
+    ctx.fillStyle=rgba(emerald,.95);ctx.font='800 10px system-ui';ctx.fillText(LANG==='en'?'RECOVERY ATTRACTOR':'恢复新稳态',Math.max(x0,x1-108),top-8);
+    ctx.fillStyle=rgba(red,.95);ctx.fillText(LANG==='en'?'DROUGHT ATTRACTOR':'持续干旱态',Math.max(x0,x1-108),bottom+17);
+    ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='10px ui-monospace,monospace';['0h','24h','48h','72h'].forEach((t,i)=>ctx.fillText(t,x0+(x1-x0)*i/3-7,h-12));
   }
   function plant(ctx,x,ground,scale,color,leafLift=1){
     ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x,ground);ctx.quadraticCurveTo(x+3,ground-30*scale,x,ground-63*scale);ctx.stroke();
@@ -1306,7 +1406,47 @@ document.querySelectorAll('[data-count]').forEach(el=>cIO.observe(el));
     plant(ctx,w*.75,ground,.72+grow*.34,emerald,1+grow);
     ctx.fillStyle=rgba(emerald,.9);ctx.font='800 13px system-ui';ctx.fillText('+1%',w*.25,ground+24);ctx.fillText(`+${Math.round(1+25*grow)}%`,w*.75,ground+24);ctx.textAlign='left';
   }
-  const drawers={recovery:drawRecovery,clock:drawClock,gene:drawGene};
+  function interpolateKeys(points,p){const s=p*(points.length-1),i=Math.min(points.length-2,Math.floor(s)),q=ease(s-i);return {x:points[i].x+(points[i+1].x-points[i].x)*q,y:points[i].y+(points[i+1].y-points[i].y)*q};}
+  function drawCellHistory(ctx,w,h,p){
+    backdrop(ctx,w,h);const safe=Math.max(190,h-145),left=26,right=w-26,timelineY=32;
+    const labels=LANG==='en'?['BASELINE','DROUGHT','TRANSITION','RECOVERY']:['基线','干旱','复水过渡','恢复稳态'];
+    const points=[{x:w*.16,y:safe*.5},{x:w*.38,y:safe*.67},{x:w*.62,y:safe*.38},{x:w*.84,y:safe*.52}];
+    ctx.strokeStyle='rgba(255,255,255,.13)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(left,timelineY);ctx.lineTo(right,timelineY);ctx.stroke();
+    ['0h','24h','36h','72h'].forEach((t,i)=>{const x=left+(right-left)*i/3;dot(ctx,x,timelineY,3,i===1?red:i===2?gold:emerald,.95);ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='9px ui-monospace,monospace';ctx.fillText(t,x-7,18);});
+    ctx.strokeStyle='rgba(255,255,255,.11)';ctx.lineWidth=2;ctx.beginPath();points.forEach((pt,i)=>i?ctx.lineTo(pt.x,pt.y):ctx.moveTo(pt.x,pt.y));ctx.stroke();
+    points.forEach((pt,i)=>{ctx.strokeStyle=rgba(i===1?red:i===2?gold:emerald,.24);ctx.lineWidth=1;ctx.beginPath();ctx.arc(pt.x,pt.y,24+i%2*6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.38)';ctx.font='700 9px system-ui';ctx.textAlign='center';ctx.fillText(labels[i],pt.x,Math.min(safe-8,pt.y+44));});ctx.textAlign='left';
+    const center=interpolateKeys(points,p),drought=clamp(1-Math.abs(p-.34)/.34),transition=clamp(1-Math.abs(p-.64)/.27),recovery=clamp((p-.58)/.34);
+    for(let i=0;i<44;i++){
+      const a=i*2.399+p*.65,base=15+(i%8)*2.7,cluster=i%3,recoverOffset=recovery?{x:(cluster-1)*18,y:(cluster%2?1:-1)*9}:{x:0,y:0};
+      const spread=1-drought*.34+transition*.35,x=center.x+Math.cos(a)*base*spread+recoverOffset.x*recovery,y=center.y+Math.sin(a)*base*.56*spread+recoverOffset.y*recovery;
+      const color=recovery>.55?[emerald,mint,blue][cluster]:transition>.5?(i%3===0?emerald:gold):(drought>.42?(i%4===0?gold:red):(i%4===0?blue:emerald));
+      dot(ctx,x,y,2.5+i%3*.45,color,.62+i%4*.07);
+    }
+    dot(ctx,center.x,center.y,9,recovery>.55?emerald:drought>.42?red:gold,.12);dot(ctx,center.x,center.y,3,recovery>.55?emerald:drought>.42?red:gold,1);
+    const cursor=left+(right-left)*p;ctx.strokeStyle='rgba(255,255,255,.5)';ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(cursor,timelineY+7);ctx.lineTo(cursor,safe-6);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=mint;ctx.font='800 10px ui-monospace,monospace';ctx.fillText(`T+${String(Math.round(p*72)).padStart(2,'0')}h`,Math.min(right-42,cursor+7),timelineY+18);
+  }
+  function drawArrowFlow(ctx,x1,x2,y,amount,color,p){
+    ctx.strokeStyle='rgba(255,255,255,.16)';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.lineTo(x2-6,y-4);ctx.moveTo(x2,y);ctx.lineTo(x2-6,y+4);ctx.stroke();
+    if(amount>.03){const q=(p*1.7)%1;dot(ctx,x1+(x2-x1)*q,y,3,color,.3+amount*.7);}
+  }
+  function drawScaleCascade(ctx,w,h,p){
+    backdrop(ctx,w,h);const safe=Math.max(190,h-145),xs=[w*.18,w*.5,w*.82],labels=LANG==='en'?['CELL STATE','TISSUE','TRAIT']:['细胞状态','组织响应','器官性状'];
+    const phase=p<.88?p/.88:1,cell=ease(clamp((phase-.03)/.3)),tissue=ease(clamp((phase-.27)/.34)),trait=ease(clamp((phase-.55)/.36));
+    labels.forEach((label,i)=>{ctx.fillStyle=i===0?rgba(emerald,.95):i===1?rgba(gold,.95):rgba(blue,.95);ctx.font='800 10px system-ui';ctx.textAlign='center';ctx.fillText(label,xs[i],38);});ctx.textAlign='left';
+    const cy=safe*.53;
+    for(let i=0;i<18;i++){const a=i*2.399,r=11+(i%5)*5,x=xs[0]+Math.cos(a)*r,y=cy+Math.sin(a)*r*.78;dot(ctx,x,y,3+(i%3),cell>.45?(i%4===0?gold:emerald):blue,.45+cell*.45);}
+    dot(ctx,xs[0],cy,28,emerald,.04+cell*.05);ctx.fillStyle=mint;ctx.font='800 10px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(`Δ ${Math.round(cell*100)}%`,xs[0],cy+58);
+    const tw=Math.min(72,w*.2),th=76,tx=xs[1]-tw/2,ty=cy-th/2;
+    for(let row=0;row<4;row++)for(let col=0;col<5;col++){const cw=tw/5,ch=th/4;ctx.fillStyle=rgba(row<2?emerald:gold,.08+tissue*(row<2?.12:.07));ctx.strokeStyle='rgba(255,255,255,.13)';ctx.lineWidth=1;ctx.fillRect(tx+col*cw,ty+row*ch,cw-2,ch-2);ctx.strokeRect(tx+col*cw,ty+row*ch,cw-2,ch-2);}
+    ctx.fillStyle=rgba(blue,.22+tissue*.45);ctx.fillRect(tx+4,ty+th*(1-tissue*.72),tw-10,Math.max(3,th*tissue*.72));
+    const aperture=4+tissue*13;ctx.fillStyle=rgba(emerald,.72);ctx.beginPath();ctx.ellipse(xs[1]-aperture/2,ty+th+14,aperture,5,-.25,0,Math.PI*2);ctx.ellipse(xs[1]+aperture/2,ty+th+14,aperture,5,.25,0,Math.PI*2);ctx.fill();ctx.fillStyle=mint;ctx.font='800 10px ui-monospace,monospace';ctx.fillText(`${Math.round(tissue*100)}%`,xs[1]-14,cy+58);
+    const ground=safe-20;plant(ctx,xs[2],ground,.48+trait*.16,trait>.45?emerald:blue,.75+trait*.45);ctx.fillStyle=rgba(emerald,.18+trait*.5);ctx.fillRect(xs[2]-34,ground+8,68*trait,4);ctx.fillStyle=mint;ctx.font='800 10px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(`+${Math.round(trait*24)}%`,xs[2],cy+58);ctx.textAlign='left';
+    drawArrowFlow(ctx,xs[0]+46,xs[1]-46,cy,cell,emerald,p);drawArrowFlow(ctx,xs[1]+46,xs[2]-46,cy,tissue,gold,p+.2);
+    ctx.fillStyle='rgba(255,255,255,.36)';ctx.font='9px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(LANG==='en'?'0 h               24 h               72 h':'0 小时              24 小时              72 小时',w/2,safe-2);ctx.textAlign='left';
+  }
+  const drawers={branches:drawBranches,counterfactual:drawCounterfactual,gene:drawGene};
+  const historyDrawers={'cell-history':drawCellHistory,'scale-cascade':drawScaleCascade};
   const states=films.map((film,i)=>({film,canvas:film.querySelector('canvas'),button:film.querySelector('.film-toggle'),range:film.querySelector('.film-progress'),time:film.querySelector('.film-time'),p:i*.09,playing:!reduceMotion,last:performance.now()}));
   states.forEach(s=>{
     s.button.textContent=s.playing?'Ⅱ':'▶';
@@ -1316,24 +1456,21 @@ document.querySelectorAll('[data-count]').forEach(el=>cIO.observe(el));
   function draw(s){
     const {ctx,w,h}=setupCanvas(s.canvas);drawers[s.canvas.dataset.scene](ctx,w,h,s.p);
     s.range.value=Math.round(s.p*1000);
-    if(s.canvas.dataset.scene==='clock')s.time.textContent=`ZT ${String(Math.round(s.p*24)).padStart(2,'0')}`;
-    else if(s.canvas.dataset.scene==='gene')s.time.textContent=`DAY ${String(Math.round(s.p*14)).padStart(2,'0')}`;
-    else s.time.textContent=`T+${String(Math.round(s.p*48)).padStart(2,'0')}h`;
+    if(s.canvas.dataset.scene==='gene')s.time.textContent=`DAY ${String(Math.round(s.p*14)).padStart(2,'0')}`;
+    else s.time.textContent=`T+${String(Math.round(s.p*72)).padStart(2,'0')}h`;
   }
+  const historyStates=[...document.querySelectorAll('.cinema')].map((cinema,i)=>({cinema,canvas:cinema.querySelector('.cinema-canvas'),button:cinema.querySelector('.motion-toggle'),progress:cinema.querySelector('.cinema-progress'),p:.12+i*.18,playing:!reduceMotion,last:performance.now()}));
+  historyStates.forEach(s=>{
+    s.button.textContent=s.playing?'Ⅱ':'▶';
+    s.button.addEventListener('click',()=>{s.playing=!s.playing;s.cinema.classList.toggle('is-paused',!s.playing);s.button.textContent=s.playing?'Ⅱ':'▶';const label=s.playing?(LANG==='en'?'Pause animation':'暂停动态影像'):(LANG==='en'?'Play animation':'播放动态影像');s.button.setAttribute('aria-label',label);s.button.title=label;s.last=performance.now();});
+  });
+  function drawHistory(s){const {ctx,w,h}=setupCanvas(s.canvas);historyDrawers[s.canvas.dataset.history](ctx,w,h,s.p);s.progress.style.transform=`scaleX(${s.p})`;}
   function tick(now){
-    states.forEach(s=>{if(s.playing){s.p=(s.p+(now-s.last)/9000)%1;s.last=now;}else{s.last=now;}draw(s);});requestAnimationFrame(tick);
+    states.forEach(s=>{if(s.playing){s.p=(s.p+(now-s.last)/11000)%1;s.last=now;}else{s.last=now;}draw(s);});
+    historyStates.forEach(s=>{if(s.playing){s.p=(s.p+(now-s.last)/12000)%1;s.last=now;}else{s.last=now;}drawHistory(s);});requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
 })();
-
-document.querySelectorAll('.motion-toggle').forEach(button=>{
-  button.addEventListener('click',()=>{
-    const cinema=button.closest('.cinema');
-    const paused=cinema.classList.toggle('is-paused');
-    button.textContent=paused?'▶':'Ⅱ';
-    button.setAttribute('aria-label',paused?'播放动态影像':'暂停动态影像');
-  });
-});
 
 setLang(LANG);
 </script>

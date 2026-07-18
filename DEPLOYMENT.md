@@ -1,20 +1,32 @@
-# Hòujì AI prediction deployment
+# Hòujì GitHub-only prediction refresh
 
-The public GitHub Pages site is static. The AI prediction endpoint must run as a serverless function so the OpenRouter API key stays private.
+The public site stays entirely on GitHub Pages. GitHub Actions calls OpenRouter privately, writes the complete trajectory library to `data/predictions.json`, and commits that public, key-free data back to the repository.
 
-## Deploy on Vercel
+## One-time setup
 
-1. Import `TaoyongCui/houji-plant-world-model` in Vercel.
-2. Keep the framework preset as `Other` and the project root as the repository root.
-3. Add these environment variables in Vercel:
-   - `OPENROUTER_API_KEY`: a newly generated OpenRouter key with a low credit limit.
-   - `OPENROUTER_MODEL`: `openai/gpt-4o-mini` (verified), or another structured-output model.
-   - `ALLOWED_ORIGINS`: the deployed site origin, plus `https://taoyongcui.github.io` if the GitHub Pages frontend will call this API.
-   - `SAFETY_SALT`: a long random string.
-   - `SITE_URL`: the public site URL used to identify the app to OpenRouter.
-4. Deploy. When the whole site runs on Vercel, the frontend automatically uses `/api/predict`.
-5. To keep GitHub Pages as the frontend, set the `houji-api` meta tag in `index.html` to the full Vercel function URL, for example `https://YOUR-PROJECT.vercel.app/api/predict`.
+1. Delete any OpenRouter key that has appeared in chat or another exposed location.
+2. Create a new OpenRouter key with a low spending limit.
+3. Open the GitHub repository and go to **Settings → Secrets and variables → Actions**.
+4. Create a repository secret named `OPENROUTER_API_KEY` and paste the new key there.
+5. In **Settings → Actions → General**, ensure workflows are allowed to write repository contents if repository policy blocks the explicit workflow permission.
 
-The API includes input limits, an origin allowlist, a short timeout and a lightweight rate limit. Also set a hard credit limit on the OpenRouter key because public endpoints can still be abused.
+## Refresh the prediction library
 
-Never commit `.env` or put `OPENROUTER_API_KEY` in `index.html`. If a key has appeared in chat or any public place, delete it and create a replacement before deployment.
+1. Open **Actions → Refresh GPT world trajectories**.
+2. Choose **Run workflow**.
+3. Keep `openai/gpt-5.6-terra` for the latest balanced GPT-5.6 model, or select `openai/gpt-5.6-sol` for the flagship model at higher cost.
+4. The workflow generates 36 species × organ × action trajectories, validates them, uploads a snapshot artifact, and commits `data/predictions.json`.
+5. GitHub Pages publishes the refreshed data automatically after the commit reaches `main`.
+
+Each trajectory contains bilingual outputs for every 6-hour horizon from 6 to 72 hours. The browser never receives `OPENROUTER_API_KEY`.
+
+## Local generation
+
+Copy `.env.example` values into your shell without creating a tracked `.env`, then run:
+
+```bash
+node scripts/generate-predictions.mjs
+node scripts/validate-predictions.mjs data/predictions.json
+```
+
+Never commit an API key or place it in `index.html`, workflow YAML, or `data/predictions.json`.

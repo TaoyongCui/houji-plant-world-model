@@ -2,4 +2,6 @@
 .env.*
 !.env.example
 .vercel
+.prediction-checkpoint.json
+.prediction-checkpoint.json.tmp
 .DS_Store
