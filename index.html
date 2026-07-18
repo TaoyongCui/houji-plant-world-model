@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="后稷 Hòujì：一个以行动为条件的植物世界模型，面向植物细胞、组织、表型和干预方向的多尺度预测。">
 <meta name="theme-color" content="#05100b">
+<meta name="houji-api" content="">
 <title>后稷 Hòujì · 植物世界模型 / Plant World Model</title>
 <style>
   :root{
@@ -249,14 +250,21 @@
   .console-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 12px var(--emerald);animation:pulse 1.8s infinite}
   .console-equation{padding:22px 22px 18px;font:700 clamp(18px,3vw,29px)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:#eefaf3;border-bottom:1px solid var(--line)}
   .console-equation span{color:var(--gold)}
-  .console-grid{display:grid;grid-template-columns:.88fr 1.15fr 1.15fr}
+  .console-grid{display:grid;grid-template-columns:1fr 1fr 1.18fr}
   .console-pane{min-width:0;padding:22px;border-right:1px solid var(--line)}
   .console-pane:last-child{border-right:0}
   .console-label{color:var(--emerald);font:750 10.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.4px;text-transform:uppercase}
-  .state-symbol{display:flex;align-items:center;justify-content:center;width:104px;height:104px;margin:22px auto;border:1px solid rgba(52,211,153,.38);border-radius:50%;font:800 27px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff;position:relative;background:radial-gradient(circle,rgba(52,211,153,.18),rgba(52,211,153,.02) 70%)}
+  .state-symbol{display:flex;align-items:center;justify-content:center;width:76px;height:76px;margin:18px auto;border:1px solid rgba(52,211,153,.38);border-radius:50%;font:800 22px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff;position:relative;background:radial-gradient(circle,rgba(52,211,153,.18),rgba(52,211,153,.02) 70%)}
   .state-symbol::before,.state-symbol::after{content:"";position:absolute;border:1px solid rgba(230,189,92,.24);border-radius:50%;animation:orbitState 7s linear infinite}
-  .state-symbol::before{inset:-10px}.state-symbol::after{inset:-22px;animation-direction:reverse;animation-duration:11s}
+  .state-symbol::before{inset:-8px}.state-symbol::after{inset:-16px;animation-direction:reverse;animation-duration:11s}
   @keyframes orbitState{to{transform:rotate(360deg)}}
+  .engine-context{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+  .engine-field{display:grid;gap:5px;color:var(--muted);font-size:11.5px}
+  .engine-field.wide{grid-column:1/-1}
+  .engine-field select,.engine-field textarea{width:100%;border:1px solid var(--line);border-radius:6px;background:#08160f;color:#e7f2eb;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+  .engine-field select{height:36px;padding:0 9px;color-scheme:dark}
+  .engine-field textarea{min-height:62px;resize:vertical;padding:8px 9px;line-height:1.45}
+  .engine-field select:focus,.engine-field textarea:focus{border-color:rgba(52,211,153,.64);box-shadow:0 0 0 3px rgba(52,211,153,.08)}
   .state-lines{display:grid;gap:8px;color:var(--muted);font-size:12.5px}
   .state-lines span{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:7px}
   .state-lines em{font-style:normal}.state-lines b{color:#dcebe2;font-weight:650}
@@ -268,16 +276,47 @@
   .time-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:8px;color:var(--muted);font-size:12px}
   .time-row strong{color:var(--gold);font:750 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
   #engineTime{width:100%;accent-color:var(--gold);cursor:pointer}
+  .engine-run{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:42px;margin-top:18px;border:1px solid rgba(52,211,153,.7);border-radius:6px;background:var(--emerald);color:#04160c;font:750 12.5px/1.2 inherit;cursor:pointer;transition:transform .2s,box-shadow .2s,opacity .2s}
+  .engine-run:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(52,211,153,.18)}
+  .engine-run:disabled{cursor:wait;opacity:.65;transform:none}
+  .engine-run-icon{font-size:15px;line-height:1}
+  .engine-run.loading .engine-run-icon{width:14px;height:14px;border:2px solid rgba(4,22,12,.28);border-top-color:#04160c;border-radius:50%;font-size:0;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .engine-status{display:flex;align-items:flex-start;gap:7px;min-height:32px;margin-top:10px;color:var(--muted);font-size:11px;line-height:1.4}
+  .engine-status::before{content:"";flex:0 0 auto;width:6px;height:6px;margin-top:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(230,189,92,.65)}
+  .engine-status.ai::before{background:var(--emerald);box-shadow:0 0 8px rgba(52,211,153,.7)}
+  .engine-status.error::before{background:var(--red);box-shadow:none}
   .future-title{margin:15px 0 13px;color:#fff;font-size:17px}
   .future-stack{display:grid;gap:10px}
-  .future-output{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .future-output{display:grid;grid-template-columns:52px 22px 1fr;gap:8px;align-items:start;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07)}
   .future-output:last-child{border-bottom:0}
   .future-output b{color:var(--gold);font:750 10.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase}
-  .future-output span{color:#d9e8df;font-size:12.5px;transition:opacity .18s}
+  .future-output i{display:grid;place-items:center;width:19px;height:19px;border:1px solid rgba(110,231,183,.24);border-radius:50%;color:var(--mint);font:800 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;font-style:normal}
+  .future-output span{color:#d9e8df;font-size:12.5px;line-height:1.5;transition:opacity .18s}
+  .confidence{margin-top:15px;padding-top:13px;border-top:1px solid rgba(255,255,255,.07)}
+  .confidence-row{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}
+  .confidence-row strong{color:var(--mint);font:750 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .confidence-track{height:3px;margin-top:8px;background:rgba(255,255,255,.08);overflow:hidden}
+  .confidence-fill{height:100%;width:58%;background:linear-gradient(90deg,var(--gold),var(--emerald));transition:width .5s ease}
+  .ai-report{border-top:1px solid var(--line);background:rgba(255,255,255,.018)}
+  .ai-report[hidden]{display:none}
+  .report-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .report-head h3{margin:5px 0 0;font-size:16px;color:#f1f7f3}
+  .report-meta{flex:0 0 auto;color:var(--dim);font:650 10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;text-align:right;white-space:pre-line}
+  .report-summary{margin:0;padding:17px 22px;color:#cfe0d6;font-size:13px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .report-grid{display:grid;grid-template-columns:1fr 1fr 1.1fr}
+  .report-section{min-width:0;padding:18px 22px;border-right:1px solid rgba(255,255,255,.06)}
+  .report-section:last-child{border-right:0}
+  .report-section h4{margin:0 0 10px;color:var(--gold);font:750 10.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px;text-transform:uppercase}
+  .report-section ul{margin:0;padding-left:17px;color:#b8ccc0;font-size:12px;line-height:1.55}
+  .report-section li+li{margin-top:6px}
+  .report-note{margin:10px 0 0;color:var(--muted);font-size:11.5px;line-height:1.5}
+  .report-disclaimer{padding:11px 22px;border-top:1px solid rgba(255,255,255,.06);color:var(--dim);font-size:10.5px}
   .console-loop{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line)}
   .loop-step{padding:13px 8px;text-align:center;color:var(--dim);font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.7px;border-right:1px solid var(--line)}
   .loop-step:last-child{border-right:0}.loop-step strong{display:block;color:var(--mint);font-size:12px;margin-bottom:4px}
-  @media(max-width:900px){.console-grid{grid-template-columns:1fr}.console-pane{border-right:0;border-bottom:1px solid var(--line)}.console-pane:last-child{border-bottom:0}.console-loop{grid-template-columns:repeat(3,1fr)}.loop-step:nth-child(3){border-right:0}}
+  @media(max-width:900px){.console-grid{grid-template-columns:1fr}.console-pane{border-right:0;border-bottom:1px solid var(--line)}.console-pane:last-child{border-bottom:0}.report-grid{grid-template-columns:1fr}.report-section{border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}.report-section:last-child{border-bottom:0}.console-loop{grid-template-columns:repeat(3,1fr)}.loop-step:nth-child(3){border-right:0}}
+  @media(max-width:520px){.console-head{align-items:flex-start;flex-direction:column}.console-equation{font-size:15px;overflow-wrap:anywhere}.engine-context{grid-template-columns:1fr}.engine-field.wide{grid-column:auto}.report-head{flex-direction:column}.report-meta{text-align:left}.future-output{grid-template-columns:46px 20px 1fr}}
 
   .matrix{display:grid; grid-template-columns:1.05fr .95fr; gap:22px; margin-top:34px}
   @media(max-width:900px){.matrix{grid-template-columns:1fr}}
@@ -417,11 +456,16 @@
   <h2 data-i18n="what_h">不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span></h2>
   <p class="lead" data-i18n="what_p">后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。</p>
   <div class="world-console">
-    <div class="console-head"><span>HÒUJÌ / PLANT WORLD ENGINE</span><span class="console-live" data-i18n="console_live">ACTION-CONDITIONED ROLLOUT</span></div>
+    <div class="console-head"><span>HÒUJÌ / PLANT WORLD ENGINE</span><span class="console-live" id="engineMode" data-i18n="console_live">ACTION-CONDITIONED ROLLOUT</span></div>
     <div class="console-equation">p(S<sub>t+1:T</sub> | S<sub>t</sub>, <span>A<sub>t:T</sub></span>) → p(Y<sub>cell</sub>, Y<sub>tissue</sub>, Y<sub>trait</sub>)</div>
     <div class="console-grid">
       <div class="console-pane">
         <div class="console-label" data-i18n="console_state">CURRENT WORLD STATE</div>
+        <div class="engine-context">
+          <label class="engine-field"><span data-i18n="engine_species">物种</span><select id="engineSpecies"><option value="Arabidopsis thaliana" data-i18n="species1">拟南芥</option><option value="Oryza sativa" data-i18n="species2">水稻</option><option value="Zea mays" data-i18n="species3">玉米</option></select></label>
+          <label class="engine-field"><span data-i18n="engine_organ">器官</span><select id="engineOrgan"><option value="leaf" data-i18n="organ1">叶片</option><option value="root" data-i18n="organ2">根</option><option value="seedling" data-i18n="organ3">幼苗</option></select></label>
+          <label class="engine-field wide"><span data-i18n="engine_baseline">当前状态补充</span><textarea id="engineBaseline" maxlength="300" data-i18n-placeholder="engine_baseline_ph" placeholder="营养生长阶段，正常供水；可补充基因型、温度或处理剂量"></textarea></label>
+        </div>
         <div class="state-symbol">S<sub>t</sub></div>
         <div class="state-lines"><span><em data-i18n="state1_k">细胞状态</em><b data-i18n="state1_v">分布</b></span><span><em data-i18n="state2_k">组织组成</em><b data-i18n="state2_v">比例</b></span><span><em data-i18n="state3_k">空间关系</em><b data-i18n="state3_v">邻接图</b></span></div>
       </div>
@@ -434,12 +478,25 @@
           <button class="action-choice" type="button" data-action="fro6" data-i18n="action4">FRO6 ↑</button>
         </div>
         <div class="time-control"><div class="time-row"><span data-i18n="console_horizon">推演时域</span><strong id="engineTimeLabel">T + 36 h</strong></div><input id="engineTime" type="range" min="6" max="72" value="36" step="6" aria-label="推演时域"></div>
+        <button class="engine-run" id="engineRun" type="button"><span class="engine-run-icon" aria-hidden="true">AI</span><span data-i18n="engine_run">生成条件未来</span></button>
+        <div class="engine-status" id="engineStatus" role="status" aria-live="polite" data-i18n="engine_local">本地动态演示 · AI 服务接入后将生成新推演</div>
       </div>
       <div class="console-pane">
         <div class="console-label" data-i18n="console_future">ROLLED-OUT FUTURE</div>
         <h3 class="future-title" id="engineFutureTitle">干旱未来线 · T + 36 h</h3>
-        <div class="future-stack"><div class="future-output"><b>Cell</b><span id="engineCell">气孔关闭 · ABA 应答增强</span></div><div class="future-output"><b>Tissue</b><span id="engineTissue">叶肉应激状态占比上升</span></div><div class="future-output"><b>Trait</b><span id="engineTrait">生长受限 · 保水优先</span></div></div>
+        <div class="future-stack"><div class="future-output"><b>Cell</b><i id="engineCellDirection">↑</i><span id="engineCell">气孔关闭 · ABA 应答增强</span></div><div class="future-output"><b>Tissue</b><i id="engineTissueDirection">↑</i><span id="engineTissue">叶肉应激状态占比上升</span></div><div class="future-output"><b>Trait</b><i id="engineTraitDirection">↓</i><span id="engineTrait">生长受限 · 保水优先</span></div></div>
+        <div class="confidence"><div class="confidence-row"><span data-i18n="engine_confidence">条件置信度</span><strong id="engineConfidence">58%</strong></div><div class="confidence-track"><div class="confidence-fill" id="engineConfidenceFill"></div></div><p class="report-note" id="engineUncertainty" data-i18n="engine_uncertainty_local">基于一般植物生理规律的演示估计。</p></div>
       </div>
+    </div>
+    <div class="ai-report" id="engineReport" hidden>
+      <div class="report-head"><div><div class="console-label" data-i18n="report_label">CONDITIONAL FUTURE REPORT</div><h3 id="engineReportTitle">干旱条件未来报告</h3></div><div class="report-meta" id="engineReportMeta">LOCAL DYNAMICS<br>T + 36 h</div></div>
+      <p class="report-summary" id="engineSummary"></p>
+      <div class="report-grid">
+        <div class="report-section"><h4 data-i18n="report_mechanisms">机制链</h4><ul id="engineMechanisms"></ul></div>
+        <div class="report-section"><h4 data-i18n="report_assumptions">关键假设</h4><ul id="engineAssumptions"></ul></div>
+        <div class="report-section"><h4 data-i18n="report_validation">建议验证</h4><ul id="engineReadouts"></ul><p class="report-note" id="engineDesign"></p><p class="report-note" id="engineTimepoints"></p></div>
+      </div>
+      <div class="report-disclaimer" id="engineDisclaimer" data-i18n="report_disclaimer_local">条件推演用于生成可检验假设，实验结果以实际测量为准。</div>
     </div>
     <div class="console-loop"><div class="loop-step"><strong>01</strong><span data-i18n="loop1">OBSERVE</span></div><div class="loop-step"><strong>02</strong><span data-i18n="loop2">ENCODE</span></div><div class="loop-step"><strong>03</strong><span data-i18n="loop3">ACT</span></div><div class="loop-step"><strong>04</strong><span data-i18n="loop4">ROLL OUT</span></div><div class="loop-step"><strong>05</strong><span data-i18n="loop5">DECODE</span></div><div class="loop-step"><strong>06</strong><span data-i18n="loop6">CALIBRATE</span></div></div>
   </div>
@@ -690,6 +747,11 @@ const I18N = {
     what_h:'不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span>',
     what_p:"后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。",
     console_live:"行动条件推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
+    engine_species:"物种", engine_organ:"器官", engine_baseline:"当前状态补充", engine_baseline_ph:"营养生长阶段，正常供水；可补充基因型、温度或处理剂量",
+    species1:"拟南芥", species2:"水稻", species3:"玉米", organ1:"叶片", organ2:"根", organ3:"幼苗",
+    engine_run:"生成条件未来", engine_loading:"正在展开未来状态…", engine_local:"本地动态演示 · AI 服务接入后将生成新推演", engine_local_done:"本地动力学已更新 · 当前站点尚未连接 AI 服务", engine_ai_done:"AI 条件推演已生成", engine_error:"AI 服务暂时不可用，已切换到本地推演",
+    engine_confidence:"条件置信度", engine_uncertainty_local:"基于一般植物生理规律的演示估计。",
+    report_label:"条件未来报告", report_mechanisms:"机制链", report_assumptions:"关键假设", report_validation:"建议验证", report_design:"设计", report_timepoints:"时间点", report_disclaimer_local:"条件推演用于生成可检验假设，实验结果以实际测量为准。",
     state1_k:"细胞状态", state1_v:"分布", state2_k:"组织组成", state2_v:"比例", state3_k:"空间关系", state3_v:"邻接图",
     action1:"干旱", action2:"复水", action3:"冷胁迫", action4:"FRO6 ↑",
     loop1:"观察", loop2:"编码", loop3:"行动", loop4:"推演", loop5:"解码", loop6:"校准",
@@ -759,6 +821,11 @@ const I18N = {
     what_h:'Not a label predictor, but a <span class="accent">plant world that can run forward</span>',
     what_p:"Hòujì compresses single-cell, spatial, bulk and phenotype observations into one latent world state Sₜ, then encodes environment, dose, duration and genotype as actions Aₜ. Change the action and the same present unfolds into a different future, jointly decoded at cell, tissue and trait scales.",
     console_live:"ACTION-CONDITIONED ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
+    engine_species:"Species", engine_organ:"Organ", engine_baseline:"Current-state context", engine_baseline_ph:"Vegetative stage, well-watered; add genotype, temperature or treatment dose",
+    species1:"Arabidopsis", species2:"Rice", species3:"Maize", organ1:"Leaf", organ2:"Root", organ3:"Seedling",
+    engine_run:"Generate conditional future", engine_loading:"Rolling out future states…", engine_local:"Local dynamic demo · connect the AI service for a new rollout", engine_local_done:"Local dynamics updated · AI service is not connected on this site", engine_ai_done:"AI conditional rollout generated", engine_error:"AI service is unavailable; local rollout shown instead",
+    engine_confidence:"Conditional confidence", engine_uncertainty_local:"Demonstration estimate based on general plant physiology.",
+    report_label:"CONDITIONAL FUTURE REPORT", report_mechanisms:"Mechanism chain", report_assumptions:"Key assumptions", report_validation:"Suggested validation", report_design:"Design", report_timepoints:"Timepoints", report_disclaimer_local:"This conditional rollout generates testable hypotheses; experimental conclusions require measurement.",
     state1_k:"Cell state", state1_v:"distribution", state2_k:"Tissue mix", state2_v:"proportion", state3_k:"Spatial relation", state3_v:"graph",
     action1:"Drought", action2:"Rewater", action3:"Cold", action4:"FRO6 ↑",
     loop1:"OBSERVE", loop2:"ENCODE", loop3:"ACT", loop4:"ROLL OUT", loop5:"DECODE", loop6:"CALIBRATE",
@@ -819,20 +886,117 @@ const I18N = {
 };
 const ENGINE_COPY = {
   zh:{
-    drought:{title:"干旱未来线",cell:"气孔关闭 · ABA 应答增强",tissue:"叶肉应激状态占比上升",trait:"生长受限 · 保水优先"},
-    rewater:{title:"复水未来线",cell:"恢复程序启动 · 非简单反演",tissue:"组织含水状态重新组织",trait:"生长恢复 · 进入新稳态"},
-    cold:{title:"冷胁迫未来线",cell:"冷响应与膜稳定程序启动",tissue:"组织状态沿耐寒轴重排",trait:"生长减速 · 冷适应增强"},
-    fro6:{title:"FRO6 干预未来线",cell:"铁氧化还原状态改变",tissue:"叶肉特异响应增强",trait:"干旱条件下生物量增益"}
+    drought:{
+      title:"干旱未来线",
+      phases:[
+        {max:12,stage:"早期感知",summary:"水势变化先触发快速信号，植物优先降低失水，形态变化通常仍有限。",cell:["increase","ABA、Ca²⁺ 与 ROS 信号增强，气孔开始关闭"],tissue:["mixed","保卫细胞与维管束响应先行，叶片水势开始下降"],trait:["decrease","蒸腾降低，生长速度仅轻度受限"],confidence:66},
+        {max:36,stage:"胁迫适应",summary:"短时信号进入转录与代谢重编程，细胞保护开始转化为组织层的资源重新分配。",cell:["increase","脱水保护、渗透调节与 ABA 应答程序持续增强"],tissue:["increase","叶肉应激状态占比上升，碳同化能力下降"],trait:["decrease","叶面积扩张减慢，资源转向保水与维持"],confidence:62},
+        {max:72,stage:"持续胁迫",summary:"若水分仍未恢复，氧化压力与生长代价累积，未来状态对强度和基因型更敏感。",cell:["mixed","保护程序持续，同时出现氧化压力与早期衰老信号"],tissue:["decrease","光合组织活性与恢复余量下降"],trait:["decrease","生物量积累明显放缓，严重时出现萎蔫"],confidence:52}
+      ],
+      mechanisms:["水势下降通过 ABA、Ca²⁺ 和 ROS 形成快速信号链","气孔关闭降低蒸腾，但同步限制 CO₂ 进入与碳同化","渗透调节和保护蛋白提高耐受，同时消耗生长资源"],
+      assumptions:["胁迫强度为中等且连续施加","植株处于营养生长期，无病原或营养缺乏共胁迫","温度与光周期保持稳定"],
+      readouts:["叶片水势与气孔导度","ABA/ROS 标记及保护基因表达","光合速率、叶面积与干重"],
+      design:"设置正常供水、干旱和复水对照，并分离时间效应与处理效应。",timepoints:["0 h","6 h","24 h","72 h"],uncertainty:"处理强度、发育阶段和基因型尚未完全指定，因此远期置信度较低。"
+    },
+    rewater:{
+      title:"复水未来线",
+      phases:[
+        {max:12,stage:"液压恢复",summary:"复水首先修复水分状态，但胁迫转录记忆不会同步归零，因此恢复不是干旱过程的倒放。",cell:["mixed","水通量快速恢复，ABA 信号下降但胁迫转录仍有残留"],tissue:["increase","组织含水量回升，细胞群开始离开干旱吸引态"],trait:["stable","萎蔫缓解，生长尚未完全恢复"],confidence:68},
+        {max:36,stage:"状态重组",summary:"细胞群沿新的恢复轨迹重组，修复、抗氧化与重新启动生长同时发生。",cell:["mixed","修复与抗氧化程序增强，部分干旱记忆持续"],tissue:["mixed","恢复态细胞比例上升，组织组成发生非对称重排"],trait:["increase","叶片伸展与碳同化逐步恢复"],confidence:64},
+        {max:72,stage:"新稳态",summary:"可逆损伤逐步消退，但长期结果取决于此前干旱造成的不可逆代价。",cell:["decrease","急性胁迫程序回落，稳态和生长程序重新占优"],tissue:["mixed","多数组织恢复，但受损细胞群可能保留"],trait:["increase","生长重新启动，通常仍低于未受胁迫对照"],confidence:56}
+      ],
+      mechanisms:["复水先恢复液压状态，再逐步重置激素和转录网络","抗氧化与膜修复清除干旱后残留损伤","胁迫记忆使恢复轨迹区别于简单时间反演"],
+      assumptions:["复水发生在中度干旱之后且根系仍具活力","恢复供水充分，不伴随涝害","比较对象包含持续干旱与未胁迫对照"],
+      readouts:["相对含水量与叶片水势","ABA、ROS 与膜损伤指标","恢复态细胞比例、光合速率与新生长"],
+      design:"采用干旱→复水时间序列，同时设置持续干旱和全程正常供水对照。",timepoints:["复水前","2 h","12 h","36 h","72 h"],uncertainty:"恢复程度高度依赖先前干旱持续时间和组织损伤是否可逆。"
+    },
+    cold:{
+      title:"冷胁迫未来线",
+      phases:[
+        {max:12,stage:"冷感知",summary:"温度突降先改变膜状态并启动 Ca²⁺ 信号，随后进入 CBF 类冷响应。",cell:["increase","膜流动性变化触发 Ca²⁺、ROS 与 CBF 早期信号"],tissue:["mixed","维管和表皮先响应，组织代谢开始降速"],trait:["decrease","伸长与光合短时下降"],confidence:67},
+        {max:36,stage:"冷驯化",summary:"保护代谢物与膜稳定程序积累，植物用降低生长换取耐寒能力。",cell:["increase","保护蛋白、糖代谢与膜脂重塑增强"],tissue:["increase","耐寒状态细胞比例上升，组织协同增强"],trait:["mixed","生长放缓，但低温耐受提高"],confidence:63},
+        {max:72,stage:"适应或损伤",summary:"中度低温趋向驯化，过强低温则转向光抑制和损伤，两条未来开始分叉。",cell:["mixed","适应程序与氧化损伤信号并存"],tissue:["mixed","耐受组织维持功能，敏感组织活性下降"],trait:["uncertain","耐寒增强或出现冷害，取决于最低温度"],confidence:48}
+      ],
+      mechanisms:["膜物理状态变化引发 Ca²⁺ 与 ROS 冷信号","CBF/DREB 网络推动保护蛋白和渗透物积累","光合作用降速与膜脂重塑共同决定耐受和生长代价"],
+      assumptions:["处理为非冻结性低温","降温速度和光照未造成额外急性损伤","材料未预先冷驯化"],
+      readouts:["叶温、Fv/Fm 与电解质渗漏","CBF/COR 标记表达","可溶性糖、膜脂组成与生长速率"],
+      design:"设置常温、低温和恢复组，并记录实际叶温以区分设定温度与组织温度。",timepoints:["0 h","3 h","12 h","36 h","72 h"],uncertainty:"未给出最低温度与降温速率，72 h 结果可能在驯化和损伤之间分叉。"
+    },
+    fro6:{
+      title:"FRO6 干预未来线",
+      phases:[
+        {max:12,stage:"氧化还原响应",summary:"FRO6 上调首先影响叶肉细胞的铁还原与氧化还原环境，表型变化通常滞后。",cell:["mixed","铁还原与局部氧化还原状态改变，应激信号被重新调节"],tissue:["increase","叶肉细胞的胁迫适应程序优先增强"],trait:["stable","早期生物量尚无明显改变"],confidence:57},
+        {max:36,stage:"叶肉重编程",summary:"在干旱背景下，叶肉氧化还原调节可能改善光合组织维持，但效应依赖表达位置和铁状态。",cell:["increase","抗氧化与电子传递相关状态增强"],tissue:["increase","叶肉功能维持优于未干预干旱组"],trait:["increase","生长抑制趋缓，潜在生物量优势开始出现"],confidence:54},
+        {max:72,stage:"条件表型",summary:"若干预确实缓冲干旱损伤，优势会在较晚表型上累积；正常供水下预计效应较弱。",cell:["mixed","氧化还原稳态改善，但过量铁反应也可能增加风险"],tissue:["increase","干旱下叶肉活性与组织完整性提高"],trait:["increase","干旱条件下生物量相对提高，正常供水下接近稳定"],confidence:50}
+      ],
+      mechanisms:["FRO6 改变质膜铁还原与叶肉氧化还原平衡","氧化还原状态调节光合电子传递和抗氧化能力","基因效应与干旱环境形成交互，而非普遍促生长"],
+      assumptions:["FRO6 在叶肉中有效上调且无明显异位表达","背景包含中度干旱，铁供应不构成极端限制或毒害","比较包含空载体/野生型和正常供水组"],
+      readouts:["FRO6 表达与铁还原酶活性","叶肉 ROS、铁状态与光合效率","干旱和正常供水下的地上部干重"],
+      design:"采用基因型×水分的二因素设计，检验交互项而不只比较单一处理。",timepoints:["0 h","12 h","36 h","72 h","终点干重"],uncertainty:"这是强情境依赖干预；器官、表达量和铁营养不足会显著降低可迁移性。"
+    }
   },
   en:{
-    drought:{title:"Drought future line",cell:"Stomatal closure · ABA response rises",tissue:"Stress-state mesophyll fraction increases",trait:"Growth constrained · water retention prioritized"},
-    rewater:{title:"Rewatering future line",cell:"Recovery program starts · not simple reversal",tissue:"Tissue hydration state reorganizes",trait:"Growth resumes · a new steady state emerges"},
-    cold:{title:"Cold-stress future line",cell:"Cold response and membrane stabilization activate",tissue:"Tissue states reorder along the tolerance axis",trait:"Growth slows · cold adaptation rises"},
-    fro6:{title:"FRO6 intervention future line",cell:"Iron redox state shifts",tissue:"Mesophyll-specific response strengthens",trait:"Biomass gains under drought"}
+    drought:{
+      title:"Drought future line",
+      phases:[
+        {max:12,stage:"early sensing",summary:"Water-potential change triggers rapid signaling before large morphological effects emerge.",cell:["increase","ABA, Ca²⁺ and ROS signaling rises as stomata begin to close"],tissue:["mixed","Guard cells and vasculature respond first while leaf water potential falls"],trait:["decrease","Transpiration drops with only mild early growth restriction"],confidence:66},
+        {max:36,stage:"stress acclimation",summary:"Fast signals become transcriptional and metabolic reprogramming, reallocating resources toward protection.",cell:["increase","Dehydration protection, osmotic adjustment and ABA programs strengthen"],tissue:["increase","Stress-state mesophyll fraction rises as carbon assimilation declines"],trait:["decrease","Leaf expansion slows and water retention takes priority"],confidence:62},
+        {max:72,stage:"sustained stress",summary:"If water remains unavailable, oxidative load and growth costs accumulate and genotype matters more.",cell:["mixed","Protective programs persist alongside oxidative and early senescence signals"],tissue:["decrease","Photosynthetic activity and recovery reserve decline"],trait:["decrease","Biomass accumulation slows markedly; wilting is possible"],confidence:52}
+      ],
+      mechanisms:["Falling water potential couples ABA, Ca²⁺ and ROS into a rapid signal chain","Stomatal closure saves water while limiting CO₂ uptake and assimilation","Osmotic adjustment and protective proteins improve tolerance at a growth cost"],
+      assumptions:["Stress is moderate and continuous","Plants are vegetative without pathogen or nutrient co-stress","Temperature and photoperiod remain stable"],
+      readouts:["Leaf water potential and stomatal conductance","ABA/ROS markers and protective-gene expression","Photosynthesis, leaf area and dry mass"],
+      design:"Compare well-watered, drought and rewatered groups while separating treatment from elapsed-time effects.",timepoints:["0 h","6 h","24 h","72 h"],uncertainty:"Stress intensity, developmental stage and genotype are incompletely specified, lowering long-horizon confidence."
+    },
+    rewater:{
+      title:"Rewatering future line",
+      phases:[
+        {max:12,stage:"hydraulic recovery",summary:"Hydration recovers before transcriptional stress memory resets, so recovery is not drought played backward.",cell:["mixed","Water flux recovers quickly while ABA falls and stress transcripts persist"],tissue:["increase","Tissue hydration rises as cells begin leaving the drought attractor"],trait:["stable","Wilting eases before growth fully resumes"],confidence:68},
+        {max:36,stage:"state reorganization",summary:"Cell populations follow a new recovery path combining repair, antioxidant activity and growth restart.",cell:["mixed","Repair and antioxidant programs rise while some drought memory remains"],tissue:["mixed","Recovery-state fractions rise through asymmetric tissue reorganization"],trait:["increase","Leaf expansion and carbon assimilation gradually recover"],confidence:64},
+        {max:72,stage:"new steady state",summary:"Reversible damage fades, while prior irreversible injury determines the final recovery ceiling.",cell:["decrease","Acute stress programs recede as homeostasis and growth regain priority"],tissue:["mixed","Most tissue recovers while damaged subpopulations may remain"],trait:["increase","Growth restarts but often stays below the unstressed control"],confidence:56}
+      ],
+      mechanisms:["Rewatering restores hydraulics before hormones and transcription reset","Antioxidant and membrane-repair programs remove residual damage","Stress memory makes recovery different from simple time reversal"],
+      assumptions:["Rewatering follows moderate drought while roots remain viable","Water supply is restored without flooding","Controls include sustained drought and never-stressed plants"],
+      readouts:["Relative water content and leaf water potential","ABA, ROS and membrane-damage markers","Recovery-state fractions, photosynthesis and new growth"],
+      design:"Run a drought-to-rewatering time course beside sustained-drought and continuously watered controls.",timepoints:["pre-rewatering","2 h","12 h","36 h","72 h"],uncertainty:"Recovery depends strongly on drought duration and whether tissue damage remains reversible."
+    },
+    cold:{
+      title:"Cold-stress future line",
+      phases:[
+        {max:12,stage:"cold sensing",summary:"A temperature drop first changes membrane state and Ca²⁺ signaling before engaging CBF-like responses.",cell:["increase","Membrane changes activate Ca²⁺, ROS and early CBF signaling"],tissue:["mixed","Vascular and epidermal cells respond early as tissue metabolism slows"],trait:["decrease","Elongation and photosynthesis decline transiently"],confidence:67},
+        {max:36,stage:"cold acclimation",summary:"Protective metabolites and membrane stabilization accumulate, exchanging growth for tolerance.",cell:["increase","Protective proteins, sugar metabolism and lipid remodeling increase"],tissue:["increase","Cold-tolerant cell states expand and tissue coordination strengthens"],trait:["mixed","Growth slows while cold tolerance rises"],confidence:63},
+        {max:72,stage:"adaptation or injury",summary:"Moderate cold favors acclimation; severe cold favors photoinhibition and damage, splitting the future path.",cell:["mixed","Acclimation programs coexist with oxidative-damage signals"],tissue:["mixed","Tolerant tissue maintains function while sensitive regions decline"],trait:["uncertain","Tolerance rises or chilling injury appears, depending on minimum temperature"],confidence:48}
+      ],
+      mechanisms:["Membrane physical changes initiate Ca²⁺ and ROS cold signaling","CBF/DREB networks induce protectants and osmolytes","Photosynthetic slowdown and lipid remodeling set tolerance and growth cost"],
+      assumptions:["Treatment is chilling rather than freezing","Cooling rate and light do not cause separate acute injury","Material was not pre-acclimated"],
+      readouts:["Leaf temperature, Fv/Fm and electrolyte leakage","CBF/COR marker expression","Soluble sugars, membrane lipids and growth rate"],
+      design:"Include ambient, cold and recovery arms and record actual leaf temperature, not chamber setpoint alone.",timepoints:["0 h","3 h","12 h","36 h","72 h"],uncertainty:"Minimum temperature and cooling rate are missing, so 72-hour outcomes may split between acclimation and injury."
+    },
+    fro6:{
+      title:"FRO6 intervention future line",
+      phases:[
+        {max:12,stage:"redox response",summary:"FRO6 upregulation first alters mesophyll iron reduction and redox context; phenotype should lag.",cell:["mixed","Iron reduction and local redox state shift, retuning stress signaling"],tissue:["increase","Mesophyll stress-adaptation programs respond first"],trait:["stable","Early biomass remains largely unchanged"],confidence:57},
+        {max:36,stage:"mesophyll reprogramming",summary:"Under drought, redox regulation may help sustain photosynthetic tissue, conditional on expression and iron status.",cell:["increase","Antioxidant and electron-transport-associated states strengthen"],tissue:["increase","Mesophyll function is maintained better than in drought controls"],trait:["increase","Growth restriction eases and a biomass advantage may emerge"],confidence:54},
+        {max:72,stage:"conditional phenotype",summary:"If the intervention buffers drought injury, the advantage accumulates late while remaining weak under normal watering.",cell:["mixed","Redox homeostasis improves, with risk from excess iron reactivity"],tissue:["increase","Mesophyll activity and integrity improve under drought"],trait:["increase","Relative biomass rises under drought and stays near stable when watered"],confidence:50}
+      ],
+      mechanisms:["FRO6 shifts plasma-membrane iron reduction and mesophyll redox balance","Redox state modulates photosynthetic electron transport and antioxidant capacity","The gene effect interacts with drought rather than generally promoting growth"],
+      assumptions:["FRO6 is effectively increased in mesophyll without strong ectopic expression","Moderate drought is present and iron is neither severely limiting nor toxic","Controls include wild type/vector and normal watering"],
+      readouts:["FRO6 expression and ferric-chelate reductase activity","Mesophyll ROS, iron state and photosynthetic efficiency","Shoot dry mass under drought and normal watering"],
+      design:"Use a genotype-by-watering factorial and test the interaction, not only separate pairwise contrasts.",timepoints:["0 h","12 h","36 h","72 h","final dry mass"],uncertainty:"This intervention is context dependent; organ, expression level and iron nutrition strongly limit transferability."
+    }
   }
 };
+
+const DIRECTION_SYMBOLS={increase:"↑",decrease:"↓",mixed:"↕",stable:"→",uncertain:"?"};
+const configuredEndpoint=document.querySelector('meta[name="houji-api"]')?.content.trim()||'';
+const isGitHubPages=location.hostname.endsWith('github.io');
+const ENGINE_ENDPOINT=configuredEndpoint||(!isGitHubPages&&/^https?:$/.test(location.protocol)?'/api/predict':'');
 let ENGINE_ACTION='drought';
+let ENGINE_RESULT=null;
+let ENGINE_HAS_REPORT=false;
+let ENGINE_BUSY=false;
 let LANG = localStorage.getItem('lang') || 'zh';
+
 function setLang(l){
   LANG=l; localStorage.setItem('lang',l);
   document.documentElement.lang = l;
@@ -842,23 +1006,153 @@ function setLang(l){
     const k=el.getAttribute('data-i18n'); const s=I18N[l][k];
     if(s!==undefined) el.innerHTML=s;
   });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-placeholder'); const s=I18N[l][k];
+    if(s!==undefined) el.setAttribute('placeholder',s);
+  });
+  if(ENGINE_RESULT?.language!==l){ENGINE_RESULT=null;ENGINE_HAS_REPORT=false;}
+  setEngineStatus(I18N[l].engine_local,'');
   renderEngine();
 }
 
-function renderEngine(){
-  const range=document.getElementById('engineTime');
-  if(!range) return;
-  const hours=range.value;
-  const copy=ENGINE_COPY[LANG][ENGINE_ACTION];
-  document.getElementById('engineTimeLabel').textContent=`T + ${hours} h`;
-  document.getElementById('engineFutureTitle').textContent=`${copy.title} · T + ${hours} h`;
-  document.getElementById('engineCell').textContent=copy.cell;
-  document.getElementById('engineTissue').textContent=copy.tissue;
-  document.getElementById('engineTrait').textContent=copy.trait;
-  document.querySelectorAll('.action-choice').forEach(button=>button.classList.toggle('on',button.dataset.action===ENGINE_ACTION));
+function getEngineInput(){
+  return {
+    species:document.getElementById('engineSpecies')?.value||'Arabidopsis thaliana',
+    organ:document.getElementById('engineOrgan')?.value||'leaf',
+    baseline:document.getElementById('engineBaseline')?.value.trim()||'',
+    action:ENGINE_ACTION,
+    horizonHours:Number(document.getElementById('engineTime')?.value||36),
+    language:LANG
+  };
 }
-document.querySelectorAll('.action-choice').forEach(button=>button.addEventListener('click',()=>{ENGINE_ACTION=button.dataset.action;renderEngine();}));
-document.getElementById('engineTime')?.addEventListener('input',renderEngine);
+
+function buildLocalPrediction(){
+  const input=getEngineInput();
+  const copy=ENGINE_COPY[LANG][ENGINE_ACTION];
+  const phase=copy.phases.find(item=>input.horizonHours<=item.max)||copy.phases.at(-1);
+  const species=document.getElementById('engineSpecies')?.selectedOptions[0]?.textContent||input.species;
+  const organ=document.getElementById('engineOrgan')?.selectedOptions[0]?.textContent||input.organ;
+  const context=LANG==='en'?`${species} · ${organ}`:`${species} · ${organ}`;
+  const baselineAssumption=input.baseline
+    ? (LANG==='en'?`User-supplied baseline is interpreted as: ${input.baseline}`:`用户补充的基线被解释为：${input.baseline}`)
+    : (LANG==='en'?'Baseline genotype, dose and growth conditions use the defaults above.':'基因型、剂量与生长条件按上方默认情境解释。');
+  return {
+    title:`${copy.title} · ${phase.stage}`,
+    summary:`${context} | ${phase.summary}`,
+    cell:{direction:phase.cell[0],prediction:phase.cell[1]},
+    tissue:{direction:phase.tissue[0],prediction:phase.tissue[1]},
+    trait:{direction:phase.trait[0],prediction:phase.trait[1]},
+    mechanisms:copy.mechanisms,
+    assumptions:[...copy.assumptions,baselineAssumption].slice(0,4),
+    uncertainty:{level:phase.confidence<55?'high':'medium',confidence:phase.confidence,explanation:copy.uncertainty},
+    validation:{readouts:copy.readouts,design:copy.design,timepoints:copy.timepoints},
+    disclaimer:I18N[LANG].report_disclaimer_local,
+    language:LANG,source:'local',model:'LOCAL DYNAMICS'
+  };
+}
+
+function fillList(id,items){
+  const list=document.getElementById(id); if(!list)return;
+  list.replaceChildren(...(items||[]).map(item=>{const li=document.createElement('li');li.textContent=item;return li;}));
+}
+
+function renderPrediction(prediction){
+  const hours=getEngineInput().horizonHours;
+  document.getElementById('engineTimeLabel').textContent=`T + ${hours} h`;
+  document.getElementById('engineFutureTitle').textContent=`${prediction.title} · T + ${hours} h`;
+  ['Cell','Tissue','Trait'].forEach(scale=>{
+    const key=scale.toLowerCase();
+    document.getElementById(`engine${scale}`).textContent=prediction[key]?.prediction||'—';
+    document.getElementById(`engine${scale}Direction`).textContent=DIRECTION_SYMBOLS[prediction[key]?.direction]||'?';
+  });
+  const confidence=Math.max(0,Math.min(100,Number(prediction.uncertainty?.confidence)||0));
+  document.getElementById('engineConfidence').textContent=`${confidence}%`;
+  document.getElementById('engineConfidenceFill').style.width=`${confidence}%`;
+  document.getElementById('engineUncertainty').textContent=prediction.uncertainty?.explanation||I18N[LANG].engine_uncertainty_local;
+  document.querySelectorAll('.action-choice').forEach(button=>button.classList.toggle('on',button.dataset.action===ENGINE_ACTION));
+
+  const report=document.getElementById('engineReport');
+  report.hidden=!ENGINE_HAS_REPORT;
+  if(!ENGINE_HAS_REPORT)return;
+  document.getElementById('engineReportTitle').textContent=prediction.title;
+  document.getElementById('engineSummary').textContent=prediction.summary||'';
+  fillList('engineMechanisms',prediction.mechanisms);
+  fillList('engineAssumptions',prediction.assumptions);
+  fillList('engineReadouts',prediction.validation?.readouts);
+  document.getElementById('engineDesign').textContent=`${I18N[LANG].report_design}: ${prediction.validation?.design||'—'}`;
+  document.getElementById('engineTimepoints').textContent=`${I18N[LANG].report_timepoints}: ${(prediction.validation?.timepoints||[]).join(' · ')||'—'}`;
+  document.getElementById('engineDisclaimer').textContent=prediction.disclaimer||I18N[LANG].report_disclaimer_local;
+  const source=prediction.source==='ai'?'AI ROLLOUT':'LOCAL DYNAMICS';
+  const model=prediction.source==='ai'&&prediction.model?`\n${prediction.model}`:'';
+  const generated=prediction.generatedAt?new Date(prediction.generatedAt).toLocaleString(LANG==='en'?'en-GB':'zh-CN',{hour12:false}):`T + ${hours} h`;
+  document.getElementById('engineReportMeta').textContent=`${source}${model}\n${generated}`;
+}
+
+function renderEngine(){
+  const range=document.getElementById('engineTime'); if(!range)return;
+  renderPrediction(ENGINE_RESULT||buildLocalPrediction());
+}
+
+function setEngineStatus(message,type=''){
+  const status=document.getElementById('engineStatus'); if(!status)return;
+  status.textContent=message; status.className=`engine-status${type?` ${type}`:''}`;
+}
+
+function setEngineLoading(loading){
+  ENGINE_BUSY=loading;
+  const button=document.getElementById('engineRun'); if(!button)return;
+  button.disabled=loading; button.classList.toggle('loading',loading);
+  const label=button.querySelector('[data-i18n="engine_run"]');
+  if(label)label.textContent=loading?I18N[LANG].engine_loading:I18N[LANG].engine_run;
+}
+
+function resetEngine(){
+  ENGINE_RESULT=null; ENGINE_HAS_REPORT=false;
+  setEngineStatus(I18N[LANG].engine_local,'');
+  renderEngine();
+}
+
+async function generateEnginePrediction(){
+  if(ENGINE_BUSY)return;
+  setEngineLoading(true);
+  setEngineStatus(I18N[LANG].engine_loading,'ai');
+  const input=getEngineInput();
+  try{
+    if(!ENGINE_ENDPOINT){
+      await new Promise(resolve=>setTimeout(resolve,420));
+      ENGINE_RESULT=buildLocalPrediction();
+      ENGINE_HAS_REPORT=true;
+      setEngineStatus(I18N[LANG].engine_local_done,'');
+    }else{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),30000);
+      let response;
+      try{
+        response=await fetch(ENGINE_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal:controller.signal});
+      }finally{clearTimeout(timeout);}
+      const data=await response.json().catch(()=>({}));
+      if(!response.ok||!data.prediction)throw new Error(data.error||`Request failed (${response.status})`);
+      ENGINE_RESULT={...data.prediction,language:LANG,source:'ai',model:data.meta?.model||'OpenRouter',generatedAt:data.meta?.generatedAt};
+      ENGINE_HAS_REPORT=true;
+      setEngineStatus(I18N[LANG].engine_ai_done,'ai');
+    }
+  }catch(error){
+    console.warn('Prediction service unavailable:',error.message);
+    ENGINE_RESULT=buildLocalPrediction();
+    ENGINE_HAS_REPORT=true;
+    setEngineStatus(I18N[LANG].engine_error,'error');
+  }finally{
+    setEngineLoading(false);
+    renderEngine();
+  }
+}
+
+document.querySelectorAll('.action-choice').forEach(button=>button.addEventListener('click',()=>{ENGINE_ACTION=button.dataset.action;resetEngine();}));
+document.getElementById('engineTime')?.addEventListener('input',resetEngine);
+document.getElementById('engineSpecies')?.addEventListener('change',resetEngine);
+document.getElementById('engineOrgan')?.addEventListener('change',resetEngine);
+document.getElementById('engineBaseline')?.addEventListener('input',()=>{ENGINE_RESULT=null;ENGINE_HAS_REPORT=false;renderEngine();});
+document.getElementById('engineRun')?.addEventListener('click',generateEnginePrediction);
 
 /* ---------------- scroll reveal ---------------- */
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});
