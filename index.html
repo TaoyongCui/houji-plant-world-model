@@ -69,7 +69,7 @@
   }
 
   /* ---------- hero ---------- */
-  header{position:relative; padding:112px 0 46px; min-height:820px; overflow:hidden; isolation:isolate}
+  header{position:relative;padding:92px 0 92px;min-height:calc(100svh - 72px);display:flex;align-items:center;overflow:hidden;isolation:isolate}
   .hero-bg{position:absolute;inset:0;z-index:-2;overflow:hidden;background:#06110c}
   .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center;animation:heroDrift 18s ease-in-out infinite alternate;filter:saturate(1.04) contrast(1.04)}
   .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,12,8,.97) 0%,rgba(3,12,8,.88) 31%,rgba(3,12,8,.42) 62%,rgba(3,12,8,.18) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 28%,rgba(3,12,8,.2) 100%)}
@@ -118,7 +118,8 @@
   .btn.ghost:hover{border-color:var(--emerald); color:var(--emerald)}
 
   /* ---------- stat strip ---------- */
-  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:72px}
+  .stat-band{position:relative;z-index:4;margin-top:-44px;padding-bottom:18px}
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:0}
   @media(max-width:720px){ .stats{grid-template-columns:repeat(2,1fr)} }
   .stat{
     background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px 18px; text-align:center;
@@ -294,7 +295,9 @@
   .tags span{border:1px solid var(--line); border-radius:999px; padding:4px 12px; color:var(--muted); font-size:12px}
   @media(max-width:560px){
     .wrap{padding:0 18px}
-    header{padding:76px 0 30px;min-height:760px}
+    header{padding:62px 0 78px;min-height:calc(100svh - 64px)}
+    .stat-band{margin-top:-28px}
+    .stat{padding:16px 10px}
     .hero-bg img{object-position:62% center}
     .hero-bg::after{background:linear-gradient(90deg,rgba(3,12,8,.93),rgba(3,12,8,.55)),linear-gradient(0deg,var(--bg),transparent 42%)}
     .hero-copy{text-align:center;margin:auto}
@@ -355,13 +358,14 @@
   </div>
   </div>
 
-  <div class="stats">
+</div></header>
+
+<div class="stat-band"><div class="wrap"><div class="stats">
     <div class="stat reveal"><div class="num" data-count="2022">2022</div><div class="lab" data-i18n="stat1">它的知识止步于此</div></div>
     <div class="stat reveal"><div class="num"><span data-count="5">5</span>/5</div><div class="lab" data-i18n="stat2">实验结果均证明预测</div></div>
     <div class="stat reveal"><div class="num" data-count="3">3</div><div class="lab" data-i18n="stat3">跨物种：拟南芥·水稻·玉米</div></div>
     <div class="stat reveal"><div class="num">2023–26</div><div class="lab" data-i18n="stat4">验证实验的时间跨度</div></div>
-  </div>
-</div></header>
+  </div></div></div>
 
 <!-- WHAT -->
 <section id="what"><div class="wrap reveal">
