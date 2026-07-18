@@ -417,7 +417,7 @@
   <h2 data-i18n="what_h">不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span></h2>
   <p class="lead" data-i18n="what_p">后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。</p>
   <div class="world-console">
-    <div class="console-head"><span>HÒUJÌ / PLANT WORLD ENGINE</span><span class="console-live" data-i18n="console_live">LIVE ROLLOUT</span></div>
+    <div class="console-head"><span>HÒUJÌ / PLANT WORLD ENGINE</span><span class="console-live" data-i18n="console_live">ACTION-CONDITIONED ROLLOUT</span></div>
     <div class="console-equation">p(S<sub>t+1:T</sub> | S<sub>t</sub>, <span>A<sub>t:T</sub></span>) → p(Y<sub>cell</sub>, Y<sub>tissue</sub>, Y<sub>trait</sub>)</div>
     <div class="console-grid">
       <div class="console-pane">
@@ -689,7 +689,7 @@ const I18N = {
     what_eye:"01 · 世界模型范式",
     what_h:'不是预测一个标签，而是维护一个<span class="accent">可以向前运行的植物世界</span>',
     what_p:"后稷把单细胞、空间、bulk 与表型观测压缩为同一个潜在世界状态 Sₜ；再把环境、剂量、时长和基因型编码为行动 Aₜ。改变行动，模型就在同一个“现在”上展开不同未来，并同时给出细胞、组织与性状层的结果分布。",
-    console_live:"实时推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
+    console_live:"行动条件推演", console_state:"当前世界状态", console_action:"施加行动", console_future:"推演出的未来", console_horizon:"推演时域",
     state1_k:"细胞状态", state1_v:"分布", state2_k:"组织组成", state2_v:"比例", state3_k:"空间关系", state3_v:"邻接图",
     action1:"干旱", action2:"复水", action3:"冷胁迫", action4:"FRO6 ↑",
     loop1:"观察", loop2:"编码", loop3:"行动", loop4:"推演", loop5:"解码", loop6:"校准",
@@ -758,7 +758,7 @@ const I18N = {
     what_eye:"01 · World-model paradigm",
     what_h:'Not a label predictor, but a <span class="accent">plant world that can run forward</span>',
     what_p:"Hòujì compresses single-cell, spatial, bulk and phenotype observations into one latent world state Sₜ, then encodes environment, dose, duration and genotype as actions Aₜ. Change the action and the same present unfolds into a different future, jointly decoded at cell, tissue and trait scales.",
-    console_live:"LIVE ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
+    console_live:"ACTION-CONDITIONED ROLLOUT", console_state:"CURRENT WORLD STATE", console_action:"APPLY AN ACTION", console_future:"ROLLED-OUT FUTURE", console_horizon:"Rollout horizon",
     state1_k:"Cell state", state1_v:"distribution", state2_k:"Tissue mix", state2_v:"proportion", state3_k:"Spatial relation", state3_v:"graph",
     action1:"Drought", action2:"Rewater", action3:"Cold", action4:"FRO6 ↑",
     loop1:"OBSERVE", loop2:"ENCODE", loop3:"ACT", loop4:"ROLL OUT", loop5:"DECODE", loop6:"CALIBRATE",
