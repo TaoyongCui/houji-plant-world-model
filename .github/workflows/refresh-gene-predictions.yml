@@ -1,17 +1,8 @@
-name: Refresh AI world trajectories
+name: Refresh gene-state trajectories
 
 on:
   workflow_dispatch:
     inputs:
-      model:
-        description: GPT model used for the batch
-        required: true
-        default: openai/gpt-5.6-terra
-        type: choice
-        options:
-          - openai/gpt-5.6-terra
-          - openai/gpt-5.6-sol
-          - openai/gpt-5.6-luna
       concurrency:
         description: Parallel OpenRouter requests
         required: true
@@ -26,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-ai-world-trajectories
+  group: refresh-gene-state-trajectories
   cancel-in-progress: false
 
 jobs:
@@ -43,31 +34,31 @@ jobs:
         with:
           node-version: 22
 
-      - name: Generate all trajectories
-        run: node scripts/generate-predictions.mjs
+      - name: Generate gene-state trajectories with 5.6 Sol
+        run: node scripts/generate-gene-predictions.mjs
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENROUTER_MODEL: ${{ inputs.model }}
+          GENE_PREDICTION_MODEL: openai/gpt-5.6-sol
           GENERATION_CONCURRENCY: ${{ inputs.concurrency }}
 
-      - name: Validate prediction data
-        run: node scripts/validate-predictions.mjs data/predictions.json
+      - name: Validate gene-state data
+        run: node scripts/validate-gene-predictions.mjs data/gene-predictions.json
 
-      - name: Upload prediction snapshot
+      - name: Upload gene-state snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: ai-world-trajectories
-          path: data/predictions.json
+          name: gene-state-trajectories
+          path: data/gene-predictions.json
           if-no-files-found: error
 
       - name: Commit refreshed data
         run: |
-          if git diff --quiet -- data/predictions.json; then
-            echo "Prediction data is unchanged."
+          if git diff --quiet -- data/gene-predictions.json; then
+            echo "Gene-state data is unchanged."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/predictions.json
-          git commit -m "Refresh AI world trajectories"
+          git add data/gene-predictions.json
+          git commit -m "Refresh gene-state trajectories"
           git push

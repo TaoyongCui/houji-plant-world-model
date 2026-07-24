@@ -356,11 +356,20 @@
   .gene-readout:last-child{border-right:0}
   .gene-readout b{display:block;color:var(--gold);font:750 9.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase}
   .gene-readout span{display:block;margin-top:6px;color:#c4d7cc;font-size:11.5px;line-height:1.4}
+  .gene-ai-meta{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px 14px;padding:11px 12px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.018)}
+  .gene-ai-source{display:inline-flex;align-items:center;gap:6px;color:#cfe2d6;font:750 9.5px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.4px;white-space:nowrap}
+  .gene-ai-source::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(230,189,92,.7)}
+  .gene-ai-source.ready::before{background:var(--emerald);box-shadow:0 0 8px rgba(52,211,153,.8)}
+  .gene-ai-source.error::before{background:var(--red);box-shadow:0 0 8px rgba(240,112,79,.7)}
+  .gene-ai-source strong{color:var(--gold);font-weight:800}
+  .gene-uncertainty{grid-column:1/-1;grid-row:2;min-width:0;padding-top:8px;border-top:1px solid rgba(255,255,255,.055);color:var(--muted);font-size:10.5px;line-height:1.4;overflow-wrap:anywhere}
+  .gene-confidence{display:flex;align-items:center;gap:7px;color:var(--dim);font-size:9.5px;white-space:nowrap}
+  .gene-confidence strong{color:#edf8f1;font:800 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
   .gene-questions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px}
   .gene-questions span{display:flex;align-items:center;justify-content:center;min-height:38px;padding:6px;border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:10.5px;text-align:center}
   .gene-questions span::before{content:"";width:5px;height:5px;margin-right:6px;border-radius:50%;background:rgb(var(--gene-color));box-shadow:0 0 7px rgba(var(--gene-color),.8)}
   @media(max-width:900px){.gene-lab{grid-template-columns:1fr}.gene-query{border-right:0;border-bottom:1px solid var(--line)}}
-  @media(max-width:560px){.gene-query,.gene-worldline{padding:20px}.gene-env-switch{grid-template-columns:1fr 1fr}.gene-env-choice:nth-child(2){border-right:0}.gene-env-choice:nth-child(-n+2){border-bottom:1px solid var(--line)}.gene-trajectory{grid-template-columns:82px minmax(74px,1fr) 96px;gap:9px;min-height:174px}.gene-state{padding:12px 9px}.gene-state-symbol{width:36px;height:36px}.gene-action-token{max-width:100px;font-size:8.5px}.gene-readout{padding:11px 8px}.gene-readout span{font-size:10.5px}.gene-questions{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.gene-query,.gene-worldline{padding:20px}.gene-env-switch{grid-template-columns:1fr 1fr}.gene-env-choice:nth-child(2){border-right:0}.gene-env-choice:nth-child(-n+2){border-bottom:1px solid var(--line)}.gene-trajectory{grid-template-columns:82px minmax(74px,1fr) 96px;gap:9px;min-height:174px}.gene-state{padding:12px 9px}.gene-state-symbol{width:36px;height:36px}.gene-action-token{max-width:100px;font-size:8.5px}.gene-readout{padding:11px 8px}.gene-readout span{font-size:10.5px}.gene-ai-meta{grid-template-columns:1fr}.gene-ai-source{white-space:normal;flex-wrap:wrap}.gene-confidence{grid-row:2;justify-self:start}.gene-uncertainty{grid-column:1;grid-row:3}.gene-questions{grid-template-columns:1fr 1fr}}
 
   .matrix{display:grid; grid-template-columns:1.05fr .95fr; gap:22px; margin-top:34px}
   @media(max-width:900px){.matrix{grid-template-columns:1fr}}
@@ -646,6 +655,11 @@
         <div class="gene-readout"><b>Tissue</b><span id="geneTissueReadout">水分与代谢状态改变</span></div>
         <div class="gene-readout"><b>Trait</b><span id="geneTraitReadout">生长与耐受产生权衡</span></div>
       </div>
+      <div class="gene-ai-meta">
+        <div class="gene-ai-source" id="geneAISource"><span data-i18n="gene_ai_source">AI 条件推演</span><strong id="geneModelLabel">5.6 SOL</strong></div>
+        <div class="gene-uncertainty" id="geneUncertainty">正在载入 5.6 Sol 状态库…</div>
+        <div class="gene-confidence"><span data-i18n="gene_confidence">条件置信度</span><strong id="geneConfidence">--</strong></div>
+      </div>
       <div class="gene-questions">
         <span data-i18n="gene_q1">状态是否保持</span>
         <span data-i18n="gene_q2">何时开始偏离</span>
@@ -896,6 +910,7 @@ const I18N = {
     gene_env_water:"正常供水", gene_env_drought:"持续干旱", gene_env_rewater:"24h 复水", gene_env_cold:"冷胁迫",
     gene_prompt_label:"待回答的条件未来", gene_prompt_note:"这里构造的是可检验问题：答案应是一条带时间与不确定性的状态轨迹，而不是简单的是或否。",
     gene_now:"当前状态", gene_now_note:"同一基因背景与起始细胞状态", gene_future_note:"待实验检验的条件状态分布",
+    gene_ai_source:"AI 条件推演", gene_confidence:"条件置信度", gene_ai_loading:"正在载入 5.6 Sol 状态库…", gene_ai_error:"状态库暂时不可用，当前显示本地演示结果。",
     gene_q1:"状态是否保持", gene_q2:"何时开始偏离", gene_q3:"改变行动能否恢复", gene_q4:"是否跨尺度传播",
     film_eye:"04 · 推演未来线", film_h:'同一个现在，可以展开<span class="accent">多条未来</span>', film_p:"选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。",
     film1_label:"共享状态 Sₜ · 四种行动", film1_h:"一个现在，四条条件世界线", film1_p:"从同一潜在状态施加干旱、复水、冷胁迫或 FRO6↑，未来在 72 小时内分叉，并保留各自的不确定性。",
@@ -977,6 +992,7 @@ const I18N = {
     gene_env_water:"Well-watered", gene_env_drought:"Sustained drought", gene_env_rewater:"Rewater at 24h", gene_env_cold:"Cold stress",
     gene_prompt_label:"CONDITIONAL FUTURE TO ANSWER", gene_prompt_note:"This constructs a testable question: the answer should be a time-resolved state trajectory with uncertainty, not a simple yes or no.",
     gene_now:"Present state", gene_now_note:"Same genetic background and starting cell state", gene_future_note:"Conditional state distribution awaiting experimental test",
+    gene_ai_source:"AI CONDITIONAL ROLLOUT", gene_confidence:"Conditional confidence", gene_ai_loading:"Loading the 5.6 Sol state library…", gene_ai_error:"State library unavailable; local demonstration output is shown.",
     gene_q1:"Does the state persist?", gene_q2:"When does it diverge?", gene_q3:"Can another action restore it?", gene_q4:"Does it propagate across scales?",
     film_eye:"04 · Roll out future lines", film_h:'One present can unfold into <span class="accent">multiple futures</span>', film_p:"Choose a different environmental or genetic action and the world state follows a different path, carrying cell changes into tissue response and phenotype.",
     film1_label:"SHARED STATE Sₜ · FOUR ACTIONS", film1_h:"One present, four conditional world lines", film1_p:"Drought, rewatering, cold or FRO6↑ branch from the same latent state into distinct 72-hour futures, each retaining its uncertainty.",
@@ -1124,6 +1140,7 @@ const ENGINE_COPY = {
 const DIRECTION_SYMBOLS={increase:"↑",decrease:"↓",mixed:"↕",stable:"→",uncertain:"?"};
 const SPECIES_IDS={'Arabidopsis thaliana':'arabidopsis','Oryza sativa':'rice','Zea mays':'maize'};
 const PREDICTIONS_URL=new URL('data/predictions.json',document.baseURI).href;
+const GENE_PREDICTIONS_URL=new URL('data/gene-predictions.json',document.baseURI).href;
 let ENGINE_ACTION='drought';
 let ENGINE_RESULT=null;
 let ENGINE_HAS_REPORT=false;
@@ -1367,6 +1384,8 @@ loadPredictionData().catch(()=>{});
 
 /* ---------------- gene × environment × time question ---------------- */
 let GENE_ENV='drought';
+let GENE_DATA=null;
+let GENE_DATA_STATUS='loading';
 const GENE_ENV_STATES={
   water:{
     color:'52,211,153',
@@ -1398,14 +1417,25 @@ function renderGeneQuestion(){
   const hours=Number(duration.value||36),gene=geneSelect.value||'FRO6';
   const state=GENE_ENV_STATES[GENE_ENV],copy=state[LANG];
   const phase=hours<=12?0:hours<=36?1:2;
+  const scenario=GENE_DATA?.scenarios?.[`${gene}:${GENE_ENV}`];
+  const rollout=scenario?.rollouts?.find(item=>Number(item.hours)===hours);
   lab.style.setProperty('--gene-color',state.color);
   document.getElementById('geneDurationValue').textContent=`${hours} h`;
   document.getElementById('geneLinkFill').style.width=`${Math.round(hours/72*100)}%`;
   document.getElementById('geneActionToken').textContent=`${copy.label} × ${hours} h`;
-  document.getElementById('geneFutureState').textContent=copy.states[phase];
-  document.getElementById('geneCellReadout').textContent=copy.cell;
-  document.getElementById('geneTissueReadout').textContent=copy.tissue;
-  document.getElementById('geneTraitReadout').textContent=copy.trait;
+  document.getElementById('geneFutureState').textContent=rollout?.state?.[LANG]||copy.states[phase];
+  document.getElementById('geneCellReadout').textContent=rollout?.cell?.[LANG]||copy.cell;
+  document.getElementById('geneTissueReadout').textContent=rollout?.tissue?.[LANG]||copy.tissue;
+  document.getElementById('geneTraitReadout').textContent=rollout?.trait?.[LANG]||copy.trait;
+  const source=document.getElementById('geneAISource');
+  source.classList.toggle('ready',GENE_DATA_STATUS==='ready');
+  source.classList.toggle('error',GENE_DATA_STATUS==='error');
+  document.getElementById('geneModelLabel').textContent=GENE_DATA_STATUS==='ready'
+    ?`${GENE_DATA.meta.modelLabel.toUpperCase()} · ${GENE_DATA.meta.stateCount} ${LANG==='en'?'STATES':'状态'}`
+    :(GENE_DATA_STATUS==='loading'?'5.6 SOL':'LOCAL');
+  document.getElementById('geneConfidence').textContent=rollout?`${rollout.uncertainty.confidence}%`:'--';
+  document.getElementById('geneUncertainty').textContent=rollout?.uncertainty?.text?.[LANG]
+    ||I18N[LANG][GENE_DATA_STATUS==='error'?'gene_ai_error':'gene_ai_loading'];
   const questionContext=GENE_ENV==='rewater'
     ?(LANG==='en'
       ?`a ${hours}-hour action history that switches from drought to rewatering at 24 hours`
@@ -1426,6 +1456,24 @@ document.querySelectorAll('.gene-env-choice').forEach(button=>button.addEventLis
 }));
 document.getElementById('geneProbe')?.addEventListener('change',renderGeneQuestion);
 document.getElementById('geneDuration')?.addEventListener('input',renderGeneQuestion);
+
+async function loadGenePredictionData(){
+  try{
+    const response=await fetch(GENE_PREDICTIONS_URL,{cache:'no-cache'});
+    if(!response.ok)throw new Error(`Gene-state library request failed (${response.status}).`);
+    const data=await response.json();
+    if(data?.meta?.requestedModel!=='openai/gpt-5.6-sol'||data?.meta?.complete!==true||data?.meta?.stateCount!==192){
+      throw new Error('Gene-state library metadata is invalid.');
+    }
+    GENE_DATA=data;
+    GENE_DATA_STATUS='ready';
+  }catch(error){
+    GENE_DATA_STATUS='error';
+    console.warn(error.message);
+  }
+  renderGeneQuestion();
+}
+loadGenePredictionData();
 
 /* ---------------- scroll reveal ---------------- */
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});

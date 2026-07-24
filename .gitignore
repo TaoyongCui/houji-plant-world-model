@@ -4,4 +4,6 @@
 .vercel
 .prediction-checkpoint.json
 .prediction-checkpoint.json.tmp
+.gene-prediction-checkpoint.json
+.gene-prediction-checkpoint.json.tmp
 .DS_Store
