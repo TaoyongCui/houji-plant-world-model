@@ -317,6 +317,51 @@
   @media(max-width:900px){.console-grid{grid-template-columns:1fr}.console-pane{border-right:0;border-bottom:1px solid var(--line)}.console-pane:last-child{border-bottom:0}.report-grid{grid-template-columns:1fr}.report-section{border-right:0;border-bottom:1px solid rgba(255,255,255,.06)}.report-section:last-child{border-bottom:0}.console-loop{grid-template-columns:repeat(3,1fr)}.loop-step:nth-child(3){border-right:0}}
   @media(max-width:520px){.console-head{align-items:flex-start;flex-direction:column}.console-equation{font-size:15px;overflow-wrap:anywhere}.engine-context{grid-template-columns:1fr}.engine-field.wide{grid-column:auto}.report-head{flex-direction:column}.report-meta{text-align:left}.future-output{grid-template-columns:46px 20px 1fr}}
 
+  /* ---------- gene × environment × time question ---------- */
+  .gene-lab{--gene-color:52,211,153;margin-top:34px;display:grid;grid-template-columns:.88fr 1.12fr;border-top:1px solid rgba(110,231,183,.28);border-bottom:1px solid rgba(110,231,183,.2);background:linear-gradient(115deg,rgba(8,29,19,.96),rgba(5,17,12,.98));overflow:hidden;box-shadow:0 26px 75px rgba(0,0,0,.2)}
+  .gene-query{padding:28px;border-right:1px solid var(--line)}
+  .gene-mini-label{color:var(--emerald);font:750 10.5px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1.2px;text-transform:uppercase}
+  .gene-control-grid{display:grid;gap:18px;margin-top:22px}
+  .gene-field{display:grid;gap:8px;min-width:0}
+  .gene-field-head{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px}
+  .gene-field-head strong{color:var(--gold);font:750 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .gene-field select{width:100%;height:42px;padding:0 11px;border:1px solid var(--line);border-radius:6px;background:#07150e;color:#edf7f1;font:650 13px/1.2 inherit;color-scheme:dark;outline:none}
+  .gene-field select:focus{border-color:rgba(52,211,153,.62);box-shadow:0 0 0 3px rgba(52,211,153,.08)}
+  .gene-env-switch{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .gene-env-choice{min-height:40px;padding:7px 5px;border:0;border-right:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--muted);font:700 11px/1.2 inherit;cursor:pointer;transition:background .2s,color .2s,box-shadow .2s}
+  .gene-env-choice:last-child{border-right:0}
+  .gene-env-choice:hover{color:#fff;background:rgba(255,255,255,.045)}
+  .gene-env-choice.on{color:#ecfff5;background:rgba(var(--gene-color),.14);box-shadow:inset 0 -2px 0 rgba(var(--gene-color),.95)}
+  #geneDuration{width:100%;accent-color:rgb(var(--gene-color));cursor:pointer}
+  .gene-prompt{margin-top:24px;padding-top:19px;border-top:1px solid rgba(255,255,255,.07)}
+  .gene-prompt p{margin:8px 0 0;color:#e8f4ed;font-size:16px;line-height:1.62}
+  .gene-prompt-note{display:flex;align-items:flex-start;gap:8px;margin-top:12px;color:var(--muted);font-size:11.5px;line-height:1.5}
+  .gene-prompt-note::before{content:"?";display:grid;place-items:center;flex:0 0 auto;width:18px;height:18px;border:1px solid rgba(230,189,92,.38);border-radius:50%;color:var(--gold);font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .gene-worldline{min-width:0;padding:28px;background:linear-gradient(180deg,rgba(var(--gene-color),.035),transparent 72%)}
+  .gene-formula{color:#dff4e7;font:750 clamp(14px,1.8vw,18px)/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+  .gene-formula span{color:var(--gold)}
+  .gene-trajectory{display:grid;grid-template-columns:minmax(96px,1fr) minmax(105px,1.2fr) minmax(112px,1fr);align-items:center;gap:14px;min-height:192px;margin-top:12px}
+  .gene-state{min-width:0;padding:15px 12px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+  .gene-state.future{border-color:rgba(var(--gene-color),.4);background:rgba(var(--gene-color),.075)}
+  .gene-state-symbol{display:grid;place-items:center;width:42px;height:42px;margin-bottom:12px;border:1px solid rgba(var(--gene-color),.42);border-radius:50%;background:rgba(var(--gene-color),.08);color:#fff;font:800 13px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .gene-state b{display:block;color:#f1f8f4;font-size:12.5px;line-height:1.35}
+  .gene-state small{display:block;margin-top:5px;color:var(--muted);font-size:10.5px;line-height:1.45}
+  .gene-link{position:relative;height:2px;background:rgba(255,255,255,.1)}
+  .gene-link::after{content:"";position:absolute;right:-1px;top:-4px;border-left:7px solid rgba(var(--gene-color),.72);border-top:4px solid transparent;border-bottom:4px solid transparent}
+  .gene-link-fill{position:absolute;left:0;top:0;height:2px;width:50%;background:rgb(var(--gene-color));box-shadow:0 0 12px rgba(var(--gene-color),.7);transition:width .35s ease}
+  .gene-link-fill::after{content:"";position:absolute;right:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:rgb(var(--gene-color));box-shadow:0 0 12px rgba(var(--gene-color),.9)}
+  .gene-action-token{position:absolute;left:50%;top:-34px;transform:translateX(-50%);width:max-content;max-width:140px;padding:5px 8px;border:1px solid rgba(var(--gene-color),.3);border-radius:5px;background:#07150e;color:#e8f8ee;font:750 9.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-align:center}
+  .gene-readouts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .gene-readout{min-width:0;padding:13px 12px;border-right:1px solid var(--line)}
+  .gene-readout:last-child{border-right:0}
+  .gene-readout b{display:block;color:var(--gold);font:750 9.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase}
+  .gene-readout span{display:block;margin-top:6px;color:#c4d7cc;font-size:11.5px;line-height:1.4}
+  .gene-questions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px}
+  .gene-questions span{display:flex;align-items:center;justify-content:center;min-height:38px;padding:6px;border:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:10.5px;text-align:center}
+  .gene-questions span::before{content:"";width:5px;height:5px;margin-right:6px;border-radius:50%;background:rgb(var(--gene-color));box-shadow:0 0 7px rgba(var(--gene-color),.8)}
+  @media(max-width:900px){.gene-lab{grid-template-columns:1fr}.gene-query{border-right:0;border-bottom:1px solid var(--line)}}
+  @media(max-width:560px){.gene-query,.gene-worldline{padding:20px}.gene-env-switch{grid-template-columns:1fr 1fr}.gene-env-choice:nth-child(2){border-right:0}.gene-env-choice:nth-child(-n+2){border-bottom:1px solid var(--line)}.gene-trajectory{grid-template-columns:82px minmax(74px,1fr) 96px;gap:9px;min-height:174px}.gene-state{padding:12px 9px}.gene-state-symbol{width:36px;height:36px}.gene-action-token{max-width:100px;font-size:8.5px}.gene-readout{padding:11px 8px}.gene-readout span{font-size:10.5px}.gene-questions{grid-template-columns:1fr 1fr}}
+
   .matrix{display:grid; grid-template-columns:1.05fr .95fr; gap:22px; margin-top:34px}
   @media(max-width:900px){.matrix{grid-template-columns:1fr}}
   .checklist{display:grid; gap:12px}
@@ -372,6 +417,7 @@
   .tags span{border:1px solid var(--line); border-radius:999px; padding:4px 12px; color:var(--muted); font-size:12px}
   @media(max-width:560px){
     .wrap{padding:0 18px}
+    #films h2 .accent{white-space:nowrap}
     header{padding:48px 0 62px;min-height:calc(100svh - 64px)}
     .stat-band{margin-top:-28px}
     .stat{padding:16px 10px}
@@ -535,11 +581,86 @@
   </div>
 </div></section>
 
+<!-- GENE × ENVIRONMENT × TIME -->
+<section id="gene-question"><div class="wrap reveal">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow" data-i18n="gene_eye">03 · 基因状态追踪</div>
+      <h2 data-i18n="gene_h">这个基因，在这种环境里走一段时间，<span class="accent">还是同一个状态吗？</span></h2>
+    </div>
+    <p class="lead" data-i18n="gene_p">世界模型不只判断一个终点是否相似，而是把基因、环境与处理时长写进行动历史，追踪相关细胞状态何时偏离、能否恢复，以及变化如何传递到组织和表型。</p>
+  </div>
+  <div class="gene-lab" id="geneLab">
+    <div class="gene-query">
+      <div class="gene-mini-label" data-i18n="gene_builder">条件问题构造器</div>
+      <div class="gene-control-grid">
+        <label class="gene-field" for="geneProbe">
+          <span class="gene-field-head"><span data-i18n="gene_probe">关注的基因</span></span>
+          <select id="geneProbe" aria-label="关注的基因" data-i18n-aria="gene_probe">
+            <option value="FRO6" data-i18n="gene_fro6">FRO6 · 铁还原与氧化还原</option>
+            <option value="CBF3" data-i18n="gene_cbf3">CBF3 · 冷响应调控</option>
+            <option value="RD29A" data-i18n="gene_rd29a">RD29A · 脱水响应</option>
+            <option value="TOC1" data-i18n="gene_toc1">TOC1 · 昼夜节律</option>
+          </select>
+        </label>
+        <div class="gene-field">
+          <div class="gene-field-head"><span data-i18n="gene_environment">环境行动</span></div>
+          <div class="gene-env-switch" role="group" aria-label="环境行动" data-i18n-aria="gene_environment">
+            <button class="gene-env-choice" type="button" data-env="water" data-i18n="gene_env_water">正常供水</button>
+            <button class="gene-env-choice on" type="button" data-env="drought" data-i18n="gene_env_drought">持续干旱</button>
+            <button class="gene-env-choice" type="button" data-env="rewater" data-i18n="gene_env_rewater">24h 复水</button>
+            <button class="gene-env-choice" type="button" data-env="cold" data-i18n="gene_env_cold">冷胁迫</button>
+          </div>
+        </div>
+        <label class="gene-field" for="geneDuration">
+          <span class="gene-field-head"><span data-i18n="gene_duration">处理时长</span><strong id="geneDurationValue">36 h</strong></span>
+          <input id="geneDuration" type="range" min="6" max="72" step="6" value="36" aria-label="处理时长" data-i18n-aria="gene_duration">
+        </label>
+      </div>
+      <div class="gene-prompt">
+        <div class="gene-mini-label" data-i18n="gene_prompt_label">待回答的条件未来</div>
+        <p id="geneQuestionText">给定同一个初始状态，FRO6 在持续干旱环境处理 36 小时后，相关细胞状态是否仍然相同？</p>
+        <div class="gene-prompt-note" data-i18n="gene_prompt_note">这里构造的是可检验问题：答案应是一条带时间与不确定性的状态轨迹，而不是简单的是或否。</div>
+      </div>
+    </div>
+    <div class="gene-worldline">
+      <div class="gene-formula">p(S<sub>t+Δt</sub> | S<sub>t</sub>, <span>Gene × Environment × Duration</span>)</div>
+      <div class="gene-trajectory">
+        <div class="gene-state">
+          <div class="gene-state-symbol">Sₜ</div>
+          <b data-i18n="gene_now">当前状态</b>
+          <small data-i18n="gene_now_note">同一基因背景与起始细胞状态</small>
+        </div>
+        <div class="gene-link">
+          <div class="gene-link-fill" id="geneLinkFill"></div>
+          <div class="gene-action-token" id="geneActionToken">持续干旱 × 36 h</div>
+        </div>
+        <div class="gene-state future">
+          <div class="gene-state-symbol">S′</div>
+          <b id="geneFutureState">可能进入胁迫适应状态</b>
+          <small data-i18n="gene_future_note">待实验检验的条件状态分布</small>
+        </div>
+      </div>
+      <div class="gene-readouts">
+        <div class="gene-readout"><b>Cell</b><span id="geneCellReadout">调控程序重新分配</span></div>
+        <div class="gene-readout"><b>Tissue</b><span id="geneTissueReadout">水分与代谢状态改变</span></div>
+        <div class="gene-readout"><b>Trait</b><span id="geneTraitReadout">生长与耐受产生权衡</span></div>
+      </div>
+      <div class="gene-questions">
+        <span data-i18n="gene_q1">状态是否保持</span>
+        <span data-i18n="gene_q2">何时开始偏离</span>
+        <span data-i18n="gene_q3">改变行动能否恢复</span>
+        <span data-i18n="gene_q4">是否跨尺度传播</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
 <!-- ANIMATED EXPERIMENT STORIES -->
 <section id="films" class="soft"><div class="wrap reveal">
   <div class="section-head">
     <div>
-      <div class="eyebrow" data-i18n="film_eye">03 · 推演未来线</div>
+      <div class="eyebrow" data-i18n="film_eye">04 · 推演未来线</div>
       <h2 data-i18n="film_h">同一个现在，可以展开<span class="accent">多条未来</span></h2>
     </div>
     <p class="lead" data-i18n="film_p">选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。</p>
@@ -563,7 +684,7 @@
 <!-- CINEMATIC SCIENCE STORIES -->
 <section id="cinema"><div class="wrap reveal">
   <div class="section-head">
-    <div><div class="eyebrow" data-i18n="cinema_eye">04 · 多尺度解码</div><h2 data-i18n="cinema_h">世界不是一张图，而是<span class="accent">一段可推进的状态历史</span></h2></div>
+    <div><div class="eyebrow" data-i18n="cinema_eye">05 · 多尺度解码</div><h2 data-i18n="cinema_h">世界不是一张图，而是<span class="accent">一段可推进的状态历史</span></h2></div>
     <p class="lead" data-i18n="cinema_p">同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。</p>
   </div>
   <div class="cinema-grid">
@@ -582,7 +703,7 @@
 
 <!-- FIREWALL -->
 <section id="firewall"><div class="wrap reveal">
-  <div class="eyebrow" data-i18n="fw_eye">05 · 冻结知识</div>
+  <div class="eyebrow" data-i18n="fw_eye">06 · 冻结知识</div>
   <h2 data-i18n="fw_h">先封存模型知道的过去，<span class="accent">再让未来回答</span></h2>
   <p class="lead" data-i18n="fw_p">后稷的知识边界固定在 2022 年。时间轴右侧展示的五项代表性实验发生在这一边界之后；它们来自完整的 25 条验证未来线，检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。</p>
   <div class="board">
@@ -598,7 +719,7 @@
 
 <!-- RESULTS -->
 <section id="results"><div class="wrap reveal">
-  <div class="eyebrow" data-i18n="res_eye">06 · 反事实检验</div>
+  <div class="eyebrow" data-i18n="res_eye">07 · 反事实检验</div>
   <h2 data-i18n="res_h">世界模型必须回答：<span class="accent">如果行动改变，会发生什么？</span></h2>
   <p class="lead" data-i18n="res_p">复水不是干旱倒放，基因作用依赖环境，高阶组合也不是简单相加。实验结果检验的是这些反事实未来的方向、时序与交互。</p>
 
@@ -666,7 +787,7 @@
 <section id="evidence" class="soft"><div class="wrap reveal">
   <div class="section-head">
     <div>
-      <div class="eyebrow" data-i18n="ev_eye">07 · 实验闭环</div>
+      <div class="eyebrow" data-i18n="ev_eye">08 · 实验闭环</div>
       <h2 data-i18n="ev_h">每条未来线，最终都回到<span class="accent">可测量的生物终点</span></h2>
     </div>
     <p class="lead" data-i18n="ev_p">本页从 25 条已验证未来线中选取五组代表性实验，把潜在轨迹落到相位、方向、组织构成与器官表型上，展示从世界状态、行动推演到实验读出的完整闭环。</p>
@@ -769,19 +890,26 @@ const I18N = {
     met4_v:"Action", met4_l:"干预组合响应", met5_v:"Time", met5_l:"隐藏时间点预测", met6_v:"Risk", met6_l:"校准不确定性",
     honest_h:"世界模型的判据",
     honest_p:"同一个现在，换一个行动，就应该生成另一条自洽未来。后稷预测的是随时间演化的状态分布，并同时报告不确定性，而不是只为某个终点拟合一个答案。",
-    film_eye:"03 · 推演未来线", film_h:'同一个现在，可以展开<span class="accent">多条未来</span>', film_p:"选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。",
+    gene_eye:"03 · 基因状态追踪", gene_h:'这个基因，在这种环境里走一段时间，<span class="accent">还是同一个状态吗？</span>', gene_p:"世界模型不只判断一个终点是否相似，而是把基因、环境与处理时长写进行动历史，追踪相关细胞状态何时偏离、能否恢复，以及变化如何传递到组织和表型。",
+    gene_builder:"条件问题构造器", gene_probe:"关注的基因", gene_environment:"环境行动", gene_duration:"处理时长",
+    gene_fro6:"FRO6 · 铁还原与氧化还原", gene_cbf3:"CBF3 · 冷响应调控", gene_rd29a:"RD29A · 脱水响应", gene_toc1:"TOC1 · 昼夜节律",
+    gene_env_water:"正常供水", gene_env_drought:"持续干旱", gene_env_rewater:"24h 复水", gene_env_cold:"冷胁迫",
+    gene_prompt_label:"待回答的条件未来", gene_prompt_note:"这里构造的是可检验问题：答案应是一条带时间与不确定性的状态轨迹，而不是简单的是或否。",
+    gene_now:"当前状态", gene_now_note:"同一基因背景与起始细胞状态", gene_future_note:"待实验检验的条件状态分布",
+    gene_q1:"状态是否保持", gene_q2:"何时开始偏离", gene_q3:"改变行动能否恢复", gene_q4:"是否跨尺度传播",
+    film_eye:"04 · 推演未来线", film_h:'同一个现在，可以展开<span class="accent">多条未来</span>', film_p:"选择不同环境或基因行动，世界状态沿不同轨迹向前演化；细胞变化逐级传递到组织响应与最终表型。",
     film1_label:"共享状态 Sₜ · 四种行动", film1_h:"一个现在，四条条件世界线", film1_p:"从同一潜在状态施加干旱、复水、冷胁迫或 FRO6↑，未来在 72 小时内分叉，并保留各自的不确定性。",
     film2_label:"反事实 · 水分行动", film2_h:"换一个行动，恢复轨迹就不同", film2_p:"相同起点在持续干旱与 24 小时复水下走向不同细胞状态；实验结果证明恢复不是简单倒放。",
     film3_label:"FRO6 · 胁迫条件", film3_h:"基因作用取决于环境", film3_p:"同一基因干预在正常供水与干旱下产生不同表型，实验结果证明其胁迫特异性。",
-    cinema_eye:"04 · 多尺度解码", cinema_h:'世界不是一张图，而是<span class="accent">一段可推进的状态历史</span>', cinema_p:"同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。",
+    cinema_eye:"05 · 多尺度解码", cinema_h:'世界不是一张图，而是<span class="accent">一段可推进的状态历史</span>', cinema_p:"同一条潜在未来被解码为细胞状态、组织构成和器官性状；不同尺度不再是彼此割裂的结果。",
     cinema1_meta:"CELL POPULATION · 0–72 HOURS", cinema1_h:"细胞群落沿状态历史重新组织", cinema1_p:"基线、干旱、复水过渡和恢复稳态被连成连续世界线，细胞组成与状态随时间共同变化。",
     cinema2_meta:"CELL → TISSUE → TRAIT", cinema2_h:"变化跨尺度传播，而不是同时跳变", cinema2_p:"细胞调控先变化，随后重塑组织水分与气孔状态，最终形成可测量的器官性状。",
-    fw_eye:"05 · 冻结知识",
+    fw_eye:"06 · 冻结知识",
     fw_h:'先封存模型知道的过去，<span class="accent">再让未来回答</span>',
     fw_p:"后稷的知识边界固定在 2022 年。时间轴右侧展示的五项代表性实验发生在这一边界之后；它们来自完整的 25 条验证未来线，检验的不是数据重构，而是模型能否从已知世界状态向未知未来正确推进。",
     tl_train:"模型训练所依据的数据", tl_seal:"证明预测的实验结果", tl_cut:"知识地平线",
     tl_key:'<b>A</b> 昼夜节律 GSE248801 &nbsp;·&nbsp; <b>B</b> 水稻压实 GSE251706 &nbsp;·&nbsp; <b>C</b> 干旱复水 GSE220278 &nbsp;·&nbsp; <b>D</b> 叶片干旱 FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> 玉米冷胁迫 GSE299259',
-    res_eye:"06 · 反事实检验",
+    res_eye:"07 · 反事实检验",
     res_h:'世界模型必须回答：<span class="accent">如果行动改变，会发生什么？</span>',
     res_p:"复水不是干旱倒放，基因作用依赖环境，高阶组合也不是简单相加。实验结果检验的是这些反事实未来的方向、时序与交互。",
     c1_h:"复水 ≠ 把干旱倒放", c1_d:"干旱后复水：从「干旱→复水」的行动历史向前推演被隐藏的恢复状态。模型推演出的恢复方向与真实一致，而「把干旱倒放」的反演假设完全预测反了。",
@@ -795,7 +923,7 @@ const I18N = {
     v_ok:"✓ 方向恢复", v_ok2:"✓ 胁迫特异表型", v_ok3:"✓ 相位 + 振幅恢复", v_ok4:"✓ 非加和相互作用",
     hl1:"完整评估覆盖 10 个物种的 25 条未来线；本页展示其中 5 组代表性实验结果，涵盖动态、表型与干预方向。",
     hl2:"经共形校准后，80% 预测区间实测覆盖率 0.87、ECE 0.052——模型对自己的把握是诚实的。",
-    ev_eye:"07 · 实验闭环",
+    ev_eye:"08 · 实验闭环",
     ev_h:'每条未来线，最终都回到<span class="accent">可测量的生物终点</span>',
     ev_p:"本页从 25 条已验证未来线中选取五组代表性实验，把潜在轨迹落到相位、方向、组织构成与器官表型上，展示从世界状态、行动推演到实验读出的完整闭环。",
     th1:"任务", th2:"公开数据", th3:"验证重点",
@@ -843,19 +971,26 @@ const I18N = {
     met4_v:"Action", met4_l:"intervention response", met5_v:"Time", met5_l:"hidden timepoint forecast", met6_v:"Risk", met6_l:"calibrated uncertainty",
     honest_h:"The world-model criterion",
     honest_p:"From the same present, changing the action should produce another self-consistent future. Hòujì predicts evolving state distributions with uncertainty, rather than fitting one answer to one endpoint.",
-    film_eye:"03 · Roll out future lines", film_h:'One present can unfold into <span class="accent">multiple futures</span>', film_p:"Choose a different environmental or genetic action and the world state follows a different path, carrying cell changes into tissue response and phenotype.",
+    gene_eye:"03 · Gene-state tracking", gene_h:'After this gene spends time in this environment, <span class="accent">is it still the same state?</span>', gene_p:"A world model does not only compare endpoints. It writes gene, environment and duration into the action history, then tracks when the associated cell state diverges, whether it can recover, and how change propagates into tissue and phenotype.",
+    gene_builder:"CONDITIONAL QUESTION BUILDER", gene_probe:"Gene of interest", gene_environment:"Environmental action", gene_duration:"Treatment duration",
+    gene_fro6:"FRO6 · iron reduction and redox", gene_cbf3:"CBF3 · cold-response regulation", gene_rd29a:"RD29A · dehydration response", gene_toc1:"TOC1 · circadian rhythm",
+    gene_env_water:"Well-watered", gene_env_drought:"Sustained drought", gene_env_rewater:"Rewater at 24h", gene_env_cold:"Cold stress",
+    gene_prompt_label:"CONDITIONAL FUTURE TO ANSWER", gene_prompt_note:"This constructs a testable question: the answer should be a time-resolved state trajectory with uncertainty, not a simple yes or no.",
+    gene_now:"Present state", gene_now_note:"Same genetic background and starting cell state", gene_future_note:"Conditional state distribution awaiting experimental test",
+    gene_q1:"Does the state persist?", gene_q2:"When does it diverge?", gene_q3:"Can another action restore it?", gene_q4:"Does it propagate across scales?",
+    film_eye:"04 · Roll out future lines", film_h:'One present can unfold into <span class="accent">multiple futures</span>', film_p:"Choose a different environmental or genetic action and the world state follows a different path, carrying cell changes into tissue response and phenotype.",
     film1_label:"SHARED STATE Sₜ · FOUR ACTIONS", film1_h:"One present, four conditional world lines", film1_p:"Drought, rewatering, cold or FRO6↑ branch from the same latent state into distinct 72-hour futures, each retaining its uncertainty.",
     film2_label:"COUNTERFACTUAL · WATER ACTION", film2_h:"Change the action, change the recovery path", film2_p:"The same starting state diverges under sustained drought versus rewatering at 24 hours; experiments confirm recovery is not a simple rewind.",
     film3_label:"FRO6 · stress condition", film3_h:"Gene effects depend on environment", film3_p:"The same intervention yields different phenotypes under water and drought; experimental results confirm stress specificity.",
-    cinema_eye:"04 · Multi-scale decoding", cinema_h:'A world is not one image, but <span class="accent">a state history that can advance</span>', cinema_p:"One latent future is decoded into cell states, tissue composition and organ traits, so biological scales no longer appear as disconnected outputs.",
+    cinema_eye:"05 · Multi-scale decoding", cinema_h:'A world is not one image, but <span class="accent">a state history that can advance</span>', cinema_p:"One latent future is decoded into cell states, tissue composition and organ traits, so biological scales no longer appear as disconnected outputs.",
     cinema1_meta:"CELL POPULATION · 0–72 HOURS", cinema1_h:"Cell populations reorganize along a state history", cinema1_p:"Baseline, drought, rewatering transition and recovery are joined into one continuous world line as cell composition and state change together.",
     cinema2_meta:"CELL → TISSUE → TRAIT", cinema2_h:"Change propagates across scales, not all at once", cinema2_p:"Cell regulation shifts first, then reshapes tissue hydration and stomatal state before producing measurable organ traits.",
-    fw_eye:"05 · Freeze knowledge",
+    fw_eye:"06 · Freeze knowledge",
     fw_h:'Seal what the model knew, <span class="accent">then let the future answer</span>',
     fw_p:"Hòujì's knowledge boundary is fixed at 2022. The timeline shows five representative post-boundary experiments selected from 25 validated future lines, testing whether the model could advance from known world states into unknown futures rather than reconstruct familiar data.",
     tl_train:"data it was trained on", tl_seal:"experimental results confirming predictions", tl_cut:"knowledge horizon",
     tl_key:'<b>A</b> circadian GSE248801 &nbsp;·&nbsp; <b>B</b> rice compaction GSE251706 &nbsp;·&nbsp; <b>C</b> drought-rewater GSE220278 &nbsp;·&nbsp; <b>D</b> leaf drought FRO6 GSE290214 &nbsp;·&nbsp; <b>E</b> maize cold GSE299259',
-    res_eye:"06 · Counterfactual tests",
+    res_eye:"07 · Counterfactual tests",
     res_h:'A world model must answer: <span class="accent">what changes when the action changes?</span>',
     res_p:"Rewatering is not drought in reverse, gene effects depend on environment, and higher-order combinations are not simple sums. Experiments test the direction, timing and interactions of these counterfactual futures.",
     c1_h:"Rewatering ≠ drought in reverse", c1_d:"Drought then rewatering: rolling the drought→rewater action history forward predicts the hidden recovery state. The model's recovery direction matches reality, while the 'play drought backwards' hypothesis gets it exactly wrong.",
@@ -869,7 +1004,7 @@ const I18N = {
     v_ok:"✓ direction recovered", v_ok2:"✓ stress-specific phenotype", v_ok3:"✓ phase + amplitude", v_ok4:"✓ non-additive interaction",
     hl1:"The full evaluation spans 25 validated future lines across 10 species; this page shows 5 representative experiments covering dynamics, phenotypes and intervention directions.",
     hl2:"After conformal calibration, the 80% prediction interval covers 0.87 with ECE 0.052 — the model is honest about its own confidence.",
-    ev_eye:"07 · Experimental closure",
+    ev_eye:"08 · Experimental closure",
     ev_h:'Every future line returns to a <span class="accent">measurable biological endpoint</span>',
     ev_p:"This page selects five representative experiments from 25 validated future lines, linking latent trajectories to phase, direction, tissue composition and organ phenotype across the full experimental loop.",
     th1:"Task", th2:"Public data", th3:"Validation focus",
@@ -1011,10 +1146,15 @@ function setLang(l){
     const k=el.getAttribute('data-i18n-placeholder'); const s=I18N[l][k];
     if(s!==undefined) el.setAttribute('placeholder',s);
   });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-aria'); const s=I18N[l][k];
+    if(s!==undefined) el.setAttribute('aria-label',s);
+  });
   if(ENGINE_RESULT?.language!==l){ENGINE_RESULT=null;ENGINE_HAS_REPORT=false;}
   syncDataIdentity();
   setCurrentEngineStatus();
   renderEngine();
+  renderGeneQuestion();
 }
 
 function getEngineInput(){
@@ -1224,6 +1364,68 @@ document.getElementById('engineSpecies')?.addEventListener('change',resetEngine)
 document.getElementById('engineOrgan')?.addEventListener('change',resetEngine);
 document.getElementById('engineRun')?.addEventListener('click',generateEnginePrediction);
 loadPredictionData().catch(()=>{});
+
+/* ---------------- gene × environment × time question ---------------- */
+let GENE_ENV='drought';
+const GENE_ENV_STATES={
+  water:{
+    color:'52,211,153',
+    zh:{label:'正常供水',question:'正常供水环境',states:['仍接近起始状态','可能维持近基线状态','时间依赖波动可能累积'],cell:'稳态调控程序占主导',tissue:'组织功能保持近基线',trait:'生长与节律持续推进'},
+    en:{label:'Well-watered',question:'well-watered conditions',states:['remains close to the starting state','may retain a near-baseline state','time-dependent variation may accumulate'],cell:'homeostatic regulation dominates',tissue:'tissue function stays near baseline',trait:'growth and rhythms continue'}
+  },
+  drought:{
+    color:'240,112,79',
+    zh:{label:'持续干旱',question:'持续干旱环境',states:['可能启动胁迫响应','可能进入胁迫适应状态','可能稳定于重塑后的胁迫态'],cell:'调控与代谢程序重新分配',tissue:'水分与碳代谢状态改变',trait:'生长与耐受产生权衡'},
+    en:{label:'Sustained drought',question:'sustained drought',states:['may initiate a stress response','may enter a stress-adapted state','may stabilize in a remodeled stress state'],cell:'regulatory and metabolic programs redistribute',tissue:'water and carbon states change',trait:'growth and tolerance trade off'}
+  },
+  rewater:{
+    color:'230,189,92',
+    zh:{label:'24h 复水',question:'干旱 24 小时后复水',states:['复水行动刚刚发生','可能穿过恢复过渡态','可能形成区别于基线的恢复态'],cell:'胁迫程序部分解除并重组',tissue:'水分关系逐步重新建立',trait:'恢复并非干旱的简单倒放'},
+    en:{label:'Rewater at 24h',question:'rewatering after 24 hours of drought',states:['the rewatering action has just occurred','may pass through a recovery transition','may form a recovery state distinct from baseline'],cell:'stress programs partly release and reorganize',tissue:'tissue water relations rebuild',trait:'recovery is not drought in reverse'}
+  },
+  cold:{
+    color:'106,169,224',
+    zh:{label:'冷胁迫',question:'非冻结冷胁迫环境',states:['可能启动低温感知','可能进入冷驯化状态','可能稳定于冷适应状态'],cell:'低温调控网络重新编排',tissue:'膜与代谢状态协同调整',trait:'生长与耐冷重新权衡'},
+    en:{label:'Cold stress',question:'non-freezing cold stress',states:['may initiate cold sensing','may enter a cold-acclimating state','may stabilize in a cold-adapted state'],cell:'cold-response networks reorganize',tissue:'membrane and metabolic states adjust',trait:'growth and cold tolerance rebalance'}
+  }
+};
+
+function renderGeneQuestion(){
+  const lab=document.getElementById('geneLab');
+  const geneSelect=document.getElementById('geneProbe');
+  const duration=document.getElementById('geneDuration');
+  if(!lab||!geneSelect||!duration)return;
+  const hours=Number(duration.value||36),gene=geneSelect.value||'FRO6';
+  const state=GENE_ENV_STATES[GENE_ENV],copy=state[LANG];
+  const phase=hours<=12?0:hours<=36?1:2;
+  lab.style.setProperty('--gene-color',state.color);
+  document.getElementById('geneDurationValue').textContent=`${hours} h`;
+  document.getElementById('geneLinkFill').style.width=`${Math.round(hours/72*100)}%`;
+  document.getElementById('geneActionToken').textContent=`${copy.label} × ${hours} h`;
+  document.getElementById('geneFutureState').textContent=copy.states[phase];
+  document.getElementById('geneCellReadout').textContent=copy.cell;
+  document.getElementById('geneTissueReadout').textContent=copy.tissue;
+  document.getElementById('geneTraitReadout').textContent=copy.trait;
+  const questionContext=GENE_ENV==='rewater'
+    ?(LANG==='en'
+      ?`a ${hours}-hour action history that switches from drought to rewatering at 24 hours`
+      :`一段持续 ${hours} 小时、并在第 24 小时由干旱切换为复水的行动历史`)
+    :(LANG==='en'?`${hours} hours of ${copy.question}`:`${copy.question}处理 ${hours} 小时`);
+  document.getElementById('geneQuestionText').textContent=LANG==='en'
+    ?`Given the same starting state, does the ${gene}-associated cell state remain the same after ${questionContext}?`
+    :`给定同一个初始状态，${gene} 经历${questionContext}后，相关细胞状态是否仍然相同？`;
+  document.querySelectorAll('.gene-env-choice').forEach(button=>button.classList.toggle('on',button.dataset.env===GENE_ENV));
+}
+
+document.querySelectorAll('.gene-env-choice').forEach(button=>button.addEventListener('click',()=>{
+  GENE_ENV=button.dataset.env;
+  const duration=document.getElementById('geneDuration');
+  duration.min=GENE_ENV==='rewater'?24:6;
+  if(Number(duration.value)<Number(duration.min))duration.value=duration.min;
+  renderGeneQuestion();
+}));
+document.getElementById('geneProbe')?.addEventListener('change',renderGeneQuestion);
+document.getElementById('geneDuration')?.addEventListener('input',renderGeneQuestion);
 
 /* ---------------- scroll reveal ---------------- */
 const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in'); io.unobserve(e.target);}})},{threshold:.14});
